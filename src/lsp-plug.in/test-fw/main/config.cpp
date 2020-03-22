@@ -91,7 +91,7 @@ namespace lsp
             argc        = utf8_argc;
             argv        = const_cast<const char **>(utf8_argv);
     #else
-            threads     = sysconf(_SC_NPROCESSORS_ONLN);
+            threads     = ::sysconf(_SC_NPROCESSORS_ONLN);
     #endif /* PLATFORM_WINDOWS */
 
             if (argc < 2)
@@ -138,7 +138,7 @@ namespace lsp
                 {
                     if ((++i) >= argc)
                     {
-                        fprintf(stderr, "Not specified trace path\n");
+                        ::fprintf(stderr, "Not specified trace path\n");
                         return STATUS_INVALID_VALUE;
                     }
                     tracepath   = argv[i];
@@ -147,7 +147,7 @@ namespace lsp
                 {
                     if ((++i) >= argc)
                     {
-                        fprintf(stderr, "Not specified name of output file\n");
+                        ::fprintf(stderr, "Not specified name of output file\n");
                         return STATUS_INVALID_VALUE;
                     }
                     outfile     = argv[i];
@@ -167,10 +167,10 @@ namespace lsp
 
                     errno           = 0;
                     char *end       = NULL;
-                    long jobs       = strtol(argv[i], &end, 10);
+                    long jobs       = ::strtol(argv[i], &end, 10);
                     if ((errno != 0) || ((*end) != '\0') || (jobs <= 0))
                     {
-                        fprintf(stderr, "Invalid value for --jobs parameter: %s\n", argv[i]);
+                        ::fprintf(stderr, "Invalid value for --jobs parameter: %s\n", argv[i]);
                         return STATUS_INVALID_VALUE;
                     }
                     threads         = size_t(jobs);
@@ -229,9 +229,9 @@ namespace lsp
                 for (size_t i=0; i<utf8_argc; ++i)
                 {
                     if (utf8_argv[i] != NULL)
-                        free(utf8_argv[i]);
+                        ::free(utf8_argv[i]);
                 }
-                free(utf8_argv);
+                ::free(utf8_argv);
 
                 utf8_argv       = NULL;
                 utf8_argc       = 0;
