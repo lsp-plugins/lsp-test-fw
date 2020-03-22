@@ -15,54 +15,113 @@
 #include <lsp-plug.in/test-fw/main/config.h>
 #include <lsp-plug.in/test-fw/main/executor.h>
 
+#include <lsp-plug.in/test-fw/init.h>
 #include <lsp-plug.in/test-fw/ptest.h>
 #include <lsp-plug.in/test-fw/mtest.h>
 #include <lsp-plug.in/test-fw/utest.h>
-
-//#include <unistd.h>
-//#include <sys/time.h>
-//#include <stdlib.h>
-//#include <signal.h>
-//
-//#include <test/main/types.h>
-//#include <test/main/config.h>
-//#include <test/main/executor.h>
-//#include <dsp/dsp.h>
-//#include <metadata/metadata.h>
-//#include <core/stdlib/stdio.h>
-//#include <core/init.h>
-//#include <sys/stat.h>
 
 namespace lsp
 {
     namespace test
     {
-        ManualTest *mtest_init()
+        status_t check_duplicates(const char *tclass, dynarray_t *list)
         {
-            return ManualTest::__root;
+            size_t n = list->size();
+
+            for (size_t i=0; i<n; ++i)
+            {
+                test::Test *a       = list->at<test::Test>(i);
+                const char *a_grp   = a->group();
+                const char *a_name  = a->name();
+
+                for (size_t j=i+1; j<n; ++j)
+                {
+                    test::Test *b       = list->at<test::Test>(i);
+                    if (::strcasecmp(a_grp, b->group()))
+                        continue;
+                    if (::strcasecmp(a_name, b->name()))
+                        continue;
+
+                    ::fprintf(stderr, "%s '%s.%s' has duplicate instance, can not proceed\n", tclass, a_grp, a_name);
+                    return STATUS_DUPLICATED;
+                }
+            }
+
+            return STATUS_OK;
         }
 
-        UnitTest *utest_init()
+        status_t mtest_init(dynarray_t *list)
         {
-            return UnitTest::__root;
+            for (ManualTest *test = ManualTest::__root; test != NULL; test = test->__next)
+            {
+                if (!list->add(static_cast<Test *>(test)))
+                    return STATUS_NO_MEM;
+            }
+
+            return check_duplicates("Manual test", list);
         }
 
-        PerformanceTest *ptest_init()
+        status_t utest_init(dynarray_t *list)
         {
-            return PerformanceTest::__root;
+            for (UnitTest *test = UnitTest::__root; test != NULL; test = test->__next)
+            {
+                if (!list->add(static_cast<Test *>(test)))
+                    return STATUS_NO_MEM;
+            }
+
+            return check_duplicates("Unit test", list);
         }
 
-        void out_test_header(FILE *out)
+        status_t ptest_init(dynarray_t *list)
         {
-            // TODO
+            for (PerfTest *test = PerfTest::__root; test != NULL; test = test->__next)
+            {
+                if (!list->add(static_cast<Test *>(test)))
+                    return STATUS_NO_MEM;
+            }
+
+            return check_duplicates("Performance test", list);
         }
 
-        void initialize_global()
+        status_t init_init(dynarray_t *list)
         {
+            for (Initializer *init = Initializer::__root; init != NULL; init = init->__next)
+            {
+                if (!list->add(init))
+                    return STATUS_NO_MEM;
+            }
+
+            return STATUS_OK;
         }
 
-        void finalize_global()
+        void out_system_info(config_t *cfg, dynarray_t *inits)
         {
+            for (size_t i=0, n=inits->size(); i<n; ++i)
+            {
+                test::Initializer *init = inits->at<test::Initializer>(i);
+                init->configure(cfg);
+                init->info();
+            }
+        }
+
+        void initialize_global(dynarray_t *inits)
+        {
+            // Initialize in direct order
+            for (size_t i=0, n=inits->size(); i<n; ++i)
+            {
+                test::Initializer *init = inits->at<test::Initializer>(i);
+                init->initialize();
+            }
+        }
+
+        void finalize_global(dynarray_t *inits)
+        {
+            // Finalize in reverse order
+            for (ssize_t i=inits->size()-1; i>=0; --i)
+            {
+                test::Initializer *init = inits->at<test::Initializer>(i);
+                init->finalize();
+            }
         }
 
         bool match_string(const char *p, const char *m)
@@ -147,13 +206,14 @@ namespace lsp
             return ::strcmp(*_a, *_b);
         }
 
-        status_t list_all(const char *text, test::Test *v)
+        status_t list_all(const char *text, dynarray_t *list)
         {
             dynarray_t names;
 
-            for ( ; v != NULL; v = v->next_test())
+            for (size_t i=0, n=list->size() ; i < n; ++i)
             {
-                const char *str = v->full_name();
+                test::Test *test = list->at<test::Test>(i);
+                const char *str = test->full_name();
                 if (str != NULL)
                     names.add(str);
             }
@@ -214,34 +274,7 @@ namespace lsp
             return STATUS_OK;
         }
 
-        status_t check_duplicates(const config_t *cfg, test::Test *list)
-        {
-            const char *tclass =
-                    (cfg->mode == UTEST) ? "Unit test" :
-                    (cfg->mode == PTEST) ? "Performance test" :
-                    "Manual test";
-
-            for (test::Test *first = list; first != NULL; first = first->next_test())
-            {
-                const char *group = first->group();
-                const char *name  = first->name();
-
-                for (test::Test *next = first->next_test(); next != NULL; next = next->next_test())
-                {
-                    if (strcasecmp(group, next->group()))
-                        continue;
-                    if (strcasecmp(name, next->name()))
-                        continue;
-
-                    fprintf(stderr, "%s '%s.%s' has duplicate instance, can not proceed\n", tclass, group, name);
-                    return STATUS_DUPLICATED;
-                }
-            }
-
-            return STATUS_OK;
-        }
-
-        status_t create_outfile(const config_t *cfg)
+        status_t create_outfile(config_t *cfg, dynarray_t *inits)
         {
             if (cfg->outfile == NULL)
                 return STATUS_OK;
@@ -249,7 +282,19 @@ namespace lsp
             FILE *fd = fopen(cfg->outfile, "w");
             if (fd != NULL)
             {
-                out_test_header(fd);
+                // Update configuration
+                FILE *std_out   = cfg->stdout;
+                bool verbose    = cfg->verbose;
+                cfg->stdout     = fd;
+                cfg->verbose    = true;
+
+                // Output information
+                out_system_info(cfg, inits);
+
+                // Restore configuration
+                cfg->stdout     = std_out;
+                cfg->verbose    = verbose;
+
                 fclose(fd);
             }
 
@@ -258,48 +303,74 @@ namespace lsp
 
         int main(int argc, const char **argv)
         {
+            // Parse configuration
             config_t cfg;
             status_t res = cfg.parse(stdout, argc, argv);
             if (res != STATUS_OK)
                 return res;
 
-            // Output system information
+            // Initialize list of test initializers
+            dynarray_t inits;
+            res = init_init(&inits);
+            if (res != STATUS_OK)
+            {
+                ::fprintf(stderr, "Failed to initialize initializer list\n");
+                return res;
+            }
+
+            // Perform global initialization
+            initialize_global(&inits);
             if (cfg.sysinfo)
-                out_test_header(stdout);
+                out_system_info(&cfg, &inits);
 
             // Obtain the source list of tests for execution
-            test::Test *list = NULL;
+            dynarray_t list;    // List of tests
             switch (cfg.mode)
             {
                 case UTEST:
-                    list = test::utest_init();
-                    if (list == NULL)
+                    res = test::utest_init(&list);
+                    if (res != STATUS_OK)
                     {
-                        fprintf(stderr, "No unit tests available\n");
+                        ::fprintf(stderr, "Error initializing unit test subsystem\n");
+                        return res;
+                    }
+                    else if (list.is_empty())
+                    {
+                        ::fprintf(stderr, "No unit tests available\n");
                         return STATUS_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available unit tests", list);
+                        return list_all("List of available unit tests", &list);
                     break;
                 case PTEST:
-                    list = test::ptest_init();
-                    if (list == NULL)
+                    res = test::ptest_init(&list);
+                    if (res != STATUS_OK)
+                    {
+                        ::fprintf(stderr, "Error initializing performance test subsystem\n");
+                        return res;
+                    }
+                    else if (list.is_empty())
                     {
                         fprintf(stderr, "No performance tests available\n");
                         return STATUS_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available performance tests", list);
+                        return list_all("List of available performance tests", &list);
                     break;
                 case MTEST:
-                    list = test::mtest_init();
-                    if (list == NULL)
+                    res = test::mtest_init(&list);
+                    if (res != STATUS_OK)
+                    {
+                        ::fprintf(stderr, "Error initializing unit test subsystem\n");
+                        return res;
+                    }
+                    else if (list.is_empty())
                     {
                         fprintf(stderr, "No manual tests available\n");
                         return STATUS_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available manual tests", list);
+                        return list_all("List of available manual tests", &list);
                     break;
                 default:
                     return STATUS_BAD_ARGUMENTS;
@@ -317,11 +388,7 @@ namespace lsp
             {
                 // Ensure that there are no duplicates in performance tests
                 if (!cfg.is_child)
-                {
-                    res = check_duplicates(&cfg, list);
-                    if (res == STATUS_OK)
-                        res     = create_outfile(&cfg);
-                }
+                    res     = create_outfile(&cfg, &inits);
 
                 // Prepare for test
                 if (res == STATUS_OK)
@@ -329,14 +396,16 @@ namespace lsp
                     test_clock_t start, finish;
                     get_test_time(&start);
 
-                    for (test::Test *v = list; v != NULL; v = v->next_test())
+                    for (size_t i=0, n=list.size(); i<n; ++i)
                     {
+                        test::Test *test = list.at<test::Test>(i);
+
                         // Check that test is not ignored
-                        if (check_test_skip(&cfg, &stats, v))
+                        if (check_test_skip(&cfg, &stats, test))
                             continue;
 
                         ++stats.total;
-                        res = executor.submit(v);
+                        res = executor.submit(test);
                         if ((res != STATUS_OK) || (cfg.is_child))
                             break;
                     }
@@ -353,7 +422,7 @@ namespace lsp
                     output_stats(&cfg, &stats);
             }
 
-            finalize_global();
+            finalize_global(&inits);
 
             ::fflush(stdout);
             ::fflush(stderr);

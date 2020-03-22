@@ -14,9 +14,9 @@ namespace lsp
 {
     namespace test
     {
-        PerformanceTest *PerformanceTest::__root = NULL;
+        PerfTest *PerfTest::__root = NULL;
 
-        PerformanceTest::PerformanceTest(const char *group, const char *name, float time, size_t iterations): Test(group, name)
+        PerfTest::PerfTest(const char *group, const char *name, float time, size_t iterations): Test(group, name)
         {
             __test_time         = time;
             __test_iterations   = iterations;
@@ -26,12 +26,12 @@ namespace lsp
             __root              = this;
         }
 
-        PerformanceTest::~PerformanceTest()
+        PerfTest::~PerfTest()
         {
             free_stats();
         }
 
-        void PerformanceTest::destroy_stats(stats_t *stats)
+        void PerfTest::destroy_stats(stats_t *stats)
         {
             if (stats->key != NULL)
                 free(stats->key);
@@ -52,7 +52,7 @@ namespace lsp
             ::free(stats);
         }
 
-        PerformanceTest::stats_t *PerformanceTest::alloc_stats()
+        PerfTest::stats_t *PerfTest::alloc_stats()
         {
             stats_t *stats      = reinterpret_cast<stats_t *>(::malloc(sizeof(stats_t)));
             if (stats == NULL)
@@ -71,14 +71,14 @@ namespace lsp
             return stats;
         }
 
-        void PerformanceTest::estimate(size_t *len, const char *text)
+        void PerfTest::estimate(size_t *len, const char *text)
         {
             size_t slen = (text != NULL) ? ::strlen(text) : 0;
             if (slen > (*len))
                 *len = slen;
         }
 
-        void PerformanceTest::gather_stats(const char *key, double time, wsize_t iterations)
+        void PerfTest::gather_stats(const char *key, double time, wsize_t iterations)
         {
             size_t count    = __test_stats.size();
             stats_t *stats  = alloc_stats();
@@ -169,7 +169,7 @@ namespace lsp
             └ ─ ┴ ─ ┘
          */
 
-        void PerformanceTest::out_text(FILE *out, size_t length, const char *text, int align, const char *padding, const char *tail)
+        void PerfTest::out_text(FILE *out, size_t length, const char *text, int align, const char *padding, const char *tail)
         {
             size_t tlen     = (text != NULL) ? strlen(text) : 0;
             length         -= tlen;
@@ -189,7 +189,7 @@ namespace lsp
                 fputs(tail, out);
         }
 
-        void PerformanceTest::dump_stats(FILE *out) const
+        void PerfTest::dump_stats(FILE *out) const
         {
             size_t key          = strlen("Case");
             size_t time         = strlen("Time[s]");
@@ -286,14 +286,14 @@ namespace lsp
             out_text(out, rel, NULL, 1, "─", "┘\n");
         }
 
-        void PerformanceTest::free_stats()
+        void PerfTest::free_stats()
         {
             for (size_t i=0, n=__test_stats.size(); i < n; ++i)
                 destroy_stats(__test_stats.at<stats_t>(i));
             __test_stats.clear();
         }
 
-        int PerformanceTest::printf(const char *fmt, ...)
+        int PerfTest::printf(const char *fmt, ...)
         {
             va_list vl;
             va_start(vl, fmt);

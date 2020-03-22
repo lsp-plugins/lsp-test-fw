@@ -8,15 +8,18 @@
 #ifndef TEST_MAIN_H_
 #define TEST_MAIN_H_
 
-namespace test
+namespace lsp
 {
-    /**
-     * The main function that executes the test framework
-     * @param argc number of arguments
-     * @param argv list of arguments
-     * @return execution code
-     */
-    int main(int argc, const char **argv);
+    namespace test
+    {
+        /**
+         * The main function that executes the test framework
+         * @param argc number of arguments
+         * @param argv list of arguments
+         * @return execution code
+         */
+        int main(int argc, const char **argv);
+    }
 }
 
 

@@ -199,23 +199,25 @@ namespace lsp
 
         config_t::config_t()
         {
-            mode        = UNKNOWN;
-            fork        = true;
-            verbose     = false;
-            debug       = false;
-            list_all    = false;
-            mtrace      = false;
-            ilist       = false;
-            sysinfo     = true;
-            is_child    = false;
-            executable  = NULL;
-            tracepath   = "/tmp/lsp-test-fw";
-            outfile     = NULL;
-            threads     = 1;
+            mode            = UNKNOWN;
+            fork            = true;
+            verbose         = false;
+            debug           = false;
+            list_all        = false;
+            mtrace          = false;
+            ilist           = false;
+            sysinfo         = true;
+            is_child        = false;
+            executable      = NULL;
+            tracepath       = "/tmp/lsp-test-fw";
+            outfile         = NULL;
+            threads         = 1;
+            this->stdout    = stdout;
+            this->stderr    = stdout;
 
     #if defined(PLATFORM_WINDOWS)
-            utf8_argc   = 0;
-            utf8_argv   = NULL;
+            utf8_argc       = 0;
+            utf8_argv       = NULL;
     #endif
         }
 

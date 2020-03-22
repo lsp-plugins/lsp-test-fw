@@ -48,7 +48,7 @@ namespace lsp
                 status_t    launch_test(test::Test *test);
                 status_t    wait_for_children();
                 status_t    launch(test::UnitTest *test);
-                status_t    launch(test::PerformanceTest *test);
+                status_t    launch(test::PerfTest *test);
                 status_t    launch(test::ManualTest *test);
 
                 // Platform-dependent routines

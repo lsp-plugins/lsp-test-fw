@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 
+#include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
 
 #define PTEST_BEGIN(group, name, time, iterations) \
@@ -17,9 +18,12 @@
         namespace ptest { \
         namespace { \
             \
-            using namespace ::test; \
+            using namespace ::lsp::test; \
             \
             class ptest_ ## name: public PerformanceTest { \
+                private: \
+                    ptest_ ## name & operator = (const ptest_ ## name &); \
+                \
                 public: \
                     typedef ptest_ ## name test_type_t; \
                 \
@@ -113,14 +117,17 @@ namespace lsp
 {
     namespace test
     {
-        class PerformanceTest: public Test
+        class PerfTest: public Test
         {
             private:
-                friend PerformanceTest *ptest_init();
+                PerfTest & operator = (const PerfTest &);
 
             private:
-                static PerformanceTest    *__root;
-                PerformanceTest           *__next;
+                friend status_t ptest_init(dynarray_t *list);
+
+            private:
+                static PerfTest    *__root;
+                PerfTest           *__next;
 
             protected:
                 typedef struct stats_t
@@ -149,18 +156,15 @@ namespace lsp
                 static void         out_text(FILE *out, size_t length, const char *text, int align, const char *padding, const char *tail);
 
             public:
-                int             printf(const char *fmt, ...);
+                int                 printf(const char *fmt, ...);
 
             public:
-                explicit PerformanceTest(const char *group, const char *name, float time, size_t iterations);
-                virtual ~PerformanceTest();
+                explicit PerfTest(const char *group, const char *name, float time, size_t iterations);
+                virtual ~PerfTest();
 
             public:
-                inline PerformanceTest *next()          { return __next; }
-                virtual Test *next_test() const         { return const_cast<PerformanceTest *>(__next); };
-
-                void dump_stats(FILE *out) const;
-                void free_stats();
+                void                dump_stats(FILE *out) const;
+                void                free_stats();
         };
     }
 }

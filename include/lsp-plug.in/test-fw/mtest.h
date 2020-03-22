@@ -8,16 +8,21 @@
 #ifndef TEST_MTEST_H_
 #define TEST_MTEST_H_
 
+#include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
+#include <lsp-plug.in/test-fw/main/dynarray.h>
 
 #define MTEST_BEGIN(group, name) \
         namespace lsp { \
         namespace mtest { \
         namespace { \
             \
-            using namespace ::test; \
+            using namespace ::lsp::test; \
             \
             class mtest_ ## name: public ManualTest { \
+                private: \
+                    mtest_ ## name & operator = (const mtest_ ## name &); \
+                \
                 public: \
                     typedef mtest_ ## name test_type_t; \
                 \
@@ -72,20 +77,18 @@ namespace lsp
         class ManualTest: public Test
         {
             private:
-                friend ManualTest *mtest_init();
+                ManualTest & operator = (const ManualTest &);
 
             private:
-                static ManualTest        *__root;
-                ManualTest               *__next;
+                friend status_t         mtest_init(dynarray_t *list);
+
+            private:
+                static ManualTest      *__root;
+                ManualTest             *__next;
 
             public:
                 explicit ManualTest(const char *group, const char *name);
                 virtual ~ManualTest();
-
-            public:
-                inline ManualTest *next()               { return __next; }
-
-                virtual Test *next_test() const         { return const_cast<ManualTest *>(__next); };
         };
     }
 }

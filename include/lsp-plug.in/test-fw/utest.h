@@ -8,16 +8,21 @@
 #ifndef TEST_UTEST_H_
 #define TEST_UTEST_H_
 
+#include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
+#include <lsp-plug.in/test-fw/main/dynarray.h>
 
 #define UTEST_BEGIN(group, name) \
         namespace lsp { \
         namespace utest { \
         namespace { \
             \
-            using namespace ::test; \
+            using namespace ::lsp::test; \
             \
             class utest_ ## name: public UnitTest { \
+                private: \
+                    utest_ ## name & operator = (const utest_ ## name &); \
+                \
                 public: \
                     typedef utest_ ## name test_type_t;\
                 \
@@ -90,7 +95,10 @@ namespace lsp
         class UnitTest: public Test
         {
             private:
-                friend UnitTest *utest_init();
+                UnitTest & operator = (const UnitTest &);
+
+            private:
+                friend status_t         utest_init(dynarray_t *list);
 
             private:
                 static UnitTest        *__root;
@@ -101,20 +109,8 @@ namespace lsp
                 virtual ~UnitTest();
 
             public:
-                inline UnitTest *next()                 { return __next; }
-
-                virtual Test *next_test() const         { return const_cast<UnitTest *>(__next); };
-
-            public:
                 virtual double time_limit() const;
         };
-
-
-        /**
-         * Initialize set of performance tests (validate duplicates, etc)
-         * @return valid set of performance tests
-         */
-        UnitTest *utest_init();
     }
 }
 

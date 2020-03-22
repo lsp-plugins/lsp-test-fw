@@ -10,8 +10,11 @@
 #include <lsp-plug.in/test-fw/main/executor.h>
 
 #ifdef PLATFORM_UNIX_COMPATIBLE
+    #include <mcheck.h>
     #include <signal.h>
     #include <sys/time.h>
+    #include <sys/types.h>
+    #include <sys/wait.h>
 #endif
 
 namespace lsp
@@ -165,8 +168,7 @@ namespace lsp
             {
                 config_t *cfg = const_cast<config_t *>(pCfg);
 
-                test->set_executable(pCfg->executable);
-                test->set_verbose(pCfg->verbose);
+                test->configure(pCfg);
                 start_memcheck(test);
                 test->init();
                 test->execute(pCfg->args.size(), cfg->args.array<const char>());
@@ -186,13 +188,12 @@ namespace lsp
             return STATUS_OK;
         }
 
-        status_t TestExecutor::launch(test::PerformanceTest *test)
+        status_t TestExecutor::launch(test::PerfTest *test)
         {
             config_t *cfg = const_cast<config_t *>(pCfg);
 
             // Execute performance test
-            test->set_executable(pCfg->executable);
-            test->set_verbose(pCfg->verbose);
+            test->configure(pCfg);
             start_memcheck(test);
             test->init();
             test->execute(pCfg->args.size(), cfg->args.array<const char>());
@@ -227,8 +228,7 @@ namespace lsp
         {
             config_t *cfg = const_cast<config_t *>(pCfg);
             // Execute performance test
-            test->set_executable(pCfg->executable);
-            test->set_verbose(pCfg->verbose);
+            test->configure(pCfg);
             start_memcheck(test);
             test->init();
             test->execute(pCfg->args.size(), cfg->args.array<const char>());
@@ -245,7 +245,7 @@ namespace lsp
                 case UTEST:
                     return launch(static_cast<test::UnitTest *>(test));
                 case PTEST:
-                    return launch(static_cast<test::PerformanceTest *>(test));
+                    return launch(static_cast<test::PerfTest *>(test));
                 case MTEST:
                     return launch(static_cast<test::ManualTest *>(test));
                 default:
@@ -606,7 +606,7 @@ namespace lsp
 
             do
             {
-                pid_t pid = waitpid(-1, &result, WUNTRACED | WCONTINUED);
+                pid_t pid = ::waitpid(-1, &result, WUNTRACED | WCONTINUED);
                 if (pid < 0)
                 {
                     fprintf(stderr, "Child process completion wait failed\n");

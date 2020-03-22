@@ -5,7 +5,6 @@
  *      Author: vsadovnikov
  */
 
-#include <stdarg.h>
 #include <stdio.h>
 
 #include <lsp-plug.in/test-fw/test.h>
@@ -20,9 +19,7 @@ namespace lsp
         {
             __test_group        = group;
             __test_name         = name;
-            __verbose           = false;
             __full_name         = NULL;
-            __executable        = NULL;
         }
 
         Test::~Test()
@@ -38,9 +35,9 @@ namespace lsp
         {
             if (__full_name == NULL)
             {
-                if ((__test_group != NULL) && (strlen(__test_group) > 0))
+                if ((__test_group != NULL) && (::strlen(__test_group) > 0))
                 {
-                    int n = asprintf(&__full_name, "%s.%s", __test_group, __test_name);
+                    int n = ::asprintf(&__full_name, "%s.%s", __test_group, __test_name);
                     if (n < 0)
                         return NULL;
                 }
@@ -61,7 +58,6 @@ namespace lsp
 
         void Test::destroy()
         {
-            __executable        = NULL;
         }
 
         void Test::__mark_supported(const void *ptr)
@@ -72,29 +68,6 @@ namespace lsp
         bool Test::__check_supported(const void *ptr)
         {
             return support.index_of(ptr) >= 0;
-        }
-
-        int Test::printf(const char *fmt, ...)
-        {
-            if (!__verbose)
-                return 0;
-
-            va_list vl;
-            va_start(vl, fmt);
-            int res = ::vprintf(fmt, vl);
-            va_end(vl);
-            fflush(stdout);
-            return res;
-        }
-
-        int Test::eprintf(const char *fmt, ...)
-        {
-            va_list vl;
-            va_start(vl, fmt);
-            int res = ::vfprintf(stderr, fmt, vl);
-            va_end(vl);
-            fflush(stdout);
-            return res;
         }
     }
 }
