@@ -49,8 +49,8 @@ namespace lsp
                 dynarray_t                  list;
                 dynarray_t                  ignore;
                 dynarray_t                  args;
-                FILE                       *stdout;         // Output stream
-                FILE                       *stderr;         // Output error stream
+                FILE                       *std_out;        // Output stream
+                FILE                       *std_err;        // Output error stream
 
     #ifdef PLATFORM_WINDOWS
                 size_t                      utf8_argc;

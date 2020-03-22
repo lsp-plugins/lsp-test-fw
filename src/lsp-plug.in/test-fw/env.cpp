@@ -34,8 +34,8 @@ namespace lsp
         {
             __verbose       = cfg->verbose;
             __executable    = cfg->executable;
-            __stdout        = cfg->stdout;
-            __stderr        = cfg->stderr;
+            __stdout        = cfg->std_out;
+            __stderr        = cfg->std_err;
         }
 
         int Environment::printf(const char *fmt, ...)

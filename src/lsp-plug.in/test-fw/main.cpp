@@ -36,7 +36,7 @@ namespace lsp
 
                 for (size_t j=i+1; j<n; ++j)
                 {
-                    test::Test *b       = list->at<test::Test>(i);
+                    test::Test *b       = list->at<test::Test>(j);
                     if (::strcasecmp(a_grp, b->group()))
                         continue;
                     if (::strcasecmp(a_name, b->name()))
@@ -104,12 +104,13 @@ namespace lsp
             }
         }
 
-        void initialize_global(dynarray_t *inits)
+        void initialize_global(config_t *cfg, dynarray_t *inits)
         {
             // Initialize in direct order
             for (size_t i=0, n=inits->size(); i<n; ++i)
             {
                 test::Initializer *init = inits->at<test::Initializer>(i);
+                init->configure(cfg);
                 init->initialize();
             }
         }
@@ -283,16 +284,16 @@ namespace lsp
             if (fd != NULL)
             {
                 // Update configuration
-                FILE *std_out   = cfg->stdout;
+                FILE *std_out   = cfg->std_out;
                 bool verbose    = cfg->verbose;
-                cfg->stdout     = fd;
+                cfg->std_out    = fd;
                 cfg->verbose    = true;
 
                 // Output information
                 out_system_info(cfg, inits);
 
                 // Restore configuration
-                cfg->stdout     = std_out;
+                cfg->std_out    = std_out;
                 cfg->verbose    = verbose;
 
                 fclose(fd);
@@ -319,7 +320,7 @@ namespace lsp
             }
 
             // Perform global initialization
-            initialize_global(&inits);
+            initialize_global(&cfg, &inits);
             if (cfg.sysinfo)
                 out_system_info(&cfg, &inits);
 

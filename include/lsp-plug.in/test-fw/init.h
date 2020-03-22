@@ -36,7 +36,7 @@
 
 #define INIT_FUNC   virtual void initialize()
 #define INFO_FUNC   virtual void info()
-#define FINI_FUNC   virtual void finalie()
+#define FINI_FUNC   virtual void finalize()
 
 #define INIT_END \
         } initializer;  /* initializer class */ \

@@ -11,17 +11,17 @@ INIT_BEGIN(demo_initializer1)
 
     INIT_FUNC
     {
-        printf("Running test initializer 1");
+        printf("Running test initializer 1\n");
     }
 
     INFO_FUNC
     {
-        printf("Some additional information from initializer 1");
+        printf("Some additional information from initializer 1\n");
     }
 
     FINI_FUNC
     {
-        printf("Running test finalizer 1");
+        printf("Running test finalizer 1\n");
     }
 
 INIT_END

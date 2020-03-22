@@ -212,8 +212,8 @@ namespace lsp
             tracepath       = "/tmp/lsp-test-fw";
             outfile         = NULL;
             threads         = 1;
-            this->stdout    = stdout;
-            this->stderr    = stdout;
+            this->std_out   = stdout;
+            this->std_err   = stderr;
 
     #if defined(PLATFORM_WINDOWS)
             utf8_argc       = 0;
