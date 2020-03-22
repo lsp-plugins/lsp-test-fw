@@ -19,7 +19,7 @@ namespace lsp
             private:
                 Environment & operator = (const Environment &);
 
-            private:
+            protected:
                 bool                __verbose;
                 const char         *__executable;
                 FILE               *__stdout;

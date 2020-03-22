@@ -16,13 +16,13 @@
  * This macro allows to export function/pointer as supported
  * for further testing
  */
-#define TEST_EXPORT(ptr)            ::test::Test::mark_supported(ptr)
+#define TEST_EXPORT(ptr)            ::lsp::test::Test::mark_supported(ptr)
 
 /**
  * This macro allows to check function/pointer as supported
  * for further testing
  */
-#define TEST_SUPPORTED(ptr)         ::test::Test::check_supported(ptr)
+#define TEST_SUPPORTED(ptr)         ::lsp::test::Test::check_supported(ptr)
 
 /**
  * Do an assertion

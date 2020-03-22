@@ -9,6 +9,7 @@
 #define TEST_PTEST_H_
 
 #include <stdio.h>
+#include <time.h>
 
 #include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
@@ -20,7 +21,7 @@
             \
             using namespace ::lsp::test; \
             \
-            class ptest_ ## name: public PerformanceTest { \
+            class ptest_ ## name: public PerfTest { \
                 private: \
                     ptest_ ## name & operator = (const ptest_ ## name &); \
                 \
@@ -28,7 +29,7 @@
                     typedef ptest_ ## name test_type_t; \
                 \
                 public: \
-                    explicit ptest_ ## name() : PerformanceTest(group, #name, time, iterations) {} \
+                    explicit ptest_ ## name() : PerfTest(group, #name, time, iterations) {} \
                     \
                     virtual ~ptest_ ## name() {}
 
@@ -148,8 +149,10 @@ namespace lsp
                 double                              __test_time;
                 mutable dynarray_t                  __test_stats;
 
-            private:
+            protected:
                 void                gather_stats(const char *key, double time, wsize_t iterations);
+
+            private:
                 static void         destroy_stats(stats_t *stats);
                 static stats_t     *alloc_stats();
                 static void         estimate(size_t *len, const char *text);
