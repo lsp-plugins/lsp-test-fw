@@ -7,6 +7,7 @@ ARTIFACT_VARS       = LSP_TEST_FW_
 # Setup paths
 BASEDIR             = ${CURDIR}
 CONFIG             ?= ${CURDIR}/.config.mk
+CONFIG_MSG          = System not properly configured. Please launch 'make config' first
 
 # Checks
 ifeq ("$(wildcard $(CONFIG))", "")
@@ -24,11 +25,11 @@ export ARTIFACT_VARS
 .PHONY: gitmodules
 
 all clean install uninstall depend:
-	@test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
-	@$(MAKE) -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)"
+	@test -f "$(CONFIG)" || (echo "$(CONFIG_MSG)" && exit 1)
+	@$(MAKE) -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
 
 gitmodules:
-	@test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
+	@test -f "$(CONFIG)" || (echo "$(CONFIG_MSG)" && exit 1)
 	@$(MAKE) -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)"
 
 config info:
