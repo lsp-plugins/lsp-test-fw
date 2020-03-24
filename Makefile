@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
+# Basic initialization
+include project.mk
+export ARTIFACT_ID
+export VERSION 
+
 # Setup variables
-ARTIFACT_ID		    = lsp-test-fw
 ARTIFACT_VARS       = LSP_TEST_FW
 
 # Setup paths
