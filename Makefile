@@ -1,9 +1,10 @@
 #!/usr/bin/make -f
 
+BASEDIR            ?= ${CURDIR}
+MODULES            ?= $(BASEDIR)/modules
+
 # Basic initialization
 include project.mk
-export ARTIFACT_ID
-export VERSION 
 
 # Setup variables
 ARTIFACT_VARS       = LSP_TEST_FW
@@ -26,7 +27,8 @@ export ARTIFACT_VARS
 .DEFAULT_GOAL      := all
 .PHONY: all clean install uninstall depend
 .PHONY: config unconfig info help
-.PHONY: gitmodules
+.PHONY: tree
+.PHONY: $(DEPENDENCIES)
 
 all install uninstall depend:
 	@test -f "$(CONFIG)" || (echo "$(CONFIG_MSG)" && exit 1)
@@ -38,10 +40,6 @@ clean:
 	@-rm -rf $($(ARTIFACT_VARS)_BUILD)/$(ARTIFACT_ID)
 	@echo "Clean OK"
 
-gitmodules:
-	@test -f "$(CONFIG)" || (echo "$(CONFIG_MSG)" && exit 1)
-	@$(MAKE) -s -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)"
-
 config info:
 	@echo "Configuring build..."
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)" $(MAKEFLAGS)
@@ -51,6 +49,9 @@ unconfig:
 	@echo "Cleaning config..."
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)"
 	@echo "Configuration clean OK"
+
+tree untree:
+	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)" MODULES="$(MODULES)"
 
 help:
 	@echo "Available targets:"
