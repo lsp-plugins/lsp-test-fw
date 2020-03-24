@@ -32,4 +32,4 @@ tree: $(DEPENDENCIES)
 	@echo "Fetching dependencies OK"
 
 untree:
-	@-rm -rf 
+	@-rm -rf $(PATHS)
