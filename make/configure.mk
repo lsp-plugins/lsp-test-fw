@@ -54,15 +54,17 @@ define vardef =
 endef
 
 # Define predefined variables
-$(ARTIFACT_VARS)_NAME      := $(ARTIFACT_NAME)
-$(ARTIFACT_VARS)_VERSION   := $(VERSION)
-$(ARTIFACT_VARS)_PATH      := $(BASEDIR)
-
-$(info $(ARTIFACT_VARS)_PATH=$($(ARTIFACT_VARS)_PATH))
+ifndef $(ARTIFACT_VARS)_NAME
+  $(ARTIFACT_VARS)_NAME      := $(ARTIFACT_NAME)
+endif
+ifndef $(ARTIFACT_VARS)_VERSION 
+  $(ARTIFACT_VARS)_VERSION   := $(VERSION)
+endif
+ifndef $(ARTIFACT_VARS)_PATH
+  $(ARTIFACT_VARS)_PATH      := $(BASEDIR)
+endif
 
 $(foreach name, $(DEPENDENCIES) $(ARTIFACT_VARS), $(eval $(call vardef, $(name))))
-
-$(info $(ARTIFACT_VARS)_PATH=$($(ARTIFACT_VARS)_PATH))
 
 CONFIG_VARS = \
   $(COMMON_VARS) \
@@ -73,13 +75,12 @@ CONFIG_VARS = \
     $(name)_INC \
     $(name)_SRC \
     $(name)_TEST \
+    $(name)_URL \
     $(name)_BIN \
     $(name)_CFLAGS \
     $(name)_LDFLAGS \
     $(name)_OBJ \
   )
-
-$(info CONFIG_VARS: $(CONFIG_VARS))
 
 .DEFAULT_GOAL      := config
 .PHONY: config
@@ -95,3 +96,26 @@ $(CONFIG_VARS): prepare
 config: $(CONFIG_VARS)
 	@mv -f "$(CONFIG).tmp" "$(CONFIG)"
 	@echo "Configured OK"
+
+help: sysvars
+	@echo ""
+	@echo "List of variables for each dependency:"
+	@echo "  <ARTIFACT>_BIN            location to put all binaries when building artifact"
+	@echo "  <ARTIFACT>_BRANCH         git branch used to checkout source code"
+	@echo "  <ARTIFACT>_CFLAGS         C/C++ flags to access headers of the artifact"
+	@echo "  <ARTIFACT>_INC            path to include files of the artifact"
+	@echo "  <ARTIFACT>_LDFLAGS        linker flags to link with artifact"
+	@echo "  <ARTIFACT>_NAME           the artifact name used in pathnames"
+	@echo "  <ARTIFACT>_OBJ            path to output object file for artifact"
+	@echo "  <ARTIFACT>_PATH           location of the source code of the artifact"
+	@echo "  <ARTIFACT>_SRC            path to source code files of the artifact"
+	@echo "  <ARTIFACT>_TEST           location of test files of the artifact"
+	@echo "  <ARTIFACT>_URL            location of the artifact git repoisitory"
+	@echo "  <ARTIFACT>_VERSION        version of the artifact used for building:"
+	@echo "                              - version contained in git tag"
+	@echo "                              - git branch name"
+	@echo "                              - 'system' for system library use"
+	@echo ""
+	@echo "Artifacts used for build:"
+	@echo "  $(DEPENDENCIES)"
+

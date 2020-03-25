@@ -104,4 +104,14 @@ COMMON_VARS = \
 	PREFIX \
 	TEMPDIR
 
+.PHONY: sysvars
+
+sysvars:
+	@echo "List of available system variables:"
+	@echo "  ARCHITECTURE              target architecture to perform build"
+	@echo "  EXECUTABLE_EXT            file extension for executable files"
+	@echo "  LIBRARY_EXT               file extension for library files"
+	@echo "  PLATFORM                  target software platform to perform build"
+	@echo "  PREFIX                    installation prefix for binary files"
+	@echo "  TEMPDIR                   location of temporary directory"
 

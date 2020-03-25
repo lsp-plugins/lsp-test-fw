@@ -52,15 +52,14 @@ untree:
 
 help:
 	@echo "Available targets:"
-	@echo "  all            Build all binaries"
-	@echo "  clean          Clean all binaries"
-	@echo "  config         Configure build"
-	@echo "  depend         Update build dependencies"
-	@echo "  help           Print this help message"
-	@echo "  info           Output build configuration"
-	@echo "  install        Install all binaries into the system"
-	@echo "  uninstall      Uninstall binaries"
+	@echo "  all                       Build all binaries"
+	@echo "  clean                     Clean all binaries"
+	@echo "  config                    Configure build"
+	@echo "  depend                    Update build dependencies"
+	@echo "  help                      Print this help message"
+	@echo "  info                      Output build configuration"
+	@echo "  install                   Install all binaries into the system"
+	@echo "  uninstall                 Uninstall binaries"
 	@echo ""
-	@echo "List of available variables:"
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@)
 	@echo ""
