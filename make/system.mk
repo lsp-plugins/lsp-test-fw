@@ -1,24 +1,24 @@
 # Detect operating system
 ifndef PLATFORM
   ifeq ($(findstring Windows,$(OS)),Windows)
-    BUILD_SYSTEM    = Windows
+    BUILD_SYSTEM   := Windows
   else
-    BUILD_SYSTEM    = $(shell uname -s 2>/dev/null || echo "Unknown")
+    BUILD_SYSTEM   := $(shell uname -s 2>/dev/null || echo "Unknown")
   endif
   
-  PLATFORM        = Unknown
+  PLATFORM       := Unknown
 
   ifeq ($(BUILD_SYSTEM),Windows)
-    PLATFORM        = Windows
+    PLATFORM       := Windows
   endif
   ifeq ($(findstring BSD,$(BUILD_SYSTEM)),BSD)
-    PLATFORM        = BSD
+    PLATFORM       := BSD
   endif
   ifeq ($(findstring Linux,$(BUILD_SYSTEM)),Linux)
-    PLATFORM        = Linux
+    PLATFORM       := Linux
   endif
   ifeq ($(findstring SunOS,$(BUILD_SYSTEM)),SunOS)
-    PLATFORM        = Solaris
+    PLATFORM       := Solaris
   endif
 endif
 
@@ -26,34 +26,34 @@ endif
 ifndef ARCHITECTURE
   ifeq ($(PLATFORM),Windows)
     ifndef BUILD_PROFILE
-      ARCHITECTURE              = i586
+      ARCHITECTURE             := i586
       ifeq ($(PROCESSOR_ARCHITECTURE),x86)
-        ARCHITECTURE              = i586
+        ARCHITECTURE             := i586
       endif
       ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-        ARCHITECTURE              = x86_64
+        ARCHITECTURE             := x86_64
       endif
     endif
   else # BUILD_PLATFORM != Windows
     ifndef BUILD_PROFILE
-      BUILD_ARCH              = $(shell cat "$(OBJDIR)/$(BUILD_PROFILE_FILE)" 2>/dev/null || uname -m)
-      ARCHITECTURE            = $(BUILD_ARCH)
+      BUILD_ARCH             := $(shell cat "$(OBJDIR)/$(BUILD_PROFILE_FILE)" 2>/dev/null || uname -m)
+      ARCHITECTURE           := $(BUILD_ARCH)
       ifeq ($(patsubst armv6%,armv6,$(BUILD_ARCH)), armv6)
-        ARCHITECTURE            = armv6a
+        ARCHITECTURE           := armv6a
       else ifeq ($(patsubst armv7%,armv7,$(BUILD_ARCH)), armv7)
-        ARCHITECTURE            = armv7a
+        ARCHITECTURE           := armv7a
       else ifeq ($(patsubst armv8%,armv8,$(BUILD_ARCH)), armv8)
-        ARCHITECTURE            = armv8a
+        ARCHITECTURE           := armv8a
       else ifeq ($(patsubst aarch64%,aarch64,$(BUILD_ARCH)), aarch64)
-        ARCHITECTURE            = aarch64
+        ARCHITECTURE           := aarch64
       else ifeq ($(BUILD_ARCH),x86_64)
-        ARCHITECTURE            = x86_64
+        ARCHITECTURE           := x86_64
       else ifeq ($(BUILD_ARCH),amd64)
-        ARCHITECTURE            = x86_64
+        ARCHITECTURE           := x86_64
       else ifeq ($(BUILD_ARCH),i86pc)
-        ARCHITECTURE            = x86_64
+        ARCHITECTURE           := x86_64
       else ifeq ($(patsubst i%86,i586,$(BUILD_ARCH)), i586)
-        ARCHITECTURE            = i586
+        ARCHITECTURE           := i586
       endif
     endif
   endif # PLATFORM != Windows
@@ -62,36 +62,36 @@ endif
 # Extension of libraries
 ifndef LIBRARY_EXT
   ifeq ($(PLATFORM),Windows)
-    LIBRARY_EXT               = .dll
+    LIBRARY_EXT              := .dll
   else
-    LIBRARY_EXT               = .so
+    LIBRARY_EXT              := .so
   endif
 endif
 
 # Extension of executables
 ifndef EXECUTABLE_EXT
   ifeq ($(PLATFORM),Windows)
-    EXECUTABLE_EXT            = .dll
+    EXECUTABLE_EXT           := .exe
   else
-    EXECUTABLE_EXT            = .so
+    EXECUTABLE_EXT           :=
   endif
 endif
 
 # Installation prefix
 ifndef PREFIX
   ifeq ($(PLATFORM),Windows)
-    PREFIX                    = $(ProgramFiles)
+    PREFIX                   := $(ProgramFiles)
   else
-    PREFIX                    = /usr/local
+    PREFIX                   := /usr/local
   endif
 endif
 
 # Temporary directory
 ifndef TEMPDIR
   ifeq ($(PLATFORM),Windows)
-    TEMPDIR                   = $(TEMP)
+    TEMPDIR                  := $(TEMP)
   else
-    TEMPDIR                   = /tmp
+    TEMPDIR                  := /tmp
   endif
 endif
 

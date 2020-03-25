@@ -32,4 +32,5 @@ tree: $(DEPENDENCIES)
 	@echo "Fetching dependencies OK"
 
 untree:
-	@-rm -rf $(PATHS)
+	@-find 'modules' -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' \;
+	@echo "Modules have been removed"

@@ -1,19 +1,10 @@
 #!/usr/bin/make -f
 
-BASEDIR            ?= ${CURDIR}
-MODULES            ?= $(BASEDIR)/modules
+# Location
+BASEDIR                     ?= ${CURDIR}
+MODULES                     ?= $(BASEDIR)/modules
 
 # Basic initialization
-include project.mk
-
-# Setup variables
-ARTIFACT_VARS       = LSP_TEST_FW
-
-# Setup paths
-BASEDIR             = ${CURDIR}
-CONFIG             ?= ${CURDIR}/.config.mk
-CONFIG_MSG          = System not properly configured. Please launch 'make config' first
-
 # Checks
 ifeq ("$(wildcard $(CONFIG))", "")
   CONFIGURED          = 0
@@ -21,8 +12,10 @@ else
   CONFIGURED          = 1
 endif
 
-export ARTIFACT_ID
-export ARTIFACT_VARS
+# Setup paths
+BASEDIR             = ${CURDIR}
+CONFIG             ?= ${CURDIR}/.config.mk
+CONFIG_MSG          = System not properly configured. Please launch 'make config' first
 
 .DEFAULT_GOAL      := all
 .PHONY: all clean install uninstall depend
@@ -40,18 +33,22 @@ clean:
 	@-rm -rf $($(ARTIFACT_VARS)_BUILD)/$(ARTIFACT_ID)
 	@echo "Clean OK"
 
-config info:
-	@echo "Configuring build..."
+config:
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)" $(MAKEFLAGS)
-	@echo "Configure OK"
+
+info:
+	
 
 unconfig:
 	@echo "Cleaning config..."
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)"
 	@echo "Configuration clean OK"
 
-tree untree:
-	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)" MODULES="$(MODULES)"
+tree:
+	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)"
+
+untree:
+	@$(MAKE) -s -f "make/modules.mk" $(@)
 
 help:
 	@echo "Available targets:"

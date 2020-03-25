@@ -1,55 +1,97 @@
-BASEDIR             = ${CURDIR}
-CONFIG             ?= ${CURDIR}/.config.mk
+# Definitions
+PREFIX                     := /usr/local
+BASEDIR                    := $(CURDIR)
+BUILDDIR                   := ${BASEDIR}/.build
+CONFIG                     := ${BASEDIR}/.config.mk
+MODULES                    := ${BASEDIR}/modules
+
+include $(BASEDIR)/make/system.mk
+include $(BASEDIR)/project.mk
+include $(BASEDIR)/dependencies.mk
+
+ifeq ($(findstring devel, $(VERSION)),devel)
+  $(foreach dep, $(DEPENDENCIES), \
+    $(eval \
+      $(dep)_BRANCH=devel \
+    ) \
+  )
+else
+  $(foreach dep, $(DEPENDENCIES), \
+    $(eval \
+      $(dep)_BRANCH="$($(dep)_NAME)-$($(dep)_VERSION)" \
+    ) \
+  )
+endif
+
+define pkgconfig =
+  name := $(1)
+  $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := $(shell pkg-config --cflags "$($(name)_NAME)")))
+  $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS := $(shell pkg-config --libs "$($(name)_NAME)")))
+  $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     :=)))
+endef
+
+define bldconfig =
+  name := $(1)
+
+  $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := "-I$($(name)_INC)"))
+  $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS :=))
+  $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     := "$($(name)_BIN)/$($(name)_NAME).o"))
+endef
+
+define vardef =
+  name := $(1)
+  # Override variables if they are not defined
+  $(if $($(name)_PATH),,    $(eval $(name)_PATH    := $(MODULES)/$($(name)_NAME)))
+  $(if $($(name)_INC),,     $(eval $(name)_INC     := $($(name)_PATH)/include))
+  $(if $($(name)_SRC),,     $(eval $(name)_SRC     := $($(name)_PATH)/src))
+  $(if $($(name)_TEST),,    $(eval $(name)_TEST    := $($(name)_PATH)/test))
+  $(if $($(name)_BIN),,     $(eval $(name)_BIN     := $(BUILDDIR)/$($(name)_NAME)))
+  
+  $(if $(findstring system, $($(name)_VERSION)), \
+    $(eval $(call pkgconfig, $(name))), \
+    $(eval $(call bldconfig, $(name))) \
+  )
+endef
 
 # Define predefined variables
-$(ARTIFACT_VARS)_PATH      ?= $(BASEDIR)
-$(ARTIFACT_VARS)_BUILD     ?= $($(ARTIFACT_VARS)_PATH)/.build
-$(ARTIFACT_VARS)_INC       ?= $($(ARTIFACT_VARS)_PATH)/include
-$(ARTIFACT_VARS)_LIB       ?= $(ARTIFACT_ID)
-$(ARTIFACT_VARS)_OBJ       ?= $(ARTIFACT_ID)
-$(ARTIFACT_VARS)_SRC       ?= $($(ARTIFACT_VARS)_PATH)/src
-$(ARTIFACT_VARS)_TEST      ?= $($(ARTIFACT_VARS)_PATH)/test
+$(ARTIFACT_VARS)_NAME      := $(ARTIFACT_NAME)
+$(ARTIFACT_VARS)_VERSION   := $(VERSION)
+$(ARTIFACT_VARS)_PATH      := $(BASEDIR)
 
-# Configure system properties
--include $(CONFIG)
-include ${CURDIR}/make/system.mk
+$(info $(ARTIFACT_VARS)_PATH=$($(ARTIFACT_VARS)_PATH))
 
-AFFECTED_VARS = \
-	$(COMMON_VARS) \
-	$(ARTIFACT_VARS)_BUILD \
-	$(ARTIFACT_VARS)_INC \
-	$(ARTIFACT_VARS)_LIB \
-	$(ARTIFACT_VARS)_OBJ \
-	$(ARTIFACT_VARS)_PATH \
-	$(ARTIFACT_VARS)_SRC \
-	$(ARTIFACT_VARS)_TEST
+$(foreach name, $(DEPENDENCIES) $(ARTIFACT_VARS), $(eval $(call vardef, $(name))))
 
-GREP_VARS = $(shell echo "$(AFFECTED_VARS)" | sed "s/ \+/\|/g")
+$(info $(ARTIFACT_VARS)_PATH=$($(ARTIFACT_VARS)_PATH))
 
-.DEFAULT_GOAL      := help
-.PHONY: config unconfig info help
-.PHONY: prepare
-.PHONY: $(AFFECTED_VARS)
+CONFIG_VARS = \
+  $(COMMON_VARS) \
+  $(foreach name, $(DEPENDENCIES) $(ARTIFACT_VARS), \
+    $(name)_VERSION \
+    $(name)_BRANCH \
+    $(name)_PATH \
+    $(name)_INC \
+    $(name)_SRC \
+    $(name)_TEST \
+    $(name)_BIN \
+    $(name)_CFLAGS \
+    $(name)_LDFLAGS \
+    $(name)_OBJ \
+  )
 
-help:
-	@echo "  $(ARTIFACT_VARS)_BUILD   location of the project build files"
-	@echo "  $(ARTIFACT_VARS)_INC     path to include files"
-	@echo "  $(ARTIFACT_VARS)_LIB     path to output shared object/library file"
-	@echo "  $(ARTIFACT_VARS)_OBJ     path to output object file"
-	@echo "  $(ARTIFACT_VARS)_PATH    location of the project"
-	@echo "  $(ARTIFACT_VARS)_SRC     path to source code files"
-	@echo "  $(ARTIFACT_VARS)_TEST    path to source test files"
+$(info CONFIG_VARS: $(CONFIG_VARS))
+
+.DEFAULT_GOAL      := config
+.PHONY: config
+.PHONY: $(CONFIG_VARS)
 
 prepare:
+	@echo "Configuring build..."
 	@test -f "$(CONFIG)" || echo "# Configuration file" >"$(CONFIG)"
-	@grep -E -v "$(GREP_VARS)" "$(CONFIG)" >"$(CONFIG).tmp"
 
-$(AFFECTED_VARS): prepare
+$(CONFIG_VARS): prepare
 	@echo "$(@)=$($(@))" >> "$(CONFIG).tmp"
 
-config: $(AFFECTED_VARS)
+config: $(CONFIG_VARS)
 	@mv -f "$(CONFIG).tmp" "$(CONFIG)"
-
-cleanconfig:
-	@-rm -f "$(CONFIG)"
-
+	@echo "Configured OK"
