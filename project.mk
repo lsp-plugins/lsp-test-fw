@@ -5,4 +5,5 @@ VERSION                    := 1.0.0-devel
 
 # List of dependencies
 DEPENDENCIES := \
+  STDLIB \
   LSP_COMMON_LIB

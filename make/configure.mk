@@ -11,9 +11,7 @@ include $(BASEDIR)/dependencies.mk
 
 ifeq ($(findstring devel, $(VERSION)),devel)
   $(foreach dep, $(DEPENDENCIES), \
-    $(eval \
-      $(dep)_BRANCH=devel \
-    ) \
+    $(eval $(dep)_BRANCH=devel) \
   )
 else
   $(foreach dep, $(DEPENDENCIES), \
@@ -25,14 +23,17 @@ endif
 
 define pkgconfig =
   name := $(1)
-  $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := $(shell pkg-config --cflags "$($(name)_NAME)")))
-  $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS := $(shell pkg-config --libs "$($(name)_NAME)")))
-  $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     :=)))
+  $(if $($(name)_NAME), \
+    $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := $(shell pkg-config --cflags "$($(name)_NAME)"))) \
+  )
+  $(if $($(name)_NAME), \
+    $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS := $(shell pkg-config --libs "$($(name)_NAME)"))) \
+  )
+  $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     :=))
 endef
 
 define bldconfig =
   name := $(1)
-
   $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := "-I$($(name)_INC)"))
   $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS :=))
   $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     := "$($(name)_BIN)/$($(name)_NAME).o"))
@@ -47,7 +48,7 @@ define vardef =
   $(if $($(name)_TEST),,    $(eval $(name)_TEST    := $($(name)_PATH)/test))
   $(if $($(name)_BIN),,     $(eval $(name)_BIN     := $(BUILDDIR)/$($(name)_NAME)))
   
-  $(if $(findstring system, $($(name)_VERSION)), \
+  $(if $(findstring system,$($(name)_VERSION)), \
     $(eval $(call pkgconfig, $(name))), \
     $(eval $(call bldconfig, $(name))) \
   )
@@ -64,7 +65,7 @@ ifndef $(ARTIFACT_VARS)_PATH
   $(ARTIFACT_VARS)_PATH      := $(BASEDIR)
 endif
 
-$(foreach name, $(DEPENDENCIES) $(ARTIFACT_VARS), $(eval $(call vardef, $(name))))
+$(foreach dep, $(DEPENDENCIES) $(ARTIFACT_VARS), $(eval $(call vardef, $(dep))))
 
 CONFIG_VARS = \
   $(COMMON_VARS) \
@@ -83,18 +84,19 @@ CONFIG_VARS = \
   )
 
 .DEFAULT_GOAL      := config
-.PHONY: config
+.PHONY: config prepare help
 .PHONY: $(CONFIG_VARS)
 
 prepare:
 	@echo "Configuring build..."
-	@test -f "$(CONFIG)" || echo "# Configuration file" >"$(CONFIG)"
+	@cp -f "$(BASEDIR)/project.mk" "$(CONFIG)"
+	@echo "" >> "$(CONFIG)"
+	@echo "# Configured variables" >> "$(CONFIG)"
 
 $(CONFIG_VARS): prepare
-	@echo "$(@)=$($(@))" >> "$(CONFIG).tmp"
+	@echo "$(@)=$($(@))" >> "$(CONFIG)"
 
 config: $(CONFIG_VARS)
-	@mv -f "$(CONFIG).tmp" "$(CONFIG)"
 	@echo "Configured OK"
 
 help: sysvars
