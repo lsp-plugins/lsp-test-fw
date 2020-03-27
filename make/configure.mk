@@ -4,11 +4,12 @@ BASEDIR                    := $(CURDIR)
 BUILDDIR                   := ${BASEDIR}/.build
 CONFIG                     := ${BASEDIR}/.config.mk
 MODULES                    := ${BASEDIR}/modules
+TEST                       := 0
 
-include $(BASEDIR)/make/system.mk
-include $(BASEDIR)/make/tools.mk
 include $(BASEDIR)/project.mk
 include $(BASEDIR)/dependencies.mk
+include $(BASEDIR)/make/system.mk
+include $(BASEDIR)/make/tools.mk
 
 ifeq ($(findstring devel, $(VERSION)),devel)
   $(foreach dep, $(DEPENDENCIES), \
@@ -96,13 +97,6 @@ CONFIG_VARS = \
 prepare:
 	@echo "Configuring build..."
 	@echo "# Project settings" > "$(CONFIG)"
-	@echo "VERSION=$(VERSION)" >> "$(CONFIG)"
-	@echo "ARTIFACT_NAME=$(ARTIFACT_NAME)" >> "$(CONFIG)"
-	@echo "ARTIFACT_VARS=$(ARTIFACT_VARS)" >> "$(CONFIG)"
-	@echo "DEPENDENCIES=$(DEPENDENCIES)" >> "$(CONFIG)"
-	@echo "" >> "$(CONFIG)"
-	@echo "# Configured variables" >> "$(CONFIG)"
-	
 
 $(CONFIG_VARS) ($TOOL_VARS): prepare
 	@echo "$(@)=$($(@))" >> "$(CONFIG)"

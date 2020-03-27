@@ -14,6 +14,8 @@ else
   CONFIGURED          = 1
 endif
 
+include $(BASEDIR)/project.mk
+
 # Setup paths
 CHK_CONFIG                  = test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
 
@@ -44,6 +46,9 @@ prune: clean
 
 # Configuration-related targets
 .PHONY: config help
+
+testconfig:
+	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)" TEST="1" $(MAKEFLAGS)
 
 config:
 	@$(MAKE) -s -f "$(BASEDIR)/make/configure.mk" $(@) CONFIG="$(CONFIG)" $(MAKEFLAGS)
