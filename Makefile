@@ -58,7 +58,7 @@ help:
 	@echo "  all                       Build all binaries"
 	@echo "  clean                     Clean all build files and configuration file"
 	@echo "  config                    Configure build"
-	@echo "  depend                    Update build dependencies"
+	@echo "  depend                    Update build dependencies for current project"
 	@echo "  fetch                     Fetch all source code dependencies from git"
 	@echo "  help                      Print this help message"
 	@echo "  info                      Output build configuration"
