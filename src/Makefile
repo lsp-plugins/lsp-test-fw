@@ -7,7 +7,7 @@ CONFIG                 := "$(CURDIR)/.config.mk"
 
 include $(CONFIG)
 
-INCLUDE_DEPS           := $(foreach dep, $(DEPENDENCIES) $(ARTIFACT_VARS), $(if $($(dep)_INC), -I$($(dep)_INC)))
+INCLUDE_DEPS            = $(foreach dep, $(DEPENDENCIES) $(ARTIFACT_VARS), $(if $($(dep)_INC), -I$($(dep)_INC)))
 
 $(info $(LSP_TEST_FW_OBJ))
 $(info CXX_SRC = $(CXX_SRC))
@@ -16,12 +16,12 @@ $(info INCLUDE_DEPS = $(INCLUDE_DEPS))
 
 .PHONY: compile depend all
 
-compile: $(LSP_TEST_FW_OBJ)
+compile: $($(ARTIFACT_VARS)_OBJ)
 
-all: $(LSP_TEST_FW_OBJ)
+all: $($(ARTIFACT_VARS)_OBJ)
 	@echo "build all"
 
-$(LSP_TEST_FW_OBJ): $(CXX_OBJ)
+$($(ARTIFACT_VARS)_OBJ): $(CXX_OBJ)
 	@echo ""
 
 $(CXX_OBJ):
