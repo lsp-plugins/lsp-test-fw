@@ -6,6 +6,7 @@ CONFIG                     := ${BASEDIR}/.config.mk
 MODULES                    := ${BASEDIR}/modules
 
 include $(BASEDIR)/make/system.mk
+include $(BASEDIR)/make/tools.mk
 include $(BASEDIR)/project.mk
 include $(BASEDIR)/dependencies.mk
 
@@ -42,11 +43,13 @@ endef
 define vardef =
   $(eval name = $(1))
   # Override variables if they are not defined
-  $(if $($(name)_PATH),,    $(eval $(name)_PATH    := $(MODULES)/$($(name)_NAME)))
-  $(if $($(name)_INC),,     $(eval $(name)_INC     := $($(name)_PATH)/include))
-  $(if $($(name)_SRC),,     $(eval $(name)_SRC     := $($(name)_PATH)/src))
-  $(if $($(name)_TEST),,    $(eval $(name)_TEST    := $($(name)_PATH)/test))
-  $(if $($(name)_BIN),,     $(eval $(name)_BIN     := $(BUILDDIR)/$($(name)_NAME)))
+  $(if $($(name)_NAME), \
+    $(if $($(name)_PATH),,    $(eval $(name)_PATH    := $(MODULES)/$($(name)_NAME))) \
+    $(if $($(name)_INC),,     $(eval $(name)_INC     := $($(name)_PATH)/include)) \
+    $(if $($(name)_SRC),,     $(eval $(name)_SRC     := $($(name)_PATH)/src)) \
+    $(if $($(name)_TEST),,    $(eval $(name)_TEST    := $($(name)_PATH)/test)) \
+    $(if $($(name)_BIN),,     $(eval $(name)_BIN     := $(BUILDDIR)/$($(name)_NAME))) \
+  )
   
   $(if $(findstring system,$($(name)_VERSION)), \
     $(eval $(call pkgconfig, $(name))), \
@@ -70,7 +73,9 @@ $(foreach dep, $(OVERALL_DEPS), $(eval $(call vardef, $(dep))))
 
 CONFIG_VARS = \
   $(COMMON_VARS) \
+  $(TOOL_VARS) \
   $(foreach name, $(OVERALL_DEPS), \
+    $(name)_NAME \
     $(name)_VERSION \
     $(name)_BRANCH \
     $(name)_PATH \
@@ -90,17 +95,22 @@ CONFIG_VARS = \
 
 prepare:
 	@echo "Configuring build..."
-	@cp -f "$(BASEDIR)/project.mk" "$(CONFIG)"
+	@echo "# Project settings" > "$(CONFIG)"
+	@echo "VERSION=$(VERSION)" >> "$(CONFIG)"
+	@echo "ARTIFACT_NAME=$(ARTIFACT_NAME)" >> "$(CONFIG)"
+	@echo "ARTIFACT_VARS=$(ARTIFACT_VARS)" >> "$(CONFIG)"
+	@echo "DEPENDENCIES=$(DEPENDENCIES)" >> "$(CONFIG)"
 	@echo "" >> "$(CONFIG)"
 	@echo "# Configured variables" >> "$(CONFIG)"
+	
 
-$(CONFIG_VARS): prepare
+$(CONFIG_VARS) ($TOOL_VARS): prepare
 	@echo "$(@)=$($(@))" >> "$(CONFIG)"
 
-config: $(CONFIG_VARS)
+config: $(CONFIG_VARS) $(TOOL_VARS)
 	@echo "Configured OK"
 
-help: sysvars
+help: | toolvars sysvars
 	@echo ""
 	@echo "List of variables for each dependency:"
 	@echo "  <ARTIFACT>_BIN            location to put all binaries when building artifact"

@@ -19,16 +19,14 @@ CHK_CONFIG                  = test -f "$(CONFIG)" || (echo "System not properly 
 
 .DEFAULT_GOAL              := all
 .PHONY: all compile install uninstall depend clean
-.PHONY: clean_modules
 
 compile all install uninstall depend:
 	@$(CHK_CONFIG)
-	@$(MAKE) -s -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
+	@$(MAKE) -s -C $(BASEDIR)/src $(@) CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
 
 clean:
 	@echo "Cleaning build directory $(BUILDDIR)"
 	@-rm -rf $(BUILDDIR)
-	@-rm -f $(CONFIG)
 	@echo "Clean OK"
 	
 # Module-related tasks
@@ -38,12 +36,11 @@ fetch:
 	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)" CONFIG="$(CONFIG)"
 	@echo "Fetch OK"
 
-clean_modules:
+prune: clean
 	@echo "Pruning the whole project tree"
 	@$(MAKE) -s -f "make/modules.mk" prune BASEDIR="$(BASEDIR)" CONFIG="$(CONFIG)"
+	@-rm -rf "$(CONFIG)"
 	@echo "Prune OK"
-	
-prune: | clean_modules clean
 
 # Configuration-related targets
 .PHONY: config help
