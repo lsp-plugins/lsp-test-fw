@@ -11,7 +11,7 @@ MODULES             = $(foreach dep, $(DEPENDENCIES), $(if $(findstring system,$
 
 # Branches
 .PHONY: $(MODULES)
-.PHONY: fetch prune
+.PHONY: fetch prune clean
 
 $(MODULES):
 	@echo "Cloning $($(@)_URL) -> $($(@)_PATH) [$($(@)_BRANCH)]"
@@ -22,6 +22,10 @@ $(MODULES):
 	 $(GIT) -c advice.detachedHead=false -C "$($(@)_PATH)" checkout refs/tags/$($(@)_BRANCH)
 
 fetch: $(MODULES)
+
+clean:
+	@echo rm -rf "$($(ARTIFACT_VARS)_BIN)/$(ARTIFACT_NAME)"
+	@-rm -rf "$($(ARTIFACT_VARS)_BIN)/$(ARTIFACT_NAME)"
 
 prune:
 	@-find 'modules' -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' \;

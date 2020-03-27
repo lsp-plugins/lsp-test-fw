@@ -22,7 +22,7 @@ else
 endif
 
 define pkgconfig =
-  name := $(1)
+  $(eval name = $(1))
   $(if $($(name)_NAME), \
     $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := $(shell pkg-config --cflags "$($(name)_NAME)"))) \
   )
@@ -33,14 +33,14 @@ define pkgconfig =
 endef
 
 define bldconfig =
-  name := $(1)
+  $(eval name = $(1))
   $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := "-I$($(name)_INC)"))
   $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS :=))
   $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     := "$($(name)_BIN)/$($(name)_NAME).o"))
 endef
 
 define vardef =
-  name := $(1)
+  $(eval name = $(1))
   # Override variables if they are not defined
   $(if $($(name)_PATH),,    $(eval $(name)_PATH    := $(MODULES)/$($(name)_NAME)))
   $(if $($(name)_INC),,     $(eval $(name)_INC     := $($(name)_PATH)/include))
@@ -65,11 +65,12 @@ ifndef $(ARTIFACT_VARS)_PATH
   $(ARTIFACT_VARS)_PATH      := $(BASEDIR)
 endif
 
-$(foreach dep, $(DEPENDENCIES) $(ARTIFACT_VARS), $(eval $(call vardef, $(dep))))
+OVERALL_DEPS := $(DEPENDENCIES) $(ARTIFACT_VARS)
+$(foreach dep, $(OVERALL_DEPS), $(eval $(call vardef, $(dep))))
 
 CONFIG_VARS = \
   $(COMMON_VARS) \
-  $(foreach name, $(DEPENDENCIES) $(ARTIFACT_VARS), \
+  $(foreach name, $(OVERALL_DEPS), \
     $(name)_VERSION \
     $(name)_BRANCH \
     $(name)_PATH \

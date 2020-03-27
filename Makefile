@@ -1,8 +1,10 @@
 #!/usr/bin/make -f
 
 # Location
-BASEDIR                     ?= ${CURDIR}
-MODULES                     ?= $(BASEDIR)/modules
+BASEDIR                    := $(CURDIR)
+MODULES                    := $(BASEDIR)/modules
+BUILDDIR                   := ${BASEDIR}/.build
+CONFIG                     := $(BASEDIR)/.config.mk
 
 # Basic initialization
 # Checks
@@ -13,34 +15,35 @@ else
 endif
 
 # Setup paths
-BASEDIR            := $(CURDIR)
-CONFIG             := $(BASEDIR)/.config.mk
-CHK_CONFIG          = test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
+CHK_CONFIG                  = test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
 
-.DEFAULT_GOAL      := all
-.PHONY: all clean prune install uninstall depend
+.DEFAULT_GOAL              := all
+.PHONY: all install uninstall depend clean
+.PHONY: clean_modules
 
 all install uninstall depend:
 	@$(CHK_CONFIG)
 	@$(MAKE) -s -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
-	
+
 clean:
-	@echo "Cleaning build directory $($(ARTIFACT_VARS)_BUILD)/$(ARTIFACT_ID)"
-	@$(CHK_CONFIG)
-	@-rm -rf $($(ARTIFACT_VARS)_BUILD)/$(ARTIFACT_ID)
+	@echo "Cleaning build directory $(BUILDDIR)"
+	@-rm -rf $(BUILDDIR)
+	@-rm -f $(CONFIG)
 	@echo "Clean OK"
-
-prune:
-	@echo "Pruning the whole project tree"
-	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)" CONFIG="$(CONFIG)"
-	@echo "Prune OK"
-
-# Git-related tasks
-.PHONY: fetch
+	
+# Module-related tasks
+.PHONY: fetch prune
 fetch:
 	@echo "Fetching source code dependencies"
 	@$(MAKE) -s -f "make/modules.mk" $(@) BASEDIR="$(BASEDIR)" CONFIG="$(CONFIG)"
 	@echo "Fetch OK"
+
+clean_modules:
+	@echo "Pruning the whole project tree"
+	@$(MAKE) -s -f "make/modules.mk" prune BASEDIR="$(BASEDIR)" CONFIG="$(CONFIG)"
+	@echo "Prune OK"
+	
+prune: | clean_modules clean
 
 # Configuration-related targets
 .PHONY: config help
@@ -51,7 +54,7 @@ config:
 help:
 	@echo "Available targets:"
 	@echo "  all                       Build all binaries"
-	@echo "  clean                     Clean all binaries"
+	@echo "  clean                     Clean all build files and configuration file"
 	@echo "  config                    Configure build"
 	@echo "  depend                    Update build dependencies"
 	@echo "  fetch                     Fetch all source code dependencies from git"
