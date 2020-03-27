@@ -18,10 +18,10 @@ endif
 CHK_CONFIG                  = test -f "$(CONFIG)" || (echo "System not properly configured. Please launch 'make config' first" && exit 1)
 
 .DEFAULT_GOAL              := all
-.PHONY: all install uninstall depend clean
+.PHONY: all compile install uninstall depend clean
 .PHONY: clean_modules
 
-all install uninstall depend:
+compile all install uninstall depend:
 	@$(CHK_CONFIG)
 	@$(MAKE) -s -c $(BASEDIR)/src $(@) CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
 
