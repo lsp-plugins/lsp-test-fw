@@ -11,10 +11,13 @@ include $(BASEDIR)/dependencies.mk
 include $(BASEDIR)/make/system.mk
 include $(BASEDIR)/make/tools.mk
 
-ifeq ($(findstring devel, $(VERSION)),devel)
+ifeq ($(findstring -devel,$(VERSION)),-devel)
   $(foreach dep, $(DEPENDENCIES), \
     $(eval $(dep)_BRANCH=devel) \
   )
+  # Strip '-devel' from version
+  tmp_version :=$(shell echo "$(VERSION)" | sed s/-devel//g)
+  VERSION=$(tmp_version)
 else
   $(foreach dep, $(DEPENDENCIES), \
     $(eval \
@@ -36,9 +39,13 @@ endef
 
 define bldconfig =
   $(eval name = $(1))
-  $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := "-I$($(name)_INC)"))
+  $(if $($(name)_CFLAGS),,  $(eval $(name)_CFLAGS  := "-I$($(name)_INC)"$(xflags)))
   $(if $($(name)_LDLAGS),,  $(eval $(name)_LDFLAGS :=))
   $(if $($(name)_OBJ),,     $(eval $(name)_OBJ     := "$($(name)_BIN)/$($(name)_NAME).o"))
+  $(if $($(name)_MFLAGS),, \
+    $(eval $(name)_MFLAGS := \
+      $(if $(patsubst $(ARTIFACT_NAME),,$($(name)_NAME)),"-DLSP_BUILTIN_MODULE -fvisibility=hidden",)) \
+  )
 endef
 
 define vardef =
@@ -86,6 +93,7 @@ CONFIG_VARS = \
     $(name)_URL \
     $(name)_BIN \
     $(name)_CFLAGS \
+    $(name)_MFLAGS \
     $(name)_LDFLAGS \
     $(name)_OBJ \
   )
@@ -112,6 +120,7 @@ help: | toolvars sysvars
 	@echo "  <ARTIFACT>_CFLAGS         C/C++ flags to access headers of the artifact"
 	@echo "  <ARTIFACT>_INC            path to include files of the artifact"
 	@echo "  <ARTIFACT>_LDFLAGS        linker flags to link with artifact"
+	@echo "  <ARTIFACT>_MFLAGS         artifact-specific compilation flags"
 	@echo "  <ARTIFACT>_NAME           the artifact name used in pathnames"
 	@echo "  <ARTIFACT>_OBJ            path to output object file for artifact"
 	@echo "  <ARTIFACT>_PATH           location of the source code of the artifact"
