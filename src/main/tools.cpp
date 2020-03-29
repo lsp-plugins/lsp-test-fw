@@ -20,16 +20,18 @@ namespace lsp
         static status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
         {
             char *dst           = *buffer;
-            dst[(*length)++]    = ch; // We have at least 1 character at the tail ('\0')
-
             if (*length < *capacity)
+            {
+                dst[(*length)++]    = ch;
                 return STATUS_OK;
+            }
 
             *capacity   = (*capacity > 0) ? ((*capacity) << 1) : 32;
             dst         = reinterpret_cast<char *>(::realloc(dst, *capacity + 1)); // Do not count the last '\0' character as capacity
             if (dst == NULL)
                 return STATUS_NO_MEM;
             *buffer     = dst;
+            dst[(*length)++]    = ch;
 
             return STATUS_OK;
         }

@@ -169,6 +169,28 @@ namespace lsp
 
             └ ─ ┴ ─ ┘
          */
+        #if defined(PLATFORM_WINDOWS)
+            #define DRAW_PAD            "\r"
+        #else
+            #define DRAW_PAD            ""
+        #endif
+
+        #define DRAW1_LT            "┌"
+        #define DRAW1_MT            "┬"
+        #define DRAW1_RT            "┐"
+        #define DRAW1_LM            "├"
+        #define DRAW1_MM            "┼"
+        #define DRAW1_RM            "┤"
+        #define DRAW1_LB            "└"
+        #define DRAW1_MB            "┴"
+        #define DRAW1_RB            "┘"
+        #define DRAW1_HL            "─"
+        #define DRAW1_VL            "│"
+
+        #define DRAW2_LM            "╞"
+        #define DRAW2_MM            "╪"
+        #define DRAW2_RM            "╡"
+        #define DRAW2_HL            "═"
 
         void PerfTest::out_text(FILE *out, size_t length, const char *text, int align, const char *padding, const char *tail)
         {
@@ -217,15 +239,15 @@ namespace lsp
             }
 
             // Output table header
-            fputs("┌", out);
-            out_text(out, key, "Case", -1, "─", "┬");
-            out_text(out, time, "Time[s]", 1, "─", "┬");
-            out_text(out, iterations, "Iter", 1, "─", "┬");
-            out_text(out, n_time, "Samp[s]", 1, "─", "┬");
-            out_text(out, n_iterations, "Est", 1, "─", "┬");
-            out_text(out, performance, "Perf[i/s]", 1, "─", "┬");
-            out_text(out, time_cost, "Cost[us/i]", 1, "─", "┬");
-            out_text(out, rel, "Rel[%]", 1, "─", "┐\n");
+            fputs(DRAW_PAD DRAW1_LT, out);
+            out_text(out, key, "Case", -1, DRAW1_HL, DRAW1_MT);
+            out_text(out, time, "Time[s]", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, iterations, "Iter", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, n_time, "Samp[s]", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, n_iterations, "Est", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, performance, "Perf[i/s]", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, time_cost, "Cost[us/i]", 1, DRAW1_HL, DRAW1_MT);
+            out_text(out, rel, "Rel[%]", 1, DRAW1_HL, DRAW1_RT "\n");
 
             int separator = 0;
 
@@ -237,54 +259,54 @@ namespace lsp
                 {
                     if (separator == 1)
                     {
-                        fputs("├", out);
-                        out_text(out, key, NULL, -1, "─", "┼");
-                        out_text(out, time, NULL, 1, "─", "┼");
-                        out_text(out, iterations, NULL, 1, "─", "┼");
-                        out_text(out, n_time, NULL, 1, "─", "┼");
-                        out_text(out, n_iterations, NULL, 1, "─", "┼");
-                        out_text(out, performance, NULL, 1, "─", "┼");
-                        out_text(out, time_cost, NULL, 1, "─", "┼");
-                        out_text(out, rel, NULL, 1, "─", "┤\n");
+                        fputs(DRAW_PAD DRAW1_LM, out);
+                        out_text(out, key, NULL, -1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, time, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, iterations, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, n_time, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, n_iterations, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, performance, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, time_cost, NULL, 1, DRAW1_HL, DRAW1_MM);
+                        out_text(out, rel, NULL, 1, DRAW1_HL, DRAW1_RM "\n");
                     }
                     else if (separator == 2)
                     {
-                        fputs("╞", out);
-                        out_text(out, key, NULL, -1, "═", "╪");
-                        out_text(out, time, NULL, 1, "═", "╪");
-                        out_text(out, iterations, NULL, 1, "═", "╪");
-                        out_text(out, n_time, NULL, 1, "═", "╪");
-                        out_text(out, n_iterations, NULL, 1, "═", "╪");
-                        out_text(out, performance, NULL, 1, "═", "╪");
-                        out_text(out, time_cost, NULL, 1, "═", "╪");
-                        out_text(out, rel, NULL, 1, "═", "╡\n");
+                        fputs(DRAW_PAD DRAW2_LM, out);
+                        out_text(out, key, NULL, -1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, time, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, iterations, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, n_time, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, n_iterations, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, performance, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, time_cost, NULL, 1, DRAW2_HL, DRAW2_MM);
+                        out_text(out, rel, NULL, 1, DRAW2_HL, DRAW2_RM "\n");
                     }
                     separator = 0;
 
-                    fputs("│", out);
-                    out_text(out, key, stats->key, -1, " ", "│");
-                    out_text(out, time, stats->time, 1, " ", "│");
-                    out_text(out, iterations, stats->iterations, 1, " ", "│");
-                    out_text(out, n_time, stats->n_time, 1, " ", "│");
-                    out_text(out, n_iterations, stats->n_iterations, 1, " ", "│");
-                    out_text(out, performance, stats->performance, 1, " ", "│");
-                    out_text(out, time_cost, stats->time_cost, 1, " ", "│");
-                    out_text(out, rel, stats->rel, 1, " ", "│\n");
+                    fputs(DRAW_PAD DRAW1_VL, out);
+                    out_text(out, key, stats->key, -1, " ", DRAW1_VL);
+                    out_text(out, time, stats->time, 1, " ", DRAW1_VL);
+                    out_text(out, iterations, stats->iterations, 1, " ", DRAW1_VL);
+                    out_text(out, n_time, stats->n_time, 1, " ", DRAW1_VL);
+                    out_text(out, n_iterations, stats->n_iterations, 1, " ", DRAW1_VL);
+                    out_text(out, performance, stats->performance, 1, " ", DRAW1_VL);
+                    out_text(out, time_cost, stats->time_cost, 1, " ", DRAW1_VL);
+                    out_text(out, rel, stats->rel, 1, " ", DRAW1_VL "\n");
                 }
                 else
                     separator = stats->cost;
             }
 
             // Output table footer
-            fputs("└", out);
-            out_text(out, key, NULL, -1, "─", "┴");
-            out_text(out, time, NULL, 1, "─", "┴");
-            out_text(out, iterations, NULL, 1, "─", "┴");
-            out_text(out, n_time, NULL, 1, "─", "┴");
-            out_text(out, n_iterations, NULL, 1, "─", "┴");
-            out_text(out, performance, NULL, 1, "─", "┴");
-            out_text(out, time_cost, NULL, 1, "─", "┴");
-            out_text(out, rel, NULL, 1, "─", "┘\n");
+            fputs(DRAW_PAD DRAW1_LB, out);
+            out_text(out, key, NULL, -1, DRAW1_HL, DRAW1_MB);
+            out_text(out, time, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, iterations, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, n_time, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, n_iterations, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, performance, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, time_cost, NULL, 1, DRAW1_HL, DRAW1_MB);
+            out_text(out, rel, NULL, 1, DRAW1_HL, DRAW1_RB "\n");
         }
 
         void PerfTest::free_stats()

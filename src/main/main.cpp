@@ -9,6 +9,12 @@
 #include <string.h>
 
 #include <errno.h>
+#include <locale.h>
+
+#ifdef PLATFORM_WINDOWS
+    #include <fcntl.h>
+    #include <io.h>
+#endif
 
 #include <lsp-plug.in/test-fw/test.h>
 #include <lsp-plug.in/test-fw/main/types.h>
@@ -302,7 +308,7 @@ namespace lsp
             return STATUS_OK;
         }
 
-        LSP_SYMBOL_EXPORT int main(int argc, const char **argv)
+        int test_main(int argc, const char **argv)
         {
             // Parse configuration
             config_t cfg;
@@ -429,6 +435,20 @@ namespace lsp
             ::fflush(stderr);
 
             return res;
+        }
+
+        LSP_SYMBOL_EXPORT int main(int argc, const char **argv)
+        {
+            #ifdef PLATFORM_WINDOWS
+                // Add a hack to change console encoding to UTF-8
+                UINT cp = ::GetConsoleOutputCP();
+                ::SetConsoleOutputCP(65001);
+                int res = test_main(argc, argv);
+                ::SetConsoleCP(cp);
+                return res;
+            #else
+                return test_main(argc, argv);
+            #endif /* PLATFORM_WINDOWS */
         }
     }
 }
