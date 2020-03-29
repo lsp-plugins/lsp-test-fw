@@ -7,8 +7,6 @@
 
 #include <errno.h>
 
-#include <lsp-plug.in/test-fw/main/executor.h>
-
 #ifdef PLATFORM_UNIX_COMPATIBLE
     #include <mcheck.h>
     #include <signal.h>
@@ -16,6 +14,9 @@
     #include <sys/types.h>
     #include <sys/wait.h>
 #endif
+
+#include <lsp-plug.in/test-fw/main/executor.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
 namespace lsp
 {
@@ -335,81 +336,6 @@ namespace lsp
             return STATUS_OK;
         }
 
-        status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
-        {
-            char *dst           = *buffer;
-            dst[(*length)++]    = ch; // We have at least 1 character at the tail ('\0')
-
-            if (*length < *capacity)
-                return STATUS_OK;
-
-            *capacity   = (*capacity > 0) ? ((*capacity) << 1) : 32;
-            dst         = reinterpret_cast<char *>(realloc(dst, *capacity + 1)); // Do not count the last '\0' character as capacity
-            if (dst == NULL)
-                return STATUS_NO_MEM;
-            *buffer     = dst;
-
-            return STATUS_OK;
-        }
-
-        status_t cmdline_append_escaped(char **buffer, size_t *length, size_t *capacity, const char *text, bool space=true)
-        {
-            char ch;
-            status_t res    = STATUS_OK;
-
-            // Append space if needed
-            if (space)
-            {
-                res = cmdline_append_char(buffer, length, capacity, ' ');
-                if (res != STATUS_OK)
-                    return res;
-            }
-
-            // Check argument length
-            if (*text == '\0')
-            {
-                // Empty argument
-                res = cmdline_append_char(buffer, length, capacity, '\"');
-                if (res == STATUS_OK)
-                    res = cmdline_append_char(buffer, length, capacity, '\"');
-            }
-            else
-            {
-                // Non-empty argument, process it:
-                //   ' ' -> '\"', ' ', '\"'
-                //   '"' -> '\\', '\"'
-                while ((ch = *(text++)) != '\0')
-                {
-                    switch (ch)
-                    {
-                        case ' ':
-                            res = cmdline_append_char(buffer, length, capacity, '\"');
-                            if (res == STATUS_OK)
-                                res = cmdline_append_char(buffer, length, capacity, ' ');
-                            if (res == STATUS_OK)
-                                res = cmdline_append_char(buffer, length, capacity, '\"');
-                            break;
-                        case '"':
-                            res = cmdline_append_char(buffer, length, capacity, '\\');
-                            if (res == STATUS_OK)
-                                res = cmdline_append_char(buffer, length, capacity, '\"');
-                            break;
-                        default:
-                            res = cmdline_append_char(buffer, length, capacity, ch);
-                            break;
-                    }
-
-                    if (res != STATUS_OK)
-                        break;
-                }
-            }
-
-            // Store end-of-string character
-            (*buffer)[*length]  = '\0';
-
-            return res;
-        }
-
         status_t TestExecutor::submit_task(task_t *task)
         {
             status_t res;
@@ -452,7 +378,7 @@ namespace lsp
                 if (res == STATUS_OK)
                 {
                     for (size_t i=0, n=pCfg->args.size(); i<n; ++i)
-                        if ((res = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->args.get(i))) != STATUS_OK)
+                        if ((res = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->args.at<char>(i))) != STATUS_OK)
                             break;
                 }
             }
@@ -464,11 +390,11 @@ namespace lsp
             }
 
             // Allocate arguments and executable strings
-            WCHAR *cmd          = lsp::utf8_to_utf16(cmdbuf);
+            WCHAR *cmd          = utf8_to_utf16(cmdbuf);
             free(cmdbuf);
             if (cmd == NULL)
                 return STATUS_NO_MEM;
-            WCHAR *executable   = lsp::utf8_to_utf16(pCfg->executable);
+            WCHAR *executable   = utf8_to_utf16(pCfg->executable);
             if (executable == NULL)
             {
                 free(cmd);

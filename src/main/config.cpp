@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include <lsp-plug.in/test-fw/main/config.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
 namespace lsp
 {
@@ -80,7 +81,7 @@ namespace lsp
                 utf8_argv[i]        = NULL;
             for (size_t i=0; i<utf8_argc; ++i)
             {
-                utf8_argv[i]        = lsp::utf16_to_utf8(arglist[i]);
+                utf8_argv[i]        = utf16_to_utf8(arglist[i]);
                 if (utf8_argv[i] == NULL)
                     return STATUS_NO_MEM;
             }

@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include <lsp-plug.in/test-fw/test.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
 namespace lsp
 {
@@ -37,7 +38,7 @@ namespace lsp
             {
                 if ((__test_group != NULL) && (::strlen(__test_group) > 0))
                 {
-                    int n = ::asprintf(&__full_name, "%s.%s", __test_group, __test_name);
+                    int n = asprintf(&__full_name, "%s.%s", __test_group, __test_name);
                     if (n < 0)
                         return NULL;
                 }

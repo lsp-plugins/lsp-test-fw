@@ -302,7 +302,7 @@ namespace lsp
             return STATUS_OK;
         }
 
-        int main(int argc, const char **argv)
+        LSP_SYMBOL_EXPORT int main(int argc, const char **argv)
         {
             // Parse configuration
             config_t cfg;

@@ -8,6 +8,8 @@
 #ifndef TEST_MAIN_H_
 #define TEST_MAIN_H_
 
+#include <lsp-plug.in/common/types.h>
+
 namespace lsp
 {
     namespace test
@@ -18,7 +20,7 @@ namespace lsp
          * @param argv list of arguments
          * @return execution code
          */
-        int main(int argc, const char **argv);
+        LSP_SYMBOL_EXPORT int main(int argc, const char **argv);
     }
 }
 

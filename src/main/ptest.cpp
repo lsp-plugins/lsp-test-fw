@@ -9,6 +9,7 @@
 #include <stdarg.h>
 
 #include <lsp-plug.in/test-fw/ptest.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
 namespace lsp
 {
@@ -130,17 +131,17 @@ namespace lsp
 
             stats->key      = ::strdup(key);
             stats->cost     = time / iterations;
-            int n = ::asprintf(&stats->time, "%.2f", time);
+            int n = asprintf(&stats->time, "%.2f", time);
             if (n >= 0)
-                n = ::asprintf(&stats->n_time, "%.2f", __test_time);
+                n = asprintf(&stats->n_time, "%.2f", __test_time);
             if (n >= 0)
-                n = ::asprintf(&stats->iterations, "%lld", (long long)(iterations));
+                n = asprintf(&stats->iterations, "%lld", (long long)(iterations));
             if (n >= 0)
-                n = ::asprintf(&stats->n_iterations, "%lld", (long long)((iterations * __test_time) / time));
+                n = asprintf(&stats->n_iterations, "%lld", (long long)((iterations * __test_time) / time));
             if (n >= 0)
-                n = ::asprintf(&stats->performance, "%.2f", (iterations / time));
+                n = asprintf(&stats->performance, "%.2f", (iterations / time));
             if (n >= 0)
-                n = ::asprintf(&stats->time_cost, "%.4f", (1000000.0 * time) / iterations);
+                n = asprintf(&stats->time_cost, "%.4f", (1000000.0 * time) / iterations);
 
             if ((n < 0) ||
                 (stats->key == NULL) ||
