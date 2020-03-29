@@ -5,8 +5,11 @@
  *      Author: sadko
  */
 
-#include <errno.h>
+#include <lsp-plug.in/common/types.h>
+#include <lsp-plug.in/test-fw/main/executor.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
+#include <errno.h>
 #ifdef PLATFORM_UNIX_COMPATIBLE
     #include <mcheck.h>
     #include <signal.h>
@@ -14,9 +17,6 @@
     #include <sys/types.h>
     #include <sys/wait.h>
 #endif
-
-#include <lsp-plug.in/test-fw/main/executor.h>
-#include <lsp-plug.in/test-fw/main/tools.h>
 
 namespace lsp
 {

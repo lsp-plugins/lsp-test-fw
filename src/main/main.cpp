@@ -5,17 +5,6 @@
  *      Author: sadko
  */
 
-#include <stdio.h>
-#include <string.h>
-
-#include <errno.h>
-#include <locale.h>
-
-#ifdef PLATFORM_WINDOWS
-    #include <fcntl.h>
-    #include <io.h>
-#endif
-
 #include <lsp-plug.in/test-fw/test.h>
 #include <lsp-plug.in/test-fw/main/types.h>
 #include <lsp-plug.in/test-fw/main/config.h>
@@ -25,6 +14,12 @@
 #include <lsp-plug.in/test-fw/ptest.h>
 #include <lsp-plug.in/test-fw/mtest.h>
 #include <lsp-plug.in/test-fw/utest.h>
+
+#include <errno.h>
+#include <locale.h>
+#include <stdio.h>
+#include <string.h>
+
 
 namespace lsp
 {
