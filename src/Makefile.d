@@ -71,10 +71,10 @@ $(LSP_TEST_FW_BIN)/main/FloatBuffer.o: main/FloatBuffer.cpp \
  $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/types.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/helpers.h
 $(LSP_TEST_FW_BIN)/main/executor.o: main/executor.cpp \
+ $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/types.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/executor.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/utest.h \
  $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/status.h \
- $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/types.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/test.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/env.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/config.h \
@@ -132,6 +132,15 @@ $(LSP_TEST_FW_BIN)/test/ptest/demo/trig.o: test/ptest/demo/trig.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/types.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/dynarray.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/helpers.h
+$(LSP_TEST_FW_BIN)/test/mtest/demo/mtest1.o: test/mtest/demo/mtest1.cpp \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/mtest.h \
+ $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/status.h \
+ $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/types.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/test.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/env.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/config.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/types.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/dynarray.h
 $(LSP_TEST_FW_BIN)/test/main.o: test/main.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main.h \
  $(LSP_COMMON_LIB_INC)/lsp-plug.in/common/types.h
