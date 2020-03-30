@@ -1,7 +1,7 @@
 # Package version
 ARTIFACT_NAME               = lsp-test-fw
 ARTIFACT_VARS               = LSP_TEST_FW
-VERSION                     = 1.0.0-devel
+VERSION                     = 1.0.0
 
 # List of dependencies
 DEPENDENCIES = \
