@@ -12,6 +12,12 @@ CXX_FILE                = $(patsubst $($(ARTIFACT_VARS)_BIN)/%.o,%.cpp, $(@))
 CXX_HEADERS             = $(call rwildcard, $($(ARTIFACT_VARS)_INC), *.h)
 CXX_INSTHEADERS         = $(patsubst $($(ARTIFACT_VARS)_INC)/%,$(DESTDIR)$(PREFIX)/include/%,$(CXX_HEADERS))
 
+ifeq ($(TEST),1)
+  CXX_SRC                += $(CXX_SRCTEST)
+  BUILD_ALL              += $(ARTIFACT_TEST)
+  DEPENDENCIES           += $(TEST_DEPENDENCIES)
+endif
+
 ARTIFACT_BIN            = $($(ARTIFACT_VARS)_BIN)
 ARTIFACT_LIB            = $(ARTIFACT_BIN)/$($(ARTIFACT_VARS)_NAME)-$($(ARTIFACT_VARS)_VERSION)$(LIBRARY_EXT)
 ARTIFACT_TEST           = $(ARTIFACT_BIN)/$($(ARTIFACT_VARS)_NAME)-test$(EXECUTABLE_EXT)
@@ -25,14 +31,7 @@ LINKER_LIBS             = $(foreach dep, $(DEPENDENCIES), $(if $($(dep)_LIB), $(
 BUILD_ALL               = $(ARTIFACT_LIB)
 
 ifeq ($(NO_DEPENDENCIES),1)
-  BUILD_DEPS            =
-else
-  
-endif
-
-ifeq ($(TEST),1)
-  CXX_SRC                += $(CXX_SRCTEST)
-  BUILD_ALL              += $(ARTIFACT_TEST)
+  BUILD_DEPS              =
 endif
 
 CXX_DEPS                = $(foreach src,$(CXX_SRCMAIN) $(CXX_SRCTEST),$(patsubst %.cpp,$(ARTIFACT_BIN)/%.d,$(src)))
