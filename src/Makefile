@@ -24,10 +24,12 @@ LINKER_OBJS             = $(foreach dep, $(DEPENDENCIES), $(if $($(dep)_OBJ), $(
 LINKER_LIBS             = $(foreach dep, $(DEPENDENCIES), $(if $($(dep)_LIB), $($(dep)_LIB)))
 BUILD_ALL               = $(ARTIFACT_LIB)
 
-ifeq ($(TEST),1)
-  CXX_SRC                += $(CXX_SRCTEST)
-  BUILD_ALL              += $(ARTIFACT_TEST)
-  DEPENDENCIES           += $(TEST_DEPENDENCIES)
+ifneq ($(DEMO_TEST),1)
+  ifeq ($(TEST),1)
+    CXX_SRC                += $(CXX_SRCTEST)
+    BUILD_ALL              += $(ARTIFACT_TEST)
+    DEPENDENCIES           += $(TEST_DEPENDENCIES)
+  endif
 endif
 
 ifeq ($(NO_DEPENDENCIES),1)
@@ -66,7 +68,7 @@ depend: $(CXX_DEPS)
 
 $(BUILD_DEPS):
 	@echo "make $(notdir $($(@)_OBJ))"
-	@$(MAKE) -s -C "$($(@)_PATH)" compile CONFIG="$(CONFIG)" NO_DEPENDENCIES="1"
+	@$(MAKE) -s -C "$($(@)_PATH)" compile CONFIG="$(CONFIG)" NO_DEPENDENCIES="1" DEMO_TEST="0"
 
 $(ARTIFACT_OBJ): $(BUILD_DEPS) $(CXX_OBJ)
 	@echo "  $(LD)   $(notdir $(ARTIFACT_OBJ))"
