@@ -24,9 +24,11 @@ LINKER_OBJS             = $(foreach dep, $(DEPENDENCIES), $(if $($(dep)_OBJ), $(
 LINKER_LIBS             = $(foreach dep, $(DEPENDENCIES), $(if $($(dep)_LIB), $($(dep)_LIB)))
 BUILD_ALL               = $(ARTIFACT_LIB)
 
-ifeq ($((ARTIFACT_VARS)_TESTING),1)
-  CXX_SRC                += $(CXX_SRCTEST)
-  BUILD_ALL              += $(ARTIFACT_TESTBIN)
+ifeq ($(TEST), 1)
+  ifeq ($($(ARTIFACT_VARS)_TESTING),1)
+    CXX_SRC                += $(CXX_SRCTEST)
+    BUILD_ALL              += $(ARTIFACT_TESTBIN)
+  endif
   DEPENDENCIES           += $(TEST_DEPENDENCIES)
 endif
 
