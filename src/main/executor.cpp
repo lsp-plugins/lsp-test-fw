@@ -10,8 +10,11 @@
 #include <lsp-plug.in/test-fw/main/tools.h>
 
 #include <errno.h>
-#ifdef PLATFORM_UNIX_COMPATIBLE
+#ifdef PLATFORM_LINUX
     #include <mcheck.h>
+#endif /* PLATFORM_LINUX */
+
+#ifdef PLATFORM_UNIX_COMPATIBLE
     #include <signal.h>
     #include <sys/time.h>
     #include <sys/types.h>

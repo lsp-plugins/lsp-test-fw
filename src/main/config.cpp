@@ -35,14 +35,14 @@ namespace lsp
             ::fputs("    -i, --ignore          Ignore tests specified after this switch\n", out);
             ::fputs("    -j, --jobs            Set number of job workers for unit tests\n", out);
             ::fputs("    -l, --list            List all available tests\n", out);
-        #ifdef PLATFORM_LINUX
+        IF_PLATFORM_LINUX(
             ::fputs("    -mt, --mtrace         Enable mtrace log\n", out);
-        #endif /* PLATFORM_LINUX */
+        )
             ::fputs("    -nf, --nofork         Do not fork child processes (for better \n", out);
             ::fputs("                          debugging capabilities)\n", out);
-        #ifdef PLATFORM_LINUX
+        IF_PLATFORM_LINUX(
             ::fputs("    -nt, --nomtrace       Disable mtrace log\n", out);
-        #endif /* PLATFORM_LINUX */
+        )
             ::fputs("    -nsi, --nosysinfo     Do not output system information\n", out);
             ::fputs("    -o, --outfile file    Output performance test statistics to specified file\n", out);
             ::fputs("    -s, --silent          Do not output additional information from tests\n", out);
