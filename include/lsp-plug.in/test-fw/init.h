@@ -75,6 +75,14 @@ namespace lsp
 
             public:
                 /** Call an initializer function at test start
+                 * This function is executed once at process start.
+                 *
+                 * This function can be used to initialize global state of program
+                 * before the target test will be called.
+                 *
+                 * IMPORTANT: Since different operating systems provide different
+                 * Inter-process-communication, don't consider that this
+                 * function will start only once for the whole test lifecycle.
                  *
                  */
                 virtual void            initialize();
@@ -86,18 +94,24 @@ namespace lsp
 
                 /**
                  * Call a finalizer function at test end
+                 *
+                 * IMPORTANT: Since different operating systems provide different
+                 * Inter-process-communication, don't consider that this
+                 * function will start only once for the whole test lifecycle.
                  */
                 virtual void            finalize();
 
                 /**
                  * Call function before each test
-                 * @param test test name
+                 * @param test fully-qualified test name
+                 * @param type type of test
                  */
                 virtual void            before(const char *test, test_mode_t type);
 
                 /**
                  * Call function after each test
-                 * @param test test name
+                 * @param test fully-qualified test name
+                 * @param type type of test
                  */
                 virtual void            after(const char *test, test_mode_t type);
         };
