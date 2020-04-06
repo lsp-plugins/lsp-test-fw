@@ -384,7 +384,7 @@ namespace lsp
 
             stats.total     = 0;
             stats.overall   = 0.0f;
-            res             = executor.init(&cfg, &stats);
+            res             = executor.init(&cfg, &stats, &inits);
 
             if (res == STATUS_OK)
             {

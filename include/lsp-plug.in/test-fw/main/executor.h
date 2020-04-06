@@ -38,6 +38,7 @@ namespace lsp
                 task_t             *vTasks;
                 config_t           *pCfg;
                 stats_t            *pStats;
+                dynarray_t         *pInits;
     #ifdef PLATFORM_WINDOWS
                 HANDLE              hThread;
                 HANDLE              hTimer;
@@ -73,6 +74,7 @@ namespace lsp
                     vTasks          = NULL;
                     pCfg            = NULL;
                     pStats          = NULL;
+                    pInits          = NULL;
 
     #ifdef PLATFORM_WINDOWS
                     hThread         = 0;
@@ -93,7 +95,7 @@ namespace lsp
                  * @param stats pointer to statistics structure
                  * @return status of operation
                  */
-                status_t init(config_t *config, stats_t *stats);
+                status_t init(config_t *config, stats_t *stats, dynarray_t *inits);
 
                 /**
                  * Wait for completion of all child processes

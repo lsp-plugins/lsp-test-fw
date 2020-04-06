@@ -37,6 +37,8 @@
 #define INIT_FUNC   virtual void initialize()
 #define INFO_FUNC   virtual void info()
 #define FINI_FUNC   virtual void finalize()
+#define BEFORE_FUNC virtual void before(const char *test, test_mode_t type)
+#define AFTER_FUNC  virtual void after(const char *test, test_mode_t type)
 
 #define INIT_END \
         } initializer;  /* initializer class */ \
@@ -86,6 +88,18 @@ namespace lsp
                  * Call a finalizer function at test end
                  */
                 virtual void            finalize();
+
+                /**
+                 * Call function before each test
+                 * @param test test name
+                 */
+                virtual void            before(const char *test, test_mode_t type);
+
+                /**
+                 * Call function after each test
+                 * @param test test name
+                 */
+                virtual void            after(const char *test, test_mode_t type);
         };
     }
 }

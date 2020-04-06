@@ -33,7 +33,7 @@ namespace lsp
                 config_t & operator = (const config_t &);
 
             public:
-                mode_t                      mode;
+                test_mode_t                 mode;
                 bool                        fork;
                 bool                        verbose;
                 bool                        debug;
