@@ -2,8 +2,11 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.1 ===
+* Improved build system
+* Added before() and after() test handlers for initializer
+
 === 1.0.0 ===
-Initial release
 * Unit tests
 * Performance tests
 * Manual tests

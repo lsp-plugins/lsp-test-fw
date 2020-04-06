@@ -8,10 +8,14 @@
 #include <lsp-plug.in/common/types.h>
 #include <lsp-plug.in/test-fw/main/executor.h>
 #include <lsp-plug.in/test-fw/main/tools.h>
+#include <lsp-plug.in/test-fw/init.h>
 
 #include <errno.h>
-#ifdef PLATFORM_UNIX_COMPATIBLE
+#ifdef PLATFORM_LINUX
     #include <mcheck.h>
+#endif /* PLATFORM_LINUX */
+
+#ifdef PLATFORM_UNIX_COMPATIBLE
     #include <signal.h>
     #include <sys/time.h>
     #include <sys/types.h>
@@ -23,7 +27,7 @@ namespace lsp
     namespace test
     {
 
-        status_t TestExecutor::init(config_t *config, stats_t *stats)
+        status_t TestExecutor::init(config_t *config, stats_t *stats, dynarray_t *inits)
         {
     #if defined(PLATFORM_WINDOWS)
             SetErrorMode(SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
@@ -52,6 +56,7 @@ namespace lsp
 
             pCfg        = config;
             pStats      = stats;
+            pInits      = inits;
 
             return STATUS_OK;
         }
@@ -241,18 +246,41 @@ namespace lsp
 
         status_t TestExecutor::launch_test(test::Test *test)
         {
+            // 'before' should be called in direct order
+            if (pInits != NULL)
+            {
+                for (size_t i=0, n=pInits->size(); i<n; ++i)
+                {
+                    test::Initializer *init = pInits->at<test::Initializer>(i);
+                    init->before(test->full_name(), pCfg->mode);
+                }
+            }
+
+            status_t result;
             switch (pCfg->mode)
             {
                 case UTEST:
-                    return launch(static_cast<test::UnitTest *>(test));
+                    result = launch(static_cast<test::UnitTest *>(test));
+                    break;
                 case PTEST:
-                    return launch(static_cast<test::PerfTest *>(test));
+                    result = launch(static_cast<test::PerfTest *>(test));
+                    break;
                 case MTEST:
-                    return launch(static_cast<test::ManualTest *>(test));
+                    result = launch(static_cast<test::ManualTest *>(test));
+                    break;
                 default:
+                    result = STATUS_BAD_STATE;
                     break;
             }
-            return STATUS_BAD_STATE;
+
+            // 'after' should be called in reverse order
+            for (ssize_t i=pInits->size()-1; i>=0; --i)
+            {
+                test::Initializer *init = pInits->at<test::Initializer>(i);
+                init->after(test->full_name(), pCfg->mode);
+            }
+
+            return result;
         }
 
     #ifdef PLATFORM_WINDOWS

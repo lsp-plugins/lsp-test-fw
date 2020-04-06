@@ -36,6 +36,14 @@ namespace lsp
         void Initializer::finalize()
         {
         }
+
+        void Initializer::before(const char *test, test_mode_t type)
+        {
+        }
+
+        void Initializer::after(const char *test, test_mode_t type)
+        {
+        }
     }
 }
 

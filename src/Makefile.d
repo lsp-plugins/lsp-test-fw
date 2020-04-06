@@ -83,7 +83,8 @@ $(LSP_TEST_FW_BIN)/main/executor.o: main/executor.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/mtest.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/ptest.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/types.h \
- $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/tools.h
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/tools.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/init.h
 $(LSP_TEST_FW_BIN)/main/env.o: main/env.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/env.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/config.h \
