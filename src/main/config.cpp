@@ -114,9 +114,6 @@ namespace lsp
             argv        = const_cast<const char **>(utf8_argv);
     #else
             threads     = ::sysconf(_SC_NPROCESSORS_ONLN);
-            tempdir     = ::strdup("/tmp");
-            if (!tempdir)
-                return STATUS_NO_MEM;
     #endif /* PLATFORM_WINDOWS */
             if (argc < 2)
                 return print_usage(out);
