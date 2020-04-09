@@ -45,7 +45,9 @@ namespace lsp
                 size_t                      threads;
                 const char                 *executable;
                 const char                 *outfile;
-                const char                 *tracepath;
+                char                       *tracepath;
+                char                       *resource;       // Location of the resource directory
+                char                       *tempdir;        // Location of the temporary directory
                 dynarray_t                  list;
                 dynarray_t                  ignore;
                 dynarray_t                  args;

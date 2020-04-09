@@ -12,6 +12,11 @@
 
 #include <lsp-plug.in/test-fw/main/tools.h>
 
+#ifdef PLATFORM_WINDOWS
+#else
+    #include <sys/stat.h>
+#endif
+
 namespace lsp
 {
     namespace test
@@ -385,6 +390,75 @@ namespace lsp
             va_end(ap);
             return r;
         }
+#else
+        status_t mkdirs(const char *path)
+        {
+            char *tmp = ::strdup(path);
+            if (!tmp)
+                return STATUS_NO_MEM;
+
+            status_t res = STATUS_OK;
+
+            // Skip first separator
+            char *curr = tmp;
+            if (*curr == FILE_SEPARATOR_C)
+                ++curr;
+
+            struct stat fs;
+
+            while (true)
+            {
+                // Get next split character
+                char *p = ::strchr(curr, FILE_SEPARATOR_C);
+                if (p != NULL)
+                    *p = '\0';
+
+                // Test for existence
+                int x = ::stat(tmp, &fs);
+                if (x != 0)
+                {
+                    // Try to create directory
+                    x = ::mkdir(tmp, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+                    // If failed - stat again (possible concurrency)
+                    if (x != 0)
+                        x = ::stat(tmp, &fs);
+                }
+
+                // Check the final result
+                if (x != 0)
+                {
+                    res = STATUS_IO_ERROR;
+                    break;
+                }
+
+                // Recover the path, move iterator to the next pathname
+                if (p == NULL) // Last path item?
+                    break;
+                *p = FILE_SEPARATOR_C;
+                curr = p + 1;
+            }
+
+            // Free allocated resource
+            ::free(tmp);
+
+            return res;
+        }
+
+        char *get_default_temporary_path()
+        {
+            return ::strdup("/tmp/lsp-test");
+        }
+
+        char *get_default_trace_path()
+        {
+            return ::strdup("/tmp/lsp-test-fw");
+        }
 #endif /* PLATFORM_WINDOWS */
+
+        char *get_default_resource_path()
+        {
+            return ::strdup("res" FILE_SEPARATOR_S "test");
+        }
     }
 }

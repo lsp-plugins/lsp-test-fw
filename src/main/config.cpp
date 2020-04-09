@@ -21,6 +21,18 @@ namespace lsp
             if (!detailed)
                 return STATUS_INSUFFICIENT;
 
+            char *tempdir = get_default_temporary_path();
+            if (!tempdir)
+                return STATUS_NO_MEM;
+
+            char *tracepath = get_default_trace_path();
+            if (!tempdir)
+                return STATUS_NO_MEM;
+
+            char *resdir = get_default_resource_path();
+            if (!resdir)
+                return STATUS_NO_MEM;
+
             ::fputs("  First argument:\n", out);
             ::fputs("    utest                 Unit testing subsystem\n", out);
             ::fputs("    ptest                 Performance testing subsystem\n", out);
@@ -45,10 +57,19 @@ namespace lsp
         )
             ::fputs("    -nsi, --nosysinfo     Do not output system information\n", out);
             ::fputs("    -o, --outfile file    Output performance test statistics to specified file\n", out);
+            ::fputs("    -r, --resource path   Location of the resource directory used by tests,\n", out);
+            ::fprintf(out, "                          default resource path is '%s'\n", resdir);
             ::fputs("    -s, --silent          Do not output additional information from tests\n", out);
             ::fputs("    -si, --sysinfo        Output system information\n", out);
             ::fputs("    -t, --tracepath path  Override default trace path with specified value\n", out);
+            ::fprintf(out, "                          default trace path is '%s'\n", tracepath);
+            ::fputs("    -td, --tempdir path   Override default temporary directory for tests,\n", out);
+            ::fprintf(out, "                          default temporary directory is '%s'\n", tempdir);
             ::fputs("    -v, --verbose         Output additional information from tests\n", out);
+
+            ::free(tempdir);
+            ::free(tracepath);
+            ::free(resdir);
 
             return STATUS_INSUFFICIENT;
         }
@@ -93,8 +114,10 @@ namespace lsp
             argv        = const_cast<const char **>(utf8_argv);
     #else
             threads     = ::sysconf(_SC_NPROCESSORS_ONLN);
+            tempdir     = ::strdup("/tmp");
+            if (!tempdir)
+                return STATUS_NO_MEM;
     #endif /* PLATFORM_WINDOWS */
-
             if (argc < 2)
                 return print_usage(out);
 
@@ -142,7 +165,34 @@ namespace lsp
                         ::fprintf(stderr, "Not specified trace path\n");
                         return STATUS_INVALID_VALUE;
                     }
-                    tracepath   = argv[i];
+                    if (tracepath != NULL)
+                        ::free(tracepath);
+                    if (!(tracepath = ::strdup(argv[i])))
+                        return STATUS_NO_MEM;
+                }
+                else if ((!::strcmp(argv[i], "--tempdir")) || (!::strcmp(argv[i], "-td")))
+                {
+                    if ((++i) >= argc)
+                    {
+                        ::fprintf(stderr, "Not specified path to temporary directory\n");
+                        return STATUS_INVALID_VALUE;
+                    }
+                    if (tempdir != NULL)
+                        ::free(tempdir);
+                    if (!(tempdir = ::strdup(argv[i])))
+                        return STATUS_NO_MEM;
+                }
+                else if ((!::strcmp(argv[i], "--resource")) || (!::strcmp(argv[i], "-r")))
+                {
+                    if ((++i) >= argc)
+                    {
+                        ::fprintf(stderr, "Not specified resource path\n");
+                        return STATUS_INVALID_VALUE;
+                    }
+                    if (resource != NULL)
+                        ::free(resource);
+                    if (!(resource = ::strdup(argv[i])))
+                        return STATUS_NO_MEM;
                 }
                 else if ((!::strcmp(argv[i], "--outfile")) || (!::strcmp(argv[i], "-o")))
                 {
@@ -195,6 +245,25 @@ namespace lsp
                 }
             }
 
+            // Initialize default values
+            if (!tracepath)
+            {
+                if (!(tracepath = get_default_trace_path()))
+                    return STATUS_NO_MEM;
+            }
+
+            if (!tempdir)
+            {
+                if (!(tempdir = get_default_temporary_path()))
+                    return STATUS_NO_MEM;
+            }
+
+            if (!resource)
+            {
+                if (!(resource = get_default_resource_path()))
+                    return STATUS_NO_MEM;
+            }
+
             return 0;
         }
 
@@ -210,7 +279,9 @@ namespace lsp
             sysinfo         = true;
             is_child        = false;
             executable      = NULL;
-            tracepath       = "/tmp/lsp-test-fw";
+            tracepath       = NULL;
+            resource        = NULL;
+            tempdir         = NULL;
             outfile         = NULL;
             threads         = 1;
             this->std_out   = stdout;
@@ -238,6 +309,22 @@ namespace lsp
                 utf8_argc       = 0;
             }
     #endif /* PLATFORM_WINDOWS */
+            if (tracepath != NULL)
+            {
+                ::free(tracepath);
+                tracepath   = NULL;
+            }
+            if (resource != NULL)
+            {
+                ::free(resource);
+                resource    = NULL;
+            }
+            if (tempdir != NULL)
+            {
+                ::free(tempdir);
+                tempdir     = NULL;
+            }
+
             list.clear();
             ignore.clear();
             args.clear();
