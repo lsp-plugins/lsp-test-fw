@@ -146,9 +146,9 @@ USAGE: {utest|ptest|mtest} [args...] [test name...]
     -s, --silent          Do not output additional information from tests
     -si, --sysinfo        Output system information
     -t, --tracepath path  Override default trace path with specified value
-                          default trace path is '/tmp/lsp-test-fw'
+                          default trace path is '/tmp/lsp-test-trace'
     -td, --tempdir path   Override default temporary directory for tests,
-                          default temporary directory is '/tmp/lsp-test'
+                          default temporary directory is '/tmp/lsp-test-temp'
     -v, --verbose         Output additional information from tests
 ```
 

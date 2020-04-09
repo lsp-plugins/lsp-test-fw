@@ -13,6 +13,8 @@
 #include <lsp-plug.in/test-fw/main/tools.h>
 
 #ifdef PLATFORM_WINDOWS
+    #include <shlwapi.h>
+    #include <fileapi.h>
 #else
     #include <sys/stat.h>
 #endif
@@ -390,6 +392,150 @@ namespace lsp
             va_end(ap);
             return r;
         }
+
+        char *get_env_var(const char *name)
+        {
+            // Convert variable name to UTF-16
+            lsp_utf16_t *varname = utf8_to_utf16(name);
+            if (!varname)
+                return NULL;
+
+            // Estimate the required buffer size
+            size_t size = ::GetEnvironmentVariableW(varname, NULL, 0);
+            if (size == 0)
+            {
+                ::free(varname);
+                return NULL;
+            }
+
+            // Allocate buffer
+            lsp_utf16_t *buf = reinterpret_cast<lsp_utf16_t *>(::malloc(size * sizeof(lsp_utf16_t)));
+            if (buf == NULL)
+            {
+                ::free(varname);
+                return NULL;
+            }
+
+            // Get environment variable
+            size = ::GetEnvironmentVariableW(varname, buf, size);
+            ::free(varname);
+            if (size == 0)
+                return NULL;
+
+            // Convert to UTF-8 and return
+            char *res = utf16_to_utf8(buf);
+            ::free(buf);
+            return res;
+        }
+
+        char *get_temp_dir()
+        {
+            char *temp = get_env_var("TEMP");
+            if (!temp)
+                temp = get_env_var("TMP");
+            return (temp) ? temp : ::strdup("tmp");
+        }
+
+        char *get_default_temporary_path()
+        {
+            char *temp = get_temp_dir();
+            char *res = NULL;
+
+            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-temp", temp);
+            ::free(temp);
+
+            if ((n < 0) && (res != NULL))
+            {
+                ::free(res);
+                res = NULL;
+            }
+
+            return res;
+        }
+
+        char *get_default_trace_path()
+        {
+            char *temp = get_temp_dir();
+            char *res = NULL;
+
+            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-trace", temp);
+            ::free(temp);
+
+            if ((n < 0) && (res != NULL))
+            {
+                ::free(res);
+                res = NULL;
+            }
+
+            return res;
+        }
+
+        status_t mkdirs(const char *path)
+        {
+            lsp_utf16_t *wpath = utf8_to_utf16(path);
+            if (!wpath)
+                return STATUS_NO_MEM;
+
+            // Skip first separator if path is not relative
+            lsp_utf16_t *curr = wpath;
+            if (!::PathIsRelativeW(reinterpret_cast<LPCWSTR>(wpath)))
+            {
+                while ((*curr != 0) && (*curr != FILE_SEPARATOR_C))
+                    ++curr;
+                if (*curr == 0)
+                    return STATUS_OK;
+                ++curr;
+            }
+
+            status_t res = STATUS_OK;
+
+            while (true)
+            {
+                // Get next split character
+                lsp_utf16_t *p = curr;
+                while ((*p != 0) && (*p != FILE_SEPARATOR_C))
+                    ++p;
+                if (*p == 0)
+                    p   = NULL;
+                else
+                    *p  = 0;
+
+                // Test for existence
+                DWORD x = ::GetFileAttributesW(wpath);
+                if (x == INVALID_FILE_ATTRIBUTES)
+                {
+                    // Try to create directory
+                    if (!::CreateDirectoryW(wpath, NULL))
+                    {
+                        DWORD x = ::GetFileAttributesW(wpath);
+                        if (x == INVALID_FILE_ATTRIBUTES)
+                        {
+                            res = STATUS_PERMISSION_DENIED;
+                            break;
+                        }
+                    }
+                }
+
+                // Check the final result
+                if (!(x & FILE_ATTRIBUTE_DIRECTORY))
+                {
+                    res = STATUS_NOT_DIRECTORY;
+                    break;
+                }
+
+                // Recover the path, move iterator to the next pathname
+                if (p == NULL) // Last path item?
+                    break;
+                *p   = FILE_SEPARATOR_C;
+                curr = p + 1;
+            }
+
+            // Free allocated resource
+            ::free(wpath);
+
+            return res;
+        }
+
 #else
         status_t mkdirs(const char *path)
         {
@@ -447,12 +593,12 @@ namespace lsp
 
         char *get_default_temporary_path()
         {
-            return ::strdup("/tmp/lsp-test");
+            return ::strdup("/tmp/lsp-test-temp");
         }
 
         char *get_default_trace_path()
         {
-            return ::strdup("/tmp/lsp-test-fw");
+            return ::strdup("/tmp/lsp-test-trace");
         }
 #endif /* PLATFORM_WINDOWS */
 
