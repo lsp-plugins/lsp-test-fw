@@ -42,18 +42,20 @@
             exit(1); \
         }
 
-#define MTEST_FAIL() {\
+#define MTEST_FAIL(...) {\
             fprintf(stderr, "Manual test '%s.%s' has failed at file %s, line %d\n", \
                     __test_group, __test_name, __FILE__, __LINE__); \
+            __VA_ARGS__; \
             exit(1); \
         }
 
 #define MTEST_FAIL_SILENT()     exit(5);
 
-#define MTEST_ASSERT(code) \
+#define MTEST_ASSERT(code, ...) \
         if (!(code)) { \
             fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
                     __test_group, __test_name, __FILE__, __LINE__, # code); \
+            __VA_ARGS__; \
             exit(2); \
         }
 
