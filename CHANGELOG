@@ -3,6 +3,9 @@
 *******************************************************************************
 
 === 1.0.2 ===
+* Added better support for temporary directory
+* Added better support for resource directory
+* Improved MTEST and UTEST macros
 
 === 1.0.1 ===
 * Improved build system
