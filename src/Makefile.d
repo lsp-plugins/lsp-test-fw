@@ -52,6 +52,7 @@ $(LSP_TEST_FW_BIN)/main/main.o: main/main.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/utest.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/mtest.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/ptest.h \
+ $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/main/tools.h \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/init.h
 $(LSP_TEST_FW_BIN)/main/init.o: main/init.cpp \
  $(LSP_TEST_FW_INC)/lsp-plug.in/test-fw/init.h \

@@ -385,24 +385,42 @@ namespace lsp
             if (res == STATUS_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--run-as-nested-process");
             if (res == STATUS_OK)
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--nosysinfo");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-nsi");
             if (res == STATUS_OK)
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--nofork");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-nf");
             if ((res == STATUS_OK) && (pCfg->debug))
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--debug");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-d");
             if (res == STATUS_OK)
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, (pCfg->verbose) ? "--verbose" : "--silent");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, (pCfg->verbose) ? "-v" : "-s");
             if ((res == STATUS_OK) && (pCfg->outfile != NULL))
             {
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--outfile");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-o");
                 if (res == STATUS_OK)
                     res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->outfile);
+            }
+            if ((res == STATUS_OK) && (pCfg->tracepath != NULL))
+            {
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-t");
+                if (res == STATUS_OK)
+                    res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->tracepath);
+            }
+            if ((res == STATUS_OK) && (pCfg->tempdir != NULL))
+            {
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-td");
+                if (res == STATUS_OK)
+                    res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->tempdir);
+            }
+            if ((res == STATUS_OK) && (pCfg->resource != NULL))
+            {
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-r");
+                if (res == STATUS_OK)
+                    res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->resource);
             }
             if (res == STATUS_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, task->test->full_name());
             if ((res == STATUS_OK) && (pCfg->args.size() > 0))
             {
-                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--args");
+                res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-a");
                 if (res == STATUS_OK)
                 {
                     for (size_t i=0, n=pCfg->args.size(); i<n; ++i)
@@ -495,7 +513,7 @@ namespace lsp
 
             // Enable memory trace
             char fname[PATH_MAX];
-            mkdir(pCfg->tracepath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            mkdirs(pCfg->tracepath);
             snprintf(fname, PATH_MAX, "%s/%s.utest.mtrace", pCfg->tracepath, v->full_name());
             fname[PATH_MAX-1] = '\0';
 

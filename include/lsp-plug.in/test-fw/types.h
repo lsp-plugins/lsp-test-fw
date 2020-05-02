@@ -11,7 +11,7 @@
 // Define header version
 #define LSP_TEST_FW_MAJOR           1
 #define LSP_TEST_FW_MINOR           0
-#define LSP_TEST_FW_MICRO           1
+#define LSP_TEST_FW_MICRO           2
 
 #include <unistd.h>
 

@@ -18,6 +18,8 @@ namespace lsp
         {
             __verbose       = false;
             __executable    = NULL;
+            __tempdir       = NULL;
+            __resources     = NULL;
             __stdout        = NULL;
             __stderr        = NULL;
         }
@@ -26,6 +28,8 @@ namespace lsp
         {
             __verbose       = false;
             __executable    = NULL;
+            __tempdir       = NULL;
+            __resources     = NULL;
             __stdout        = NULL;
             __stderr        = NULL;
         }
@@ -34,6 +38,8 @@ namespace lsp
         {
             __verbose       = cfg->verbose;
             __executable    = cfg->executable;
+            __tempdir       = cfg->tempdir;
+            __resources     = cfg->resource;
             __stdout        = cfg->std_out;
             __stderr        = cfg->std_err;
         }

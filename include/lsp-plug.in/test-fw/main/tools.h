@@ -62,6 +62,31 @@ namespace lsp
          */
         int asprintf(char **strp, const char *fmt, ...);
 #endif
+
+        /**
+         * Recursively create directory
+         * @param path UTF-8 path to the directory
+         * @return status of operation
+         */
+        status_t mkdirs(const char *path);
+
+        /**
+         * Get default temporary directory
+         * @return pointer to temporary directory which should be free()'d or NULL on error
+         */
+        char *get_default_temporary_path();
+
+        /**
+         * Get default resource directory
+         * @return pointer to resource directory which should be free()'d or NULL on error
+         */
+        char *get_default_resource_path();
+
+        /**
+         * Get default trace directory
+         * @return pointer to trace directory which should be free()'d or NULL on error
+         */
+        char *get_default_trace_path();
     }
 }
 

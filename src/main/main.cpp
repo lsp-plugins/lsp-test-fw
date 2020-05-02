@@ -9,6 +9,7 @@
 #include <lsp-plug.in/test-fw/main/types.h>
 #include <lsp-plug.in/test-fw/main/config.h>
 #include <lsp-plug.in/test-fw/main/executor.h>
+#include <lsp-plug.in/test-fw/main/tools.h>
 
 #include <lsp-plug.in/test-fw/init.h>
 #include <lsp-plug.in/test-fw/ptest.h>
@@ -309,7 +310,19 @@ namespace lsp
             config_t cfg;
             status_t res = cfg.parse(stdout, argc, argv);
             if (res != STATUS_OK)
+            {
+                cfg.clear();
                 return res;
+            }
+
+            // Perform initialization
+            if (!cfg.is_child)
+            {
+                // Create temporary directory
+                res = mkdirs(cfg.tempdir);
+                if (res != STATUS_OK)
+                    return res;
+            }
 
             // Initialize list of test initializers
             dynarray_t inits;

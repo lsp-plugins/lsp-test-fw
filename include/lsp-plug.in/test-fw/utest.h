@@ -58,16 +58,18 @@
             ::exit(1); \
         }
 
-#define UTEST_FAIL() {\
+#define UTEST_FAIL(...) {\
             ::fprintf(stderr, "Unit test '%s.%s' has failed at file %s, line %d\n", \
                     __test_group, __test_name, __FILE__, __LINE__); \
+            __VA_ARGS__; \
             ::exit(1); \
         }
 
-#define UTEST_ASSERT(code) \
+#define UTEST_ASSERT(code, ...) \
         if (!(code)) { \
             ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
                     __test_group, __test_name, __FILE__, __LINE__, # code); \
+            __VA_ARGS__; \
             ::exit(2); \
         }
 

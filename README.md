@@ -114,35 +114,42 @@ optimizations.
 After build, we can launch the test binary by issuing command:
 
 ```bash
-  .build/lsp-test-fw/lsp-test-fw-test
+.build/lsp-test-fw/lsp-test-fw-test
 ```
 
 The executable file provides simple command-line interface, so here's the full usage:
 
 ```
-  USAGE: {utest|ptest|mtest} [args...] [test name...]
-    First argument:
-      utest                 Unit testing subsystem
-      ptest                 Performance testing subsystem
-      mtest                 Manual testing subsystem
-    Additional arguments:
-      -a, --args [args...]  Pass arguments to test
-      -d, --debug           Disable time restrictions for unit tests
-                            for debugging purposes
-      -e, --execute         Launch tests specified after this switch
-      -f, --fork            Fork child processes (opposite to --nofork)
-      -h, --help            Display help
-      -i, --ignore          Ignore tests specified after this switch
-      -j, --jobs            Set number of job workers for unit tests
-      -l, --list            List all available tests
-      -mt, --mtrace         Enable mtrace log
-      -nf, --nofork         Do not fork child processes (for better 
-                            debugging capabilities)
-      -nt, --nomtrace       Disable mtrace log
-      -o, --outfile file    Output performance test statistics to specified file
-      -s, --silent          Do not output additional information from tests
-      -t, --tracepath path  Override default trace path with specified value
-      -v, --verbose         Output additional information from tests
+USAGE: {utest|ptest|mtest} [args...] [test name...]
+  First argument:
+    utest                 Unit testing subsystem
+    ptest                 Performance testing subsystem
+    mtest                 Manual testing subsystem
+  Additional arguments:
+    -a, --args [args...]  Pass arguments to test
+    -d, --debug           Disable time restrictions for unit tests
+                          for debugging purposes
+    -e, --execute         Launch tests specified after this switch
+    -f, --fork            Fork child processes (opposite to --nofork)
+    -h, --help            Display help
+    -i, --ignore          Ignore tests specified after this switch
+    -j, --jobs            Set number of job workers for unit tests
+    -l, --list            List all available tests
+    -mt, --mtrace         Enable mtrace log
+    -nf, --nofork         Do not fork child processes (for better 
+                          debugging capabilities)
+    -nt, --nomtrace       Disable mtrace log
+    -nsi, --nosysinfo     Do not output system information
+    -o, --outfile file    Output performance test statistics to specified file
+    -r, --resource path   Location of the resource directory used by tests,
+                          default resource path is 'res/test'
+    -s, --silent          Do not output additional information from tests
+    -si, --sysinfo        Output system information
+    -t, --tracepath path  Override default trace path with specified value
+                          default trace path is '/tmp/lsp-test-trace'
+    -td, --tempdir path   Override default temporary directory for tests,
+                          default temporary directory is '/tmp/lsp-test-temp'
+    -v, --verbose         Output additional information from tests
 ```
 
 Each test has fully-qualified name separated by dot symbols, tests from different
