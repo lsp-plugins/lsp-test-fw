@@ -8,14 +8,9 @@
 #ifndef LSP_PLUG_IN_TEST_FW_TYPES_H_
 #define LSP_PLUG_IN_TEST_FW_TYPES_H_
 
-// Define header version
-#define LSP_TEST_FW_MAJOR           1
-#define LSP_TEST_FW_MINOR           0
-#define LSP_TEST_FW_MICRO           2
-
-#include <unistd.h>
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/types.h>
+#include <unistd.h>
 
 namespace lsp
 {

@@ -8,10 +8,11 @@
 #ifndef LSP_PLUG_IN_TEST_FW_DYNARRAY_H_
 #define LSP_PLUG_IN_TEST_FW_DYNARRAY_H_
 
+#include <lsp-plug.in/test-fw/version.h>
+#include <lsp-plug.in/test-fw/types.h>
+
 #include <stdlib.h>
 #include <string.h>
-
-#include <lsp-plug.in/test-fw/types.h>
 
 namespace lsp
 {

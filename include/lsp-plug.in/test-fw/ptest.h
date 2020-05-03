@@ -8,11 +8,12 @@
 #ifndef TEST_PTEST_H_
 #define TEST_PTEST_H_
 
-#include <stdio.h>
-#include <time.h>
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
+
+#include <stdio.h>
+#include <time.h>
 
 #define PTEST_BEGIN(group, name, time, iterations) \
         namespace lsp { \

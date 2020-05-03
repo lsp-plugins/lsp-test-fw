@@ -8,6 +8,8 @@
 #ifndef TEST_MAIN_EXECUTOR_H_
 #define TEST_MAIN_EXECUTOR_H_
 
+#include <lsp-plug.in/test-fw/version.h>
+
 #include <lsp-plug.in/test-fw/utest.h>
 #include <lsp-plug.in/test-fw/mtest.h>
 #include <lsp-plug.in/test-fw/ptest.h>

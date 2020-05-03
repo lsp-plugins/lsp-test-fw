@@ -8,7 +8,7 @@
 #ifndef TEST_TEST_H_
 #define TEST_TEST_H_
 
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/env.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>
 

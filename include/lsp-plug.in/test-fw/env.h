@@ -8,6 +8,7 @@
 #ifndef LSP_PLUG_IN_TEST_FW_ENV_H_
 #define LSP_PLUG_IN_TEST_FW_ENV_H_
 
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/main/config.h>
 
 namespace lsp
