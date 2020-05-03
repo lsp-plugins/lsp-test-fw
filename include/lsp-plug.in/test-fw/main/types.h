@@ -8,6 +8,10 @@
 #ifndef TEST_MAIN_TYPES_H_
 #define TEST_MAIN_TYPES_H_
 
+#include <lsp-plug.in/test-fw/version.h>
+#include <lsp-plug.in/test-fw/types.h>
+#include <lsp-plug.in/test-fw/main/dynarray.h>
+
 #include <sys/stat.h>
 #include <time.h>
 
@@ -27,9 +31,6 @@
 #ifdef PLATFORM_LINUX
     #include <mcheck.h>
 #endif /* PLATFORM_LINUX */
-
-#include <lsp-plug.in/test-fw/types.h>
-#include <lsp-plug.in/test-fw/main/dynarray.h>
 
 namespace lsp
 {

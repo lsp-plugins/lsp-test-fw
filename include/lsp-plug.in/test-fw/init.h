@@ -8,6 +8,7 @@
 #ifndef LSP_PLUG_IN_TEST_FW_INIT_H_
 #define LSP_PLUG_IN_TEST_FW_INIT_H_
 
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/env.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>
 

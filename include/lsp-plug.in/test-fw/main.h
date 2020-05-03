@@ -8,6 +8,7 @@
 #ifndef TEST_MAIN_H_
 #define TEST_MAIN_H_
 
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/types.h>
 
 namespace lsp

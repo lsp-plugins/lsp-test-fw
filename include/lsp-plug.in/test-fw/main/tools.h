@@ -8,10 +8,11 @@
 #ifndef LSP_PLUG_IN_TEST_FW_MAIN_TOOLS_H_
 #define LSP_PLUG_IN_TEST_FW_MAIN_TOOLS_H_
 
-#include <stdarg.h>
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/types.h>
 #include <lsp-plug.in/common/status.h>
+
+#include <stdarg.h>
 
 namespace lsp
 {

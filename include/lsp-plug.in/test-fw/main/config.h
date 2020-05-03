@@ -8,12 +8,13 @@
 #ifndef TEST_MAIN_CONFIG_H_
 #define TEST_MAIN_CONFIG_H_
 
-#include <stdio.h>
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/status.h>
 
 #include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>
+
+#include <stdio.h>
 
 namespace lsp
 {

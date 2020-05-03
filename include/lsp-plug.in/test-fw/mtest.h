@@ -8,6 +8,7 @@
 #ifndef TEST_MTEST_H_
 #define TEST_MTEST_H_
 
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>

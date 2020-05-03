@@ -8,10 +8,11 @@
 #ifndef LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 #define LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 
-#include <stdio.h>
-
+#include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/test-fw/helpers.h>
+
+#include <stdio.h>
 
 namespace lsp
 {
