@@ -122,7 +122,7 @@ namespace lsp
             for (size_t i=0; i<count; ++i)
             {
                 if (i > 0)
-                    ::putchar(' ');
+                    putchar(' ');
                 ::printf("%.6f", buf[i]);
             }
             ::puts("");
