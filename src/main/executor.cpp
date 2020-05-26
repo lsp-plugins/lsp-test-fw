@@ -26,6 +26,16 @@ namespace lsp
 {
     namespace test
     {
+        TestExecutor::~TestExecutor()
+        {
+            wait();
+
+            if (vTasks != NULL)
+            {
+                delete [] vTasks;
+                vTasks      = NULL;
+            }
+        }
 
         status_t TestExecutor::init(config_t *config, stats_t *stats, dynarray_t *inits)
         {

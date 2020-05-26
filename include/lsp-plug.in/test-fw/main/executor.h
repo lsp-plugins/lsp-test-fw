@@ -85,10 +85,7 @@ namespace lsp
     #endif /* PLATFORM_WINDOWS */
                 }
 
-                ~TestExecutor()
-                {
-                    wait();
-                }
+                ~TestExecutor();
 
             public:
                 /**

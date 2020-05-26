@@ -4,6 +4,7 @@
 
 === 1.0.4 ===
 * Updated build files.
+* Fixed small memory leak caused by TestExecutor class.
 
 === 1.0.3 ===
 * Updated build scripts.
