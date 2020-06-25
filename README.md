@@ -10,6 +10,16 @@ parameters do affect the execution of the same algorithm.
 * Manual tests - tests that can not be automated but can be simly launched and
 performed 'by hand'.
 
+Supported platforms
+======
+
+The build and correct unit test execution has been confirmed for following platforms:
+* FreeBSD
+* GNU/Linux
+* OpenBSD
+* Windows 32-bit
+* Windows 64-bit
+
 Requirements
 ======
 
