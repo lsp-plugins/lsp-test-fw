@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include <lsp-plug.in/test-fw/helpers.h>
 
