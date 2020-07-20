@@ -2,6 +2,9 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.5 ===
+* Compatibility fixes with older GCC/GLIBC.
+
 === 1.0.4 ===
 * Updated build files.
 * Fixed small memory leak caused by TestExecutor class.
