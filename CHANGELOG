@@ -3,6 +3,7 @@
 *******************************************************************************
 
 === 1.0.5 ===
+* Compatibility fixes with older GCC/GLIBC.
 
 === 1.0.4 ===
 * Updated build files.
