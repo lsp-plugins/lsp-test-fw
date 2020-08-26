@@ -37,6 +37,14 @@ PTEST_BEGIN("demo", trig, 2.0, 10000)
 
     void call(const char *label, float *dst, const float *src, size_t count, test_func_t func)
     {
+        // Some functions may be not supported due some reasons, do not launch test
+        // for non-supported functions
+        //
+        // For example, there can be an AVX implemenation of some stuff
+        // but we execute the test on machine without AVX
+        // If we detect the AVX support somewhere where we define the function,
+        // we mark it as exported for tests by calling TEST_EXPORT(function).
+        // Otherwise PTEST_SUPPORTED(function) will return false.
         if (!PTEST_SUPPORTED(func))
             return;
 
@@ -54,6 +62,7 @@ PTEST_BEGIN("demo", trig, 2.0, 10000)
         float in_buf[0x1000];
         float out_buf[0x1000];
 
+        // We call TEST_EXPORT() to make each function visible for PTEST_SUPPORTED() call
         TEST_EXPORT(bulk_sin);
         TEST_EXPORT(bulk_cos);
         TEST_EXPORT(bulk_tan);
