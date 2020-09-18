@@ -3,7 +3,7 @@ ARTIFACT_NAME               = lsp-test-fw
 ARTIFACT_DESC               = Test framework for executing automated and manual tests
 ARTIFACT_VARS               = LSP_TEST_FW
 ARTIFACT_HEADERS            = lsp-plug.in
-ARTIFACT_VERSION            = 1.0.6
+ARTIFACT_VERSION            = 1.0.7-devel
 ARTIFACT_EXPORT_ALL         = 1
 
 # Weak property
