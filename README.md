@@ -1,6 +1,6 @@
 # lsp-test-fw
 
-This is test framework for executing automated tests.
+This is test framework for executing automated and manual tests.
 
 It allows to write the following set of tests
 * Unit tests - automated short-time tests for checking validity of algorithms
