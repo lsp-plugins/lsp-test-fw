@@ -10,11 +10,11 @@ ARTIFACT_EXPORT_ALL         = 1
 DEMO_TEST                  := 1
 
 # List of dependencies
-TEST_DEPENDENCIES = \
+DEPENDENCIES = \
   LIBPTHREAD \
   LSP_COMMON_LIB
   
-DEPENDENCIES = 
+TEST_DEPENDENCIES = 
 
 # Platform-dependent
 ifeq ($(PLATFORM),Windows)
