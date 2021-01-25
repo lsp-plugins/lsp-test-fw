@@ -72,7 +72,7 @@ BUILD_ALL               = $(ARTIFACT_LIB) $(ARTIFACT_SLIB) $(ARTIFACT_PC)
 ifeq ($($(ARTIFACT_ID)_TESTING),1)
   CXX_SRC                += $(CXX_SRC_TEST)
   CXX_OBJ                += $(CXX_OBJ_TEST)
-  ARTIFACT_TARGETS       += $(ARTIFACT_TESTBIN)
+  ARTIFACT_TARGETS       += $(ARTIFACT_TEST_BIN)
 endif
 
 DEP_CXX                 = $(foreach src,$(CXX_SRC_MAIN) $(CXX_SRC_EXT) $(CXX_SRC_TEST),$(patsubst %.cpp,$(ARTIFACT_BIN)/%.d,$(src)))
@@ -87,9 +87,9 @@ DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 dep_clean:
 
 $(DEP_CXX): dep_clean
-	@echo "  dep  [$(ARTIFACT_NAME)] $(DEP_CXXFILE)"
+	@echo "  dep  [$(ARTIFACT_NAME)] $(DEP_CXX_FILE)"
 	@mkdir -p $(dir $(@))
-	$(CXX) -MM -MT "\$$($(ARTIFACT_ID)_BIN)/$(CXX_DEP_FILE)" -MF $(@) $(DEP_CXXFILE) $(CXXFLAGS) $(INCLUDE) $(ARTIFACT_CFLAGS)
+	$(CXX) -MM -MT "\$$($(ARTIFACT_ID)_BIN)/$(DEP_DEP_FILE)" -MF $(@) $(DEP_CXX_FILE) $(CXXFLAGS) $(INCLUDE) $(ARTIFACT_CFLAGS)
 
 depend: $(DEP_CXX)
 	$(foreach dep,$(DEPENDENCIES) $(ARTIFACT_ID),\
