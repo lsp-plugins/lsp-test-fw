@@ -25,7 +25,7 @@
 // Define header version
 #define LSP_TEST_FW_MAJOR           1
 #define LSP_TEST_FW_MINOR           0
-#define LSP_TEST_FW_MICRO           7
+#define LSP_TEST_FW_MICRO           8
 
 #ifdef LSP_TEST_FW_BUILTIN
     #define LSP_TEST_FW_EXPORT
