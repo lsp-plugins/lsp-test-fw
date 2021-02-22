@@ -2,6 +2,10 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.7 ===
+* Added FloatBuffer::fill method.
+* Updated build system.
+
 === 1.0.6 ===
 * Updated build scripts that now use tags without prefixes first.
 * Updated headers and license files to match LGPL3+ license.

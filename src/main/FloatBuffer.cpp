@@ -84,6 +84,12 @@ namespace lsp
                 pBuffer[i] = 0.0f;
         }
 
+        void FloatBuffer::fill(float v)
+        {
+            for (size_t i=0; i<nLength; ++i)
+                pBuffer[i] = v;
+        }
+
         bool FloatBuffer::validate() const
         {
             uint32_t key            = uint32_t(ptrdiff_t(this));

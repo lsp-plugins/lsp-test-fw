@@ -43,30 +43,37 @@ INSTALL            := install
 # Patch flags and tools
 FLAG_RELRO          = -Wl,-z,relro,-z,now
 FLAG_STDLIB         = -lc
+CFLAGS_EXT          =
+CXXFLAGS_EXT        =
+LDFLAGS_EXT         =
+
 ifeq ($(PLATFORM),Solaris)
-  FLAG_RELRO              =
-  LD                      = gld
+  FLAG_RELRO          =
+  LD                  = gld
 else ifeq ($(PLATFORM),Windows)
-  FLAG_RELRO              =
-  FLAG_STDLIB             =
+  FLAG_RELRO          =
+  FLAG_STDLIB         =
+else ifeq ($(PLATFORM),BSD)
+  EXE_FLAGS_EXT      += -L/usr/local/lib
+  SO_FLAGS_EXT       += -L/usr/local/lib
 endif
 
 ifeq ($(DEBUG),1)
-  CFLAGS_EXT          = -O0 -g3 -DLSP_DEBUG
-  CXXFLAGS_EXT        = -O0 -g3 -DLSP_DEBUG
+  CFLAGS_EXT         += -O0 -g3 -DLSP_DEBUG
+  CXXFLAGS_EXT       += -O0 -g3 -DLSP_DEBUG
 else
-  CFLAGS_EXT          = -O2
-  CXXFLAGS_EXT        = -O2
+  CFLAGS_EXT         += -O2
+  CXXFLAGS_EXT       += -O2
 endif
 
 ifeq ($(PROFILE),1)
-  CFLAGS_EXT          = -pg -DLSP_PROFILE
-  CXXFLAGS_EXT        = -pg -DLSP_PROFILE
+  CFLAGS_EXT         += -pg -DLSP_PROFILE
+  CXXFLAGS_EXT       += -pg -DLSP_PROFILE
 endif
 
 ifeq ($(TRACE),1)
-  CFLAGS_EXT          = -DLSP_TRACE
-  CXXFLAGS_EXT        = -DLSP_TRACE
+  CFLAGS_EXT         += -DLSP_TRACE
+  CXXFLAGS_EXT       += -DLSP_TRACE
 endif
 
 ifeq ($(TEST),1)

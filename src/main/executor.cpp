@@ -493,10 +493,12 @@ namespace lsp
                 &pi             // Pointer to PROCESS_INFORMATION structure
             ))
             {
-                free(cmd);
-                free(executable);
                 fprintf(stderr, "Failed to create child process (%d)\n", int(GetLastError()));
                 fflush(stderr);
+
+                WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), cmd, len, NULL, NULL);
+                free(cmd);
+                free(executable);
                 return STATUS_UNKNOWN_ERR;
             }
 

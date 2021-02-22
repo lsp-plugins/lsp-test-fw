@@ -166,7 +166,7 @@ namespace lsp
         {
             float delta = max - min;
             for (size_t i=0; i<n; ++i)
-                buf[i] = min + delta * (float(rand())/(RAND_MAX-1));
+                buf[i] = min + delta * (float(rand())/float(RAND_MAX-1));
         }
 
         void randomize_negative(float *buf, size_t n)
