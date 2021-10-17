@@ -22,7 +22,8 @@
 LSP_COMMON_LIB_VERSION     := 1.0.14
 LSP_COMMON_LIB_NAME        := lsp-common-lib
 LSP_COMMON_LIB_TYPE        := hdr
-LSP_COMMON_LIB_URL         := git@github.com:lsp-plugins/$(LSP_COMMON_LIB_NAME).git
+LSP_COMMON_LIB_URL_RO      := https://github.com/lsp-plugins/$(LSP_COMMON_LIB_NAME).git
+LSP_COMMON_LIB_URL_RW      := git@github.com:lsp-plugins/$(LSP_COMMON_LIB_NAME).git
 
 LIBPTHREAD_VERSION         := system
 LIBPTHREAD_NAME            := libpthread
