@@ -24,7 +24,7 @@ endif
 BASEDIR                := $(CURDIR)
 DEPLIST                := $(BASEDIR)/dependencies.mk
 PROJECT                := $(BASEDIR)/project.mk
-CONFIG                 := $(CURDIR)/.config.mk
+CONFIG                 := $(BASEDIR)/.config.mk
 
 include $(BASEDIR)/make/functions.mk
 ifeq ($(TREE),1)
@@ -45,6 +45,10 @@ UNIQ_ALL_DEPENDENCIES      := $(call uniq, $(ALL_DEPENDENCIES) $(PLUGIN_DEPENDEN
 ifeq ($(TREE),1)
   MODULES                := $(BASEDIR)/modules
   GIT                    := git
+  
+  $(foreach dep,$(UNIQ_ALL_DEPENDENCIES), \
+    $(eval $(dep)_URL=$($(dep)_URL_RO)) \
+  )
   
   ifeq ($(findstring -devel,$(ARTIFACT_VERSION)),-devel)
     $(foreach dep, $(UNIQ_ALL_DEPENDENCIES), \
