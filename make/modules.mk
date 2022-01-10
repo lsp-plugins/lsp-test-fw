@@ -9,7 +9,7 @@
 # the Free Software Foundation, either version 3 of the License, or
 # any later version.
 #
-# lsp-runime-lib is distributed in the hope that it will be useful,
+# lsp-test-fw is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
@@ -39,7 +39,7 @@ MERGED_DEPENDENCIES        := \
   $(DEPENDENCIES) \
   $(TEST_DEPENDENCIES)
 UNIQ_MERGED_DEPENDENCIES   := $(call uniq, $(MERGED_DEPENDENCIES))
-UNIQ_ALL_DEPENDENCIES      := $(call uniq, $(ALL_DEPENDENCIES) $(PLUGIN_DEPENDENCIES))
+UNIQ_ALL_DEPENDENCIES      := $(call uniq, $(ALL_DEPENDENCIES))
 
 # Find the proper branch of the GIT repository
 ifeq ($(TREE),1)
