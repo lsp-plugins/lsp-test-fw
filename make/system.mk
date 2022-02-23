@@ -52,7 +52,7 @@ else
   ifndef ARCHITECTURE
     BUILD_ARCH             := $(shell uname -m)
   else
-    BUILD_ARCH             :=
+    BUILD_ARCH             := $(ARCHITECTURE)
   endif
 endif
 
@@ -172,11 +172,12 @@ TEST                       := 0
 
 # Set-up list of common variables
 COMMON_VARS = \
-    ROOTDIR \
-    ROOT_ARTIFACT_ID \
+	ROOTDIR \
+	ROOT_ARTIFACT_ID \
 	PLATFORM \
 	ARCHITECTURE \
 	ARCHITECTURE_CFLAGS \
+	FEATURES \
 	LIBRARY_EXT \
 	LIBRARY_PREFIX \
 	STATICLIB_EXT \
@@ -184,8 +185,10 @@ COMMON_VARS = \
 	PKGCONFIG_EXT \
 	PREFIX \
 	LIBDIR \
+	SHAREDDIR \
 	BINDIR \
 	INCDIR \
+	ETCDIR \
 	TEMPDIR \
 	TEST \
 	DEBUG \
@@ -196,12 +199,15 @@ COMMON_VARS = \
 
 sysvars:
 	echo "List of available system variables:"
+	echo "  ADD_FEATURES              list of features enabled in the build as an addition to default"
 	echo "  ARCHITECTURE              target architecture to perform build"
 	echo "  ARCHITECTURE_CFLAGS       compiler flags to specify architecture"
 	echo "  BINDIR                    location of the binaries"
 	echo "  DEBUG                     build with debug options"
 	echo "  DEVEL                     build with modules checked out for read/write URL"
+	echo "  ETCDIR                    location of system configuration files"
 	echo "  EXECUTABLE_EXT            file extension for executable files"
+	echo "  FEATURES                  list of features enabled in the build"
 	echo "  INCDIR                    location of the header files"
 	echo "  LIBDIR                    location of the library"
 	echo "  LIBRARY_EXT               file extension for library files"
@@ -210,7 +216,9 @@ sysvars:
 	echo "  PLATFORM                  target software platform to perform build"
 	echo "  PREFIX                    installation prefix for binary files"
 	echo "  PROFILE                   build with profile options"
+	echo "  SHAREDDIR                 location of the shared files"
 	echo "  STATICLIB_EXT             file extension for static library files"
+	echo "  SUB_FEATURES              list of features disabled in the build as a subtraction of default"
 	echo "  TEMPDIR                   location of temporary directory"
 	echo "  TEST                      use test build"
 	echo "  TRACE                     compile with additional trace information output"
