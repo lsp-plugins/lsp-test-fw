@@ -18,10 +18,19 @@
 # along with lsp-test-fw.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Package version
-ARTIFACT_ID                 = LSP_TEST_FW
-ARTIFACT_NAME               = lsp-test-fw
-ARTIFACT_DESC               = Test framework for executing automated and manual tests
-ARTIFACT_HEADERS            = lsp-plug.in
-ARTIFACT_VERSION            = 1.0.9
-ARTIFACT_EXPORT_ALL         = 1
+# Variables that describe dependencies
+LSP_COMMON_LIB_VERSION     := 1.0.15
+LSP_COMMON_LIB_NAME        := lsp-common-lib
+LSP_COMMON_LIB_TYPE        := hdr
+LSP_COMMON_LIB_URL_RO      := https://github.com/lsp-plugins/$(LSP_COMMON_LIB_NAME).git
+LSP_COMMON_LIB_URL_RW      := git@github.com:lsp-plugins/$(LSP_COMMON_LIB_NAME).git
+
+LIBPTHREAD_VERSION         := system
+LIBPTHREAD_NAME            := libpthread
+LIBPTHREAD_TYPE            := opt
+LIBPTHREAD_LDFLAGS         := -lpthread
+
+LIBSHLWAPI_VERSION         := system
+LIBSHLWAPI_NAME            := libshlwapi
+LIBSHLWAPI_TYPE            := opt
+LIBSHLWAPI_LDFLAGS         := -lshlwapi

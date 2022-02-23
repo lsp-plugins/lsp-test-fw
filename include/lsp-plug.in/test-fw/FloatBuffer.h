@@ -92,6 +92,14 @@ namespace lsp
                 inline float get_diff() const       { return (nLastDiff >= 0) ? pBuffer[nLastDiff] : 0.0f; }
 
             public:
+                inline float &operator [] (int index) {
+                    return pBuffer[index];
+                }
+
+                inline float operator [] (int index) const {
+                    return pBuffer[index];
+                }
+
                 inline float &operator [] (size_t index) {
                     return pBuffer[index];
                 }

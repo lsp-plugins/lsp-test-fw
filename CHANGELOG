@@ -2,6 +2,10 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.9 ===
+* Updated build scripts.
+* Updated FloatBuffer.
+
 === 1.0.8 ===
 * Updated build system.
 
