@@ -3,6 +3,7 @@
 *******************************************************************************
 
 === 1.0.11 ===
+* Updated build scripts.
 
 === 1.0.10 ===
 * Updated build scripts.
@@ -47,3 +48,4 @@
 * Unit tests
 * Performance tests
 * Manual tests
+
