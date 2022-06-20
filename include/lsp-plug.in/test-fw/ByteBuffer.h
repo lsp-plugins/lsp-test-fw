@@ -24,7 +24,9 @@
 
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
+#include <lsp-plug.in/common/types.h>
 
+#include <stdint.h>
 #include <stdio.h>
 
 namespace lsp

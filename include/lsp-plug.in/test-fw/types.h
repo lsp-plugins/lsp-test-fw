@@ -23,7 +23,7 @@
 #define LSP_PLUG_IN_TEST_FW_TYPES_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/types.h>
+#include <stddef.h>
 #include <unistd.h>
 
 namespace lsp

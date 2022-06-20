@@ -22,11 +22,14 @@
 #ifndef LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 #define LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 
+#include <lsp-plug.in/common/types.h>
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/test-fw/helpers.h>
 
+#include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 
 namespace lsp
 {

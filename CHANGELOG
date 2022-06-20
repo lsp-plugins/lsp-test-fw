@@ -2,6 +2,10 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.11 ===
+* Reduced dependency on the lsp-common-lib.
+* Updated build scripts.
+
 === 1.0.10 ===
 * Updated build scripts.
 
@@ -45,3 +49,4 @@
 * Unit tests
 * Performance tests
 * Manual tests
+
