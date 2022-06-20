@@ -3,6 +3,7 @@
 *******************************************************************************
 
 === 1.0.11 ===
+* Reduced dependency on the lsp-common-lib.
 * Updated build scripts.
 
 === 1.0.10 ===
