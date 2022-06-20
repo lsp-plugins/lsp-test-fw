@@ -2,6 +2,8 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.12 ===
+
 === 1.0.11 ===
 * Reduced dependency on the lsp-common-lib.
 * Updated build scripts.
