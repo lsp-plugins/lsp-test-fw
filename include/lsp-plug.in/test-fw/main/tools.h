@@ -49,7 +49,7 @@ namespace lsp
          * @return allocated UTF-16 string which should be free()'d after use or
          *   NULL if there is no sufficient memory
          */
-        lsp_utf16_t *utf8_to_utf16(const char *str);
+        utf16_t *utf8_to_utf16(const char *str);
 
         /**
          * Convert UTF-16 string to UTF-8 string
@@ -57,7 +57,7 @@ namespace lsp
          * @return allocated UTF-8 string which should be free()'d after use or
          *   NULL if there is no sufficient memory
          */
-        char *utf16_to_utf8(const lsp_utf16_t *str);
+        char *utf16_to_utf8(const utf16_t *str);
 
         /**
          * There's no vasprintf for Windows, implement it

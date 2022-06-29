@@ -19,10 +19,10 @@
  * along with lsp-test-fw. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//#include <lsp-plug.in/common/types.h>
+#include <lsp-plug.in/test-fw/init.h>
 #include <lsp-plug.in/test-fw/main/executor.h>
 #include <lsp-plug.in/test-fw/main/tools.h>
-#include <lsp-plug.in/test-fw/init.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 #include <errno.h>
 #include <stddef.h>
@@ -37,7 +37,7 @@
     #include <sys/time.h>
     #include <sys/types.h>
     #include <sys/wait.h>
-#endif
+#endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
 
 namespace lsp
 {

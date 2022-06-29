@@ -23,6 +23,7 @@
 #define LSP_PLUG_IN_TEST_FW_TYPES_H_
 
 #include <lsp-plug.in/test-fw/version.h>
+
 #include <stddef.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -107,6 +108,14 @@
 #endif /* IF_LSP_TEST_FW_PLATFORM_WINDOWS */
 
 //-----------------------------------------------------------------------------
+// Detect endianess of architecture
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+    #define LSP_TEST_FW_ARCH_LE
+#elif (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+    #define LSP_TEST_FW_ARCH_BE
+#endif /* __BYTE_ORDER__ */
+
+//-----------------------------------------------------------------------------
 // File separator
 #if defined(LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE)
     #define LSP_TEST_FW_FILE_SEPARATOR_C            '/'
@@ -115,6 +124,14 @@
     #define LSP_TEST_FW_FILE_SEPARATOR_C            '\\'
     #define LSP_TEST_FW_FILE_SEPARATOR_S            "\\"
 #endif /* */
+
+//-----------------------------------------------------------------------------
+// Character settings
+#if (WCHAR_MAX >= 0x10000ul)
+    #define LSP_TEST_FW_WCHART_32BIT
+#else
+    #define LSP_TEST_FW_WCHART_16BIT
+#endif /* WCHAR_MAX */
 
 //-----------------------------------------------------------------------------
 // Configure the export symbol
@@ -129,6 +146,12 @@
 #endif /* LSP_TEST_FW_BUILTIN */
 
 #define LSP_TEST_FW_DEFAULT_ALIGN       16
+
+//-----------------------------------------------------------------------------
+// Different platform-dependent includes
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {
@@ -154,6 +177,7 @@ namespace lsp
             STATUS_TIMED_OUT,             //!< The task has timed out
             STATUS_FAILED,                //!< The task has failed
             STATUS_NOT_DIRECTORY,         //!< The accessed object is not a directory
+            STATUS_NOT_FOUND,             //!< The object was not found
 
             STATUS_TOTAL,
             STATUS_MAX = STATUS_TOTAL - 1,
@@ -163,6 +187,15 @@ namespace lsp
         // Wide size types
         typedef uint64_t        wsize_t;
         typedef int64_t         wssize_t;
+
+        // Character type definition
+    #if defined(LSP_TEST_FW_WCHART_16BIT)
+        typedef WCHAR               utf16_t;
+        typedef uint32_t            utf32_t;
+    #else
+        typedef uint16_t            utf16_t;
+        typedef wchar_t             utf32_t;
+    #endif
 
         // Align pointer to the specified boundary
         template <class T>
