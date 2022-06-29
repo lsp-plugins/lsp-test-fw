@@ -24,12 +24,12 @@
 
 #include <lsp-plug.in/test-fw/version.h>
 
-#include <lsp-plug.in/test-fw/utest.h>
 #include <lsp-plug.in/test-fw/mtest.h>
 #include <lsp-plug.in/test-fw/ptest.h>
+#include <lsp-plug.in/test-fw/utest.h>
 
-#include <lsp-plug.in/test-fw/main/types.h>
 #include <lsp-plug.in/test-fw/main/config.h>
+#include <lsp-plug.in/test-fw/main/types.h>
 
 namespace lsp
 {
@@ -55,11 +55,11 @@ namespace lsp
                 config_t           *pCfg;
                 stats_t            *pStats;
                 dynarray_t         *pInits;
-    #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 HANDLE              hThread;
                 HANDLE              hTimer;
                 HANDLE              hLock;
-    #endif /* PLATFORM_WINDOWS */
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
             protected:
                 status_t    launch_test(test::Test *test);
@@ -76,9 +76,9 @@ namespace lsp
                 void        start_memcheck(test::Test *test);
                 void        end_memcheck();
 
-    #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 static DWORD WINAPI  thread_proc(LPVOID params);
-    #endif /* PLATFORM_WINDOWS */
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
             public:
                 explicit TestExecutor()
@@ -92,11 +92,11 @@ namespace lsp
                     pStats          = NULL;
                     pInits          = NULL;
 
-    #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                     hThread         = 0;
                     hTimer          = 0;
                     hLock           = 0;
-    #endif /* PLATFORM_WINDOWS */
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
                 }
 
                 ~TestExecutor();

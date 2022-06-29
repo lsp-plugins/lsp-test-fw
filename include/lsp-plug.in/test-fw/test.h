@@ -25,6 +25,7 @@
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/env.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 /**
  * This macro allows to export function/pointer as supported

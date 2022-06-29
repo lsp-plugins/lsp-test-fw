@@ -61,12 +61,12 @@ namespace lsp
             ::fputs("    -i, --ignore          Ignore tests specified after this switch\n", out);
             ::fputs("    -j, --jobs            Set number of job workers for unit tests\n", out);
             ::fputs("    -l, --list            List all available tests\n", out);
-        IF_PLATFORM_LINUX(
+        IF_LSP_TEST_FW_PLATFORM_LINUX(
             ::fputs("    -mt, --mtrace         Enable mtrace log\n", out);
         )
             ::fputs("    -nf, --nofork         Do not fork child processes (for better \n", out);
             ::fputs("                          debugging capabilities)\n", out);
-        IF_PLATFORM_LINUX(
+        IF_LSP_TEST_FW_PLATFORM_LINUX(
             ::fputs("    -nt, --nomtrace       Disable mtrace log\n", out);
         )
             ::fputs("    -nsi, --nosysinfo     Do not output system information\n", out);
@@ -92,7 +92,7 @@ namespace lsp
         {
             clear();
 
-    #if defined(PLATFORM_WINDOWS)
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             // Get number of processors for system
             SYSTEM_INFO     os_sysinfo;
             GetSystemInfo(&os_sysinfo);
@@ -128,7 +128,7 @@ namespace lsp
             argv        = const_cast<const char **>(utf8_argv);
     #else
             threads     = ::sysconf(_SC_NPROCESSORS_ONLN);
-    #endif /* PLATFORM_WINDOWS */
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
             if (argc < 2)
                 return print_usage(out);
 
@@ -163,12 +163,12 @@ namespace lsp
                     debug       = true;
                 else if ((!::strcmp(argv[i], "--list")) || (!::strcmp(argv[i], "-l")))
                     list_all    = true;
-        #ifdef PLATFORM_LINUX
+        #ifdef LSP_TEST_FW_PLATFORM_LINUX
                 else if ((!::strcmp(argv[i], "--mtrace")) || (!::strcmp(argv[i], "-mt")))
                     mtrace      = true;
                 else if ((!::strcmp(argv[i], "--nomtrace")) || (!::strcmp(argv[i], "-nt")))
                     mtrace      = false;
-        #endif /* PLATFORM_LINUX */
+        #endif /* LSP_TEST_FW_PLATFORM_LINUX */
                 else if ((!::strcmp(argv[i], "--tracepath")) || (!::strcmp(argv[i], "-t")))
                 {
                     if ((++i) >= argc)
@@ -243,10 +243,10 @@ namespace lsp
                     ilist           = true;
                 else if ((!::strcmp(argv[i], "--execute")) || ((!::strcmp(argv[i], "-e"))))
                     ilist           = false;
-    #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 else if (!::strcmp(argv[i], "--run-as-nested-process"))
                     is_child        = true;
-    #endif /* PLATFORM_WINDOWS */
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
                 else
                 {
                     if (ilist)
@@ -298,15 +298,15 @@ namespace lsp
             this->std_out   = stdout;
             this->std_err   = stderr;
 
-    #if defined(PLATFORM_WINDOWS)
+        #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             utf8_argc       = 0;
             utf8_argv       = NULL;
-    #endif
+        #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
         }
 
         void config_t::clear()
         {
-    #if defined(PLATFORM_WINDOWS)
+        #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             if (utf8_argv != NULL)
             {
                 for (size_t i=0; i<utf8_argc; ++i)
@@ -319,7 +319,7 @@ namespace lsp
                 utf8_argv       = NULL;
                 utf8_argc       = 0;
             }
-    #endif /* PLATFORM_WINDOWS */
+        #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
             if (tracepath != NULL)
             {
                 ::free(tracepath);

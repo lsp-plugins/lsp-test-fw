@@ -26,18 +26,18 @@
 
 #include <lsp-plug.in/test-fw/main/tools.h>
 
-#ifdef PLATFORM_WINDOWS
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
     #include <shlwapi.h>
     #include <fileapi.h>
 #else
     #include <sys/stat.h>
-#endif
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {
     namespace test
     {
-#ifdef PLATFORM_WINDOWS
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         static status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
         {
             char *dst           = *buffer;
@@ -550,7 +550,7 @@ namespace lsp
             return res;
         }
 
-#else
+    #else
         status_t mkdirs(const char *path)
         {
             char *tmp = ::strdup(path);
@@ -614,7 +614,7 @@ namespace lsp
         {
             return ::strdup("/tmp/lsp-test-trace");
         }
-#endif /* PLATFORM_WINDOWS */
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         char *get_default_resource_path()
         {

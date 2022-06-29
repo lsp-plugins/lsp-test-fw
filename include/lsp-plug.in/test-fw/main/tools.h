@@ -23,7 +23,7 @@
 #define LSP_PLUG_IN_TEST_FW_MAIN_TOOLS_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/types.h>
+#include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/common/status.h>
 
 #include <stdarg.h>
@@ -32,7 +32,7 @@ namespace lsp
 {
     namespace test
     {
-#ifdef PLATFORM_WINDOWS
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         /** Append the Windows command line with additional text parameter
          *
          * @param buffer UTF-8 buffer that contains current command line
@@ -76,7 +76,7 @@ namespace lsp
          * @return number of printed bytes
          */
         int asprintf(char **strp, const char *fmt, ...);
-#endif
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         /**
          * Recursively create directory

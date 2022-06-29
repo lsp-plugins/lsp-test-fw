@@ -91,11 +91,11 @@ namespace lsp
 
         void ByteBuffer::fill_zero()
         {
-    #if defined(PLATFORM_WINDOWS)
+        #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             ::memset(pBuffer, 0, nLength);
-    #else
+        #else
             ::bzero(pBuffer, nLength);
-    #endif
+        #endif /* LSP_TEST_FW_ */
         }
 
         bool ByteBuffer::validate() const
