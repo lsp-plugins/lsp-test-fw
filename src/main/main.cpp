@@ -467,10 +467,10 @@ namespace lsp
                 ::SetConsoleOutputCP(65001);
                 int res = test_main(argc, argv);
                 ::SetConsoleCP(cp);
-                return res;
             #else
-                return test_main(argc, argv);
+                int res = test_main(argc, argv);
             #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
+            return res;
         }
     }
 }
