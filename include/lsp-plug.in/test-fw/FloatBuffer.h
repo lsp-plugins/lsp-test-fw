@@ -22,7 +22,6 @@
 #ifndef LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 #define LSP_PLUG_IN_TEST_FW_FLOATBUFFER_H_
 
-#include <lsp-plug.in/common/types.h>
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/test-fw/helpers.h>
@@ -54,7 +53,7 @@ namespace lsp
                 void allocate(size_t samples, size_t align, bool aligned);
 
             public:
-                explicit FloatBuffer(size_t samples, size_t align = DEFAULT_ALIGN, bool aligned = true);
+                explicit FloatBuffer(size_t samples, size_t align = LSP_TEST_FW_DEFAULT_ALIGN, bool aligned = true);
                 explicit FloatBuffer(const FloatBuffer &src);
                 ~FloatBuffer();
 

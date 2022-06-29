@@ -26,10 +26,27 @@
 #include <stddef.h>
 #include <unistd.h>
 
+#if defined(__WINDOWS__) || defined(__WIN32__) || defined(__WIN64__) || defined(_WIN64) || defined(_WIN32) || defined(__WINNT) || defined(__WINNT__)
+    #define LSP_TEST_FW_PLATFORM_WINDOWS
+#endif /* WINDOWS */
+
+#ifdef LSP_TEST_FW_BUILTIN
+    #define LSP_TEST_FW_EXPORT
+#else
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+        #define LSP_TEST_FW_EXPORT              __declspec(dllexport)
+    #else
+        #define LSP_TEST_FW_EXPORT              __attribute__((visibility("default")))
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
+#endif /* LSP_TEST_FW_BUILTIN */
+
+#define LSP_TEST_FW_DEFAULT_ALIGN       16
+
 namespace lsp
 {
     namespace test
     {
+
         template <class T>
             inline T *align_pointer(void *src, size_t align)
             {
