@@ -23,10 +23,9 @@
 #define TEST_MAIN_CONFIG_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/status.h>
 
-#include <lsp-plug.in/test-fw/types.h>
 #include <lsp-plug.in/test-fw/main/dynarray.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 #include <stdio.h>
 
@@ -69,10 +68,10 @@ namespace lsp
                 FILE                       *std_out;        // Output stream
                 FILE                       *std_err;        // Output error stream
 
-    #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 size_t                      utf8_argc;
                 char                      **utf8_argv;
-    #endif /* PLATFORM_WINDOWS */
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
             public:
                 explicit config_t();

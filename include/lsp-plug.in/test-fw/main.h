@@ -23,7 +23,7 @@
 #define TEST_MAIN_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/types.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 namespace lsp
 {
@@ -35,9 +35,8 @@ namespace lsp
          * @param argv list of arguments
          * @return execution code
          */
-        LSP_SYMBOL_EXPORT int main(int argc, const char **argv);
+        LSP_TEST_FW_EXPORT int main(int argc, const char **argv);
     }
 }
-
 
 #endif /* TEST_MAIN_H_ */

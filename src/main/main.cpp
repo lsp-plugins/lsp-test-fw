@@ -459,18 +459,18 @@ namespace lsp
             return res;
         }
 
-        LSP_SYMBOL_EXPORT int main(int argc, const char **argv)
+        LSP_TEST_FW_EXPORT int main(int argc, const char **argv)
         {
-            #ifdef PLATFORM_WINDOWS
+            #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 // Add a hack to change console encoding to UTF-8
                 UINT cp = ::GetConsoleOutputCP();
                 ::SetConsoleOutputCP(65001);
                 int res = test_main(argc, argv);
                 ::SetConsoleCP(cp);
-                return res;
             #else
-                return test_main(argc, argv);
-            #endif /* PLATFORM_WINDOWS */
+                int res = test_main(argc, argv);
+            #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
+            return res;
         }
     }
 }

@@ -19,8 +19,8 @@
  * along with lsp-test-fw. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TEST_MAIN_TYPES_H_
-#define TEST_MAIN_TYPES_H_
+#ifndef LSP_PLUG_IN_TEST_FW_MAIN_TYPES_H_
+#define LSP_PLUG_IN_TEST_FW_MAIN_TYPES_H_
 
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
@@ -29,34 +29,34 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#ifdef PLATFORM_WINDOWS
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
     #include <processthreadsapi.h>
     #include <sysinfoapi.h>
     #include <errhandlingapi.h>
 #endif
 
-#ifdef PLATFORM_UNIX_COMPATIBLE
+#ifdef LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE
     #include <unistd.h>
     #include <sys/wait.h>
 
     #include <fcntl.h>
-#endif /* PLATFORM_UNIX_COMPATIBLE */
+#endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
 
-#if defined(PLATFORM_LINUX) && defined(USE_GLIBC)
+#if defined(LSP_TEST_FW_PLATFORM_LINUX) && defined(USE_GLIBC)
     #include <mcheck.h>
-#endif /* PLATFORM_LINUX */
+#endif /* LSP_TEST_FW_PLATFORM_LINUX */
 
 namespace lsp
 {
     namespace test
     {
-#if defined(PLATFORM_WINDOWS)
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         typedef PROCESS_INFORMATION     test_pid_t;
         typedef FILETIME                test_clock_t;
-#else
+    #else
         typedef pid_t                   test_pid_t;
         typedef struct timespec         test_clock_t;
-#endif
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         class UnitTest;
 
@@ -77,7 +77,7 @@ namespace lsp
             test::UnitTest     *utest;
         } task_t;
 
-    #if defined(PLATFORM_WINDOWS)
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         inline void get_test_time(test_clock_t *clock)
         {
             GetSystemTimeAsFileTime(clock);
@@ -99,8 +99,8 @@ namespace lsp
         {
             return (end->tv_sec - begin->tv_sec) + (end->tv_nsec - begin->tv_nsec) * 1e-9;
         }
-    #endif /* PLATFORM_WINDOWS */
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
     }
 }
 
-#endif /* TEST_MAIN_TYPES_H_ */
+#endif /* LSP_PLUG_IN_TEST_FW_MAIN_TYPES_H_ */

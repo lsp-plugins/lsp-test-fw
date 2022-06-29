@@ -26,5 +26,5 @@
     {
         lsp::test::main(argc, argv);
     }
-#endif
+#endif /* LSP_BUILTIN_MODULE */
 

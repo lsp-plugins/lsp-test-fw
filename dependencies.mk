@@ -23,8 +23,7 @@ DEMO_TEST                  := 1
 
 # List of dependencies
 DEPENDENCIES = \
-  LIBPTHREAD \
-  LSP_COMMON_LIB
+  LIBPTHREAD
   
 TEST_DEPENDENCIES = 
 

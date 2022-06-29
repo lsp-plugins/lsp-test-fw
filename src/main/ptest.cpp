@@ -183,11 +183,11 @@ namespace lsp
 
             └ ─ ┴ ─ ┘
          */
-        #if defined(PLATFORM_WINDOWS)
+        #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             #define DRAW_PAD            "\r"
         #else
             #define DRAW_PAD            ""
-        #endif
+        #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         #define DRAW1_LT            "┌"
         #define DRAW1_MT            "┬"

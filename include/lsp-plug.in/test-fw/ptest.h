@@ -23,7 +23,6 @@
 #define TEST_PTEST_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/status.h>
 #include <lsp-plug.in/test-fw/test.h>
 
 #include <stdio.h>

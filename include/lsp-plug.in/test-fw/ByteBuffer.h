@@ -24,7 +24,6 @@
 
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
-#include <lsp-plug.in/common/types.h>
 
 #include <stdint.h>
 #include <stdio.h>
@@ -51,9 +50,9 @@ namespace lsp
                 void allocate(size_t samples, size_t align, bool aligned);
 
             public:
-                explicit ByteBuffer(size_t samples, size_t align = DEFAULT_ALIGN, bool aligned = true);
+                explicit ByteBuffer(size_t samples, size_t align = LSP_TEST_FW_DEFAULT_ALIGN, bool aligned = true);
                 explicit ByteBuffer(const ByteBuffer &src);
-                explicit ByteBuffer(const void *data, size_t samples, size_t align = DEFAULT_ALIGN, bool aligned = true);
+                explicit ByteBuffer(const void *data, size_t samples, size_t align = LSP_TEST_FW_DEFAULT_ALIGN, bool aligned = true);
                 ~ByteBuffer();
 
             public:

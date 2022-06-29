@@ -23,8 +23,7 @@
 #define LSP_PLUG_IN_TEST_FW_MAIN_TOOLS_H_
 
 #include <lsp-plug.in/test-fw/version.h>
-#include <lsp-plug.in/common/types.h>
-#include <lsp-plug.in/common/status.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 #include <stdarg.h>
 
@@ -32,7 +31,7 @@ namespace lsp
 {
     namespace test
     {
-#ifdef PLATFORM_WINDOWS
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         /** Append the Windows command line with additional text parameter
          *
          * @param buffer UTF-8 buffer that contains current command line
@@ -50,7 +49,7 @@ namespace lsp
          * @return allocated UTF-16 string which should be free()'d after use or
          *   NULL if there is no sufficient memory
          */
-        lsp_utf16_t *utf8_to_utf16(const char *str);
+        utf16_t *utf8_to_utf16(const char *str);
 
         /**
          * Convert UTF-16 string to UTF-8 string
@@ -58,7 +57,7 @@ namespace lsp
          * @return allocated UTF-8 string which should be free()'d after use or
          *   NULL if there is no sufficient memory
          */
-        char *utf16_to_utf8(const lsp_utf16_t *str);
+        char *utf16_to_utf8(const utf16_t *str);
 
         /**
          * There's no vasprintf for Windows, implement it
@@ -76,7 +75,7 @@ namespace lsp
          * @return number of printed bytes
          */
         int asprintf(char **strp, const char *fmt, ...);
-#endif
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         /**
          * Recursively create directory

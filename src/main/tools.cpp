@@ -26,18 +26,18 @@
 
 #include <lsp-plug.in/test-fw/main/tools.h>
 
-#ifdef PLATFORM_WINDOWS
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
     #include <shlwapi.h>
     #include <fileapi.h>
 #else
     #include <sys/stat.h>
-#endif
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {
     namespace test
     {
-#ifdef PLATFORM_WINDOWS
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         static status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
         {
             char *dst           = *buffer;
@@ -48,7 +48,7 @@ namespace lsp
             }
 
             *capacity   = (*capacity > 0) ? ((*capacity) << 1) : 32;
-            dst         = reinterpret_cast<char *>(::realloc(dst, *capacity + 1)); // Do not count the last '\0' character as capacity
+            dst         = static_cast<char *>(::realloc(dst, *capacity + 1)); // Do not count the last '\0' character as capacity
             if (dst == NULL)
                 return STATUS_NO_MEM;
             *buffer     = dst;
@@ -115,12 +115,12 @@ namespace lsp
             return res;
         }
 
-        static inline size_t sizeof_utf16(lsp_utf32_t cp)
+        static inline size_t sizeof_utf16(utf32_t cp)
         {
             return (cp < 0x10000) ? 2 : 4;
         }
 
-        static inline size_t sizeof_utf8(lsp_utf32_t cp)
+        static inline size_t sizeof_utf8(utf32_t cp)
         {
             if (cp >= 0x800)
                 return ((cp < 0x10000) || (cp >= 0x200000)) ? 3 : 4;
@@ -128,12 +128,12 @@ namespace lsp
                 return (cp >= 0x80) ? 2 : 1;
         }
 
-        static void write_utf16_codepoint(lsp_utf16_t **str, lsp_utf32_t cp)
+        static void write_utf16_codepoint(utf16_t **str, utf32_t cp)
         {
             uint8_t *dst        = reinterpret_cast<uint8_t *>(*str);
             if (cp < 0x10000)
             {
-                #ifdef ARCH_LE
+                #ifdef LSP_TEST_FW_ARCH_LE
                     dst[0]          = uint8_t(cp & 0xff);
                     dst[1]          = uint8_t(cp >> 8);
                 #else
@@ -145,10 +145,10 @@ namespace lsp
             else
             {
                 cp             -= 0x10000;
-                lsp_utf16_t w1  = lsp_utf16_t(0xd800 | (cp >> 10));
-                lsp_utf16_t w2  = lsp_utf16_t(0xdc00 | (cp & 0x3ff));
+                utf16_t w1      = utf16_t(0xd800 | (cp >> 10));
+                utf16_t w2      = utf16_t(0xdc00 | (cp & 0x3ff));
 
-                #ifdef ARCH_LE
+                #ifdef LSP_TEST_FW_ARCH_LE
                     dst[0]          = uint8_t(w1 & 0xff);
                     dst[1]          = uint8_t(w1 >> 8);
                     dst[2]          = uint8_t(w2 & 0xff);
@@ -163,7 +163,7 @@ namespace lsp
             }
         }
 
-        void write_utf8_codepoint(char **str, lsp_utf32_t cp)
+        void write_utf8_codepoint(char **str, utf32_t cp)
         {
             char *dst = *str;
             if (cp >= 0x800) // 3-4 bytes
@@ -205,9 +205,9 @@ namespace lsp
             *str    = dst;
         }
 
-        static lsp_utf32_t read_utf8_codepoint(const char **str)
+        static utf32_t read_utf8_codepoint(const char **str)
         {
-            lsp_utf32_t cp, sp;
+            utf32_t cp, sp;
             size_t bytes;
             const char *s = *str;
 
@@ -267,12 +267,12 @@ namespace lsp
             return cp;
         }
 
-        static lsp_utf32_t read_utf16_codepoint(const lsp_utf16_t **str)
+        static utf32_t read_utf16_codepoint(const utf16_t **str)
         {
             uint32_t cp, sc;
             const uint8_t *s = reinterpret_cast<const uint8_t *>(*str);
 
-            #ifdef ARCH_LE
+            #ifdef LSP_TEST_FW_ARCH_LE
                 cp = s[0] | (s[1] << 8);
             #else
                 cp = (s[0] << 8) | s[1];
@@ -287,7 +287,7 @@ namespace lsp
             sc = cp & 0xfc00;
             if (sc == 0xd800) // cp = Surrogate high
             {
-                #ifdef ARCH_LE
+                #ifdef LSP_TEST_FW_ARCH_LE
                     sc = s[0] | (s[1] << 8);
                 #else
                     sc = (s[0] << 8) | s[1];
@@ -302,7 +302,7 @@ namespace lsp
             }
             else if (sc == 0xdc00) // Surrogate low?
             {
-                #ifdef ARCH_LE
+                #ifdef LSP_TEST_FW_ARCH_LE
                     sc = s[0] | (s[1] << 8);
                 #else
                     sc = (s[0] << 8) | s[1];
@@ -321,10 +321,10 @@ namespace lsp
             return cp;
         }
 
-        lsp_utf16_t *utf8_to_utf16(const char *str)
+        utf16_t *utf8_to_utf16(const char *str)
         {
             // Estimate number of bytes to allocate
-            lsp_utf32_t cp;
+            utf32_t cp;
             size_t bytes    = 0;
             const char *p = str;
             do
@@ -334,12 +334,12 @@ namespace lsp
             } while (cp != 0);
 
             // Allocate memory
-            lsp_utf16_t *utf16  = reinterpret_cast<lsp_utf16_t *>(::malloc(bytes));
+            utf16_t *utf16  = static_cast<utf16_t *>(::malloc(bytes));
             if (utf16 == NULL)
                 return NULL;
 
             // Perform encoding
-            lsp_utf16_t *dst = utf16;
+            utf16_t *dst = utf16;
             p               = str;
             while ((cp = read_utf8_codepoint(&p)) != 0)
                 write_utf16_codepoint(&dst, cp);
@@ -348,12 +348,12 @@ namespace lsp
             return utf16;
         }
 
-        char *utf16_to_utf8(const lsp_utf16_t *str)
+        char *utf16_to_utf8(const utf16_t *str)
         {
             // Estimate number of bytes
-            lsp_utf32_t cp;
+            utf32_t cp;
             size_t bytes = 0;
-            const lsp_utf16_t *p = str;
+            const utf16_t *p = str;
             do
             {
                 cp          = read_utf16_codepoint(&p);
@@ -361,7 +361,7 @@ namespace lsp
             } while (cp != 0);
 
             // Allocate memory
-            char *utf8  = reinterpret_cast<char *>(::malloc(bytes));
+            char *utf8  = static_cast<char *>(::malloc(bytes));
             if (utf8 == NULL)
                 return NULL;
 
@@ -381,7 +381,7 @@ namespace lsp
             if (len < 0)
                 return -1;
 
-            char *str = reinterpret_cast<char *>(malloc(size_t(len) + 1));
+            char *str = static_cast<char *>(malloc(size_t(len) + 1));
             if (str == NULL)
                 return -1;
 
@@ -410,7 +410,7 @@ namespace lsp
         char *get_env_var(const char *name)
         {
             // Convert variable name to UTF-16
-            lsp_utf16_t *varname = utf8_to_utf16(name);
+            utf16_t *varname = utf8_to_utf16(name);
             if (!varname)
                 return NULL;
 
@@ -423,7 +423,7 @@ namespace lsp
             }
 
             // Allocate buffer
-            lsp_utf16_t *buf = reinterpret_cast<lsp_utf16_t *>(::malloc(size * sizeof(lsp_utf16_t)));
+            utf16_t *buf = static_cast<utf16_t *>(::malloc(size * sizeof(utf16_t)));
             if (buf == NULL)
             {
                 ::free(varname);
@@ -455,7 +455,7 @@ namespace lsp
             char *temp = get_temp_dir();
             char *res = NULL;
 
-            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-temp", temp);
+            int n = asprintf(&res, "%s" LSP_TEST_FW_FILE_SEPARATOR_S "lsp-test-temp", temp);
             ::free(temp);
 
             if ((n < 0) && (res != NULL))
@@ -472,7 +472,7 @@ namespace lsp
             char *temp = get_temp_dir();
             char *res = NULL;
 
-            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-trace", temp);
+            int n = asprintf(&res, "%s" LSP_TEST_FW_FILE_SEPARATOR_S "lsp-test-trace", temp);
             ::free(temp);
 
             if ((n < 0) && (res != NULL))
@@ -486,15 +486,15 @@ namespace lsp
 
         status_t mkdirs(const char *path)
         {
-            lsp_utf16_t *wpath = utf8_to_utf16(path);
+            utf16_t *wpath = utf8_to_utf16(path);
             if (!wpath)
                 return STATUS_NO_MEM;
 
             // Skip first separator if path is not relative
-            lsp_utf16_t *curr = wpath;
+            utf16_t *curr = wpath;
             if (!::PathIsRelativeW(reinterpret_cast<LPCWSTR>(wpath)))
             {
-                while ((*curr != 0) && (*curr != FILE_SEPARATOR_C))
+                while ((*curr != 0) && (*curr != LSP_TEST_FW_FILE_SEPARATOR_C))
                     ++curr;
                 if (*curr == 0)
                     return STATUS_OK;
@@ -506,8 +506,8 @@ namespace lsp
             while (true)
             {
                 // Get next split character
-                lsp_utf16_t *p = curr;
-                while ((*p != 0) && (*p != FILE_SEPARATOR_C))
+                utf16_t *p = curr;
+                while ((*p != 0) && (*p != LSP_TEST_FW_FILE_SEPARATOR_C))
                     ++p;
                 if (*p == 0)
                     p   = NULL;
@@ -540,7 +540,7 @@ namespace lsp
                 // Recover the path, move iterator to the next pathname
                 if (p == NULL) // Last path item?
                     break;
-                *p   = FILE_SEPARATOR_C;
+                *p   = LSP_TEST_FW_FILE_SEPARATOR_C;
                 curr = p + 1;
             }
 
@@ -550,7 +550,7 @@ namespace lsp
             return res;
         }
 
-#else
+    #else
         status_t mkdirs(const char *path)
         {
             char *tmp = ::strdup(path);
@@ -561,7 +561,7 @@ namespace lsp
 
             // Skip first separator
             char *curr = tmp;
-            if (*curr == FILE_SEPARATOR_C)
+            if (*curr == LSP_TEST_FW_FILE_SEPARATOR_C)
                 ++curr;
 
             struct stat fs;
@@ -569,7 +569,7 @@ namespace lsp
             while (true)
             {
                 // Get next split character
-                char *p = ::strchr(curr, FILE_SEPARATOR_C);
+                char *p = ::strchr(curr, LSP_TEST_FW_FILE_SEPARATOR_C);
                 if (p != NULL)
                     *p = '\0';
 
@@ -595,7 +595,7 @@ namespace lsp
                 // Recover the path, move iterator to the next pathname
                 if (p == NULL) // Last path item?
                     break;
-                *p = FILE_SEPARATOR_C;
+                *p = LSP_TEST_FW_FILE_SEPARATOR_C;
                 curr = p + 1;
             }
 
@@ -614,11 +614,11 @@ namespace lsp
         {
             return ::strdup("/tmp/lsp-test-trace");
         }
-#endif /* PLATFORM_WINDOWS */
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
         char *get_default_resource_path()
         {
-            return ::strdup("res" FILE_SEPARATOR_S "test");
+            return ::strdup("res" LSP_TEST_FW_FILE_SEPARATOR_S "test");
         }
     }
 }

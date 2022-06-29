@@ -19,25 +19,25 @@
  * along with lsp-test-fw. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//#include <lsp-plug.in/common/types.h>
+#include <lsp-plug.in/test-fw/init.h>
 #include <lsp-plug.in/test-fw/main/executor.h>
 #include <lsp-plug.in/test-fw/main/tools.h>
-#include <lsp-plug.in/test-fw/init.h>
+#include <lsp-plug.in/test-fw/types.h>
 
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 
-#if defined(PLATFORM_LINUX) && defined(USE_GLIBC)
+#if defined(LSP_TEST_FW_PLATFORM_LINUX) && defined(USE_GLIBC)
     #include <mcheck.h>
 #endif /* PLATFORM_LINUX */
 
-#ifdef PLATFORM_UNIX_COMPATIBLE
+#ifdef LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE
     #include <signal.h>
     #include <sys/time.h>
     #include <sys/types.h>
     #include <sys/wait.h>
-#endif
+#endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
 
 namespace lsp
 {
@@ -56,9 +56,9 @@ namespace lsp
 
         status_t TestExecutor::init(config_t *config, stats_t *stats, dynarray_t *inits)
         {
-    #if defined(PLATFORM_WINDOWS)
+        #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             SetErrorMode(SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
-    #endif /* PLATFORM_WINDOWS */
+        #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
             if (config->fork)
             {
@@ -310,7 +310,7 @@ namespace lsp
             return result;
         }
 
-    #ifdef PLATFORM_WINDOWS
+    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
         DWORD WINAPI TestExecutor::thread_proc(LPVOID params)
         {
             TestExecutor *_this = reinterpret_cast<TestExecutor *>(params);
@@ -532,9 +532,9 @@ namespace lsp
 
             return STATUS_OK;
         }
-    #endif /* PLATFORM_WINDOWS */
+    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
-    #if defined(PLATFORM_LINUX) && defined(USE_GLIBC)
+    #if defined(LSP_TEST_FW_PLATFORM_LINUX) && defined(USE_GLIBC)
         void TestExecutor::start_memcheck(test::Test *v)
         {
             if (!pCfg->mtrace)
@@ -571,9 +571,9 @@ namespace lsp
         void TestExecutor::end_memcheck()
         {
         }
-    #endif /* PLATFORM_LINUX */
+    #endif /* LSP_TEST_FW_PLATFORM_LINUX */
 
-    #ifdef PLATFORM_UNIX_COMPATIBLE
+    #ifdef LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE
         void utest_timeout_handler(int signum)
         {
             fprintf(stderr, "Unit test time limit exceeded\n");
@@ -675,7 +675,7 @@ namespace lsp
             return STATUS_UNKNOWN_ERR;
         }
 
-    #endif /* PLATFORM_UNIX_COMPATIBLE */
+    #endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
     }
 }
 
