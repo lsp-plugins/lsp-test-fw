@@ -24,7 +24,6 @@
 
 #include <lsp-plug.in/test-fw/version.h>
 #include <lsp-plug.in/test-fw/types.h>
-#include <lsp-plug.in/common/status.h>
 
 #include <stdarg.h>
 

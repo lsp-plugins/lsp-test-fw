@@ -455,7 +455,7 @@ namespace lsp
             char *temp = get_temp_dir();
             char *res = NULL;
 
-            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-temp", temp);
+            int n = asprintf(&res, "%s" LSP_TEST_FW_FILE_SEPARATOR_S "lsp-test-temp", temp);
             ::free(temp);
 
             if ((n < 0) && (res != NULL))
@@ -472,7 +472,7 @@ namespace lsp
             char *temp = get_temp_dir();
             char *res = NULL;
 
-            int n = asprintf(&res, "%s" FILE_SEPARATOR_S "lsp-test-trace", temp);
+            int n = asprintf(&res, "%s" LSP_TEST_FW_FILE_SEPARATOR_S "lsp-test-trace", temp);
             ::free(temp);
 
             if ((n < 0) && (res != NULL))
@@ -494,7 +494,7 @@ namespace lsp
             lsp_utf16_t *curr = wpath;
             if (!::PathIsRelativeW(reinterpret_cast<LPCWSTR>(wpath)))
             {
-                while ((*curr != 0) && (*curr != FILE_SEPARATOR_C))
+                while ((*curr != 0) && (*curr != LSP_TEST_FW_FILE_SEPARATOR_C))
                     ++curr;
                 if (*curr == 0)
                     return STATUS_OK;
@@ -507,7 +507,7 @@ namespace lsp
             {
                 // Get next split character
                 lsp_utf16_t *p = curr;
-                while ((*p != 0) && (*p != FILE_SEPARATOR_C))
+                while ((*p != 0) && (*p != LSP_TEST_FW_FILE_SEPARATOR_C))
                     ++p;
                 if (*p == 0)
                     p   = NULL;
@@ -540,7 +540,7 @@ namespace lsp
                 // Recover the path, move iterator to the next pathname
                 if (p == NULL) // Last path item?
                     break;
-                *p   = FILE_SEPARATOR_C;
+                *p   = LSP_TEST_FW_FILE_SEPARATOR_C;
                 curr = p + 1;
             }
 
@@ -561,7 +561,7 @@ namespace lsp
 
             // Skip first separator
             char *curr = tmp;
-            if (*curr == FILE_SEPARATOR_C)
+            if (*curr == LSP_TEST_FW_FILE_SEPARATOR_C)
                 ++curr;
 
             struct stat fs;
@@ -569,7 +569,7 @@ namespace lsp
             while (true)
             {
                 // Get next split character
-                char *p = ::strchr(curr, FILE_SEPARATOR_C);
+                char *p = ::strchr(curr, LSP_TEST_FW_FILE_SEPARATOR_C);
                 if (p != NULL)
                     *p = '\0';
 
@@ -595,7 +595,7 @@ namespace lsp
                 // Recover the path, move iterator to the next pathname
                 if (p == NULL) // Last path item?
                     break;
-                *p = FILE_SEPARATOR_C;
+                *p = LSP_TEST_FW_FILE_SEPARATOR_C;
                 curr = p + 1;
             }
 
@@ -618,7 +618,7 @@ namespace lsp
 
         char *get_default_resource_path()
         {
-            return ::strdup("res" FILE_SEPARATOR_S "test");
+            return ::strdup("res" LSP_TEST_FW_FILE_SEPARATOR_S "test");
         }
     }
 }

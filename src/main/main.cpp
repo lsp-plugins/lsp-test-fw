@@ -459,7 +459,7 @@ namespace lsp
             return res;
         }
 
-        LSP_SYMBOL_EXPORT int main(int argc, const char **argv)
+        LSP_TEST_FW_EXPORT int main(int argc, const char **argv)
         {
             #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 // Add a hack to change console encoding to UTF-8
