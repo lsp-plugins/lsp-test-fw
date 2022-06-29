@@ -2,6 +2,8 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.13 ===
+
 === 1.0.12 ===
 * Removed lsp-common-lib from dependencies (breaking circular dependencies).
 * Source code is compatible with C++ 11 standard and above.
