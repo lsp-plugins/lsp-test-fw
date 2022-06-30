@@ -44,7 +44,7 @@ namespace lsp
                     test_pid_t          pid;
                     test_clock_t        submitted;
                     test::Test         *test;
-                    status_t            result;
+                    test_status_t       result;
                 } task_t;
 
             private:
@@ -63,19 +63,19 @@ namespace lsp
             #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
             protected:
-                status_t    launch_test(test::Test *test);
-                status_t    wait_for_children();
-                status_t    launch(test::UnitTest *test);
-                status_t    launch(test::PerfTest *test);
-                status_t    launch(test::ManualTest *test);
+                test_status_t   launch_test(test::Test *test);
+                test_status_t   wait_for_children();
+                test_status_t   launch(test::UnitTest *test);
+                test_status_t   launch(test::PerfTest *test);
+                test_status_t   launch(test::ManualTest *test);
 
                 // Platform-dependent routines
-                status_t    submit_task(task_t *task);
-                status_t    wait_for_child(task_t **task);
-                status_t    set_timeout(double timeout);
-                status_t    kill_timeout();
-                void        start_memcheck(test::Test *test);
-                void        end_memcheck();
+                test_status_t   submit_task(task_t *task);
+                test_status_t   wait_for_child(task_t **task);
+                test_status_t   set_timeout(double timeout);
+                test_status_t   kill_timeout();
+                void            start_memcheck(test::Test *test);
+                void            end_memcheck();
 
             #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 static DWORD WINAPI  thread_proc(LPVOID params);
@@ -109,20 +109,20 @@ namespace lsp
                  * @param stats pointer to statistics structure
                  * @return status of operation
                  */
-                status_t init(config_t *config, stats_t *stats, dynarray_t *inits);
+                test_status_t init(config_t *config, stats_t *stats, dynarray_t *inits);
 
                 /**
                  * Wait for completion of all child processes
                  * @return  status of operation
                  */
-                status_t wait();
+                test_status_t wait();
 
                 /**
                  * Submit test for execution
                  * @param test test for execution
                  * @return status of operation
                  */
-                status_t submit(test::Test *test);
+                test_status_t submit(test::Test *test);
         };
     }
 }

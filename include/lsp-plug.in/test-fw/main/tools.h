@@ -43,7 +43,7 @@ namespace lsp
          * @param space emit additional space before appending
          * @return status of operation
          */
-        status_t cmdline_append_escaped(char **buffer, size_t *length, size_t *capacity, const char *text, bool space=true);
+        test_status_t cmdline_append_escaped(char **buffer, size_t *length, size_t *capacity, const char *text, bool space=true);
 
         /**
          * Convert UTF-8 string to UTF-16 string
@@ -84,7 +84,7 @@ namespace lsp
          * @param path UTF-8 path to the directory
          * @return status of operation
          */
-        status_t mkdirs(const char *path);
+        test_status_t mkdirs(const char *path);
 
         /**
          * Get default temporary directory

@@ -78,9 +78,9 @@ namespace lsp
                 explicit config_t();
                 ~config_t()         { clear(); }
 
-                status_t        parse(FILE *out, int argc, const char **argv);
-                status_t        print_usage(FILE *out, bool detailed=false);
-                void            clear();
+                test_status_t       parse(FILE *out, int argc, const char **argv);
+                test_status_t       print_usage(FILE *out, bool detailed=false);
+                void                clear();
 
         } config_t;
     }
