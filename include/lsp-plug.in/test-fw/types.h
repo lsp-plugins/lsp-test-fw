@@ -157,33 +157,6 @@ namespace lsp
 {
     namespace test
     {
-        // Status codes
-        typedef int                 status_t;
-
-        enum status_codes
-        {
-            STATUS_OK,                    //!< Successful status
-            STATUS_UNKNOWN_ERR,           //!< Unknown error occurred
-            STATUS_NO_MEM,                //!< Not enough memory
-            STATUS_NO_DATA,               //!< No data at the input
-            STATUS_BAD_ARGUMENTS,         //!< Invalid arguments
-            STATUS_BAD_STATE,             //!< Bad state of the object/data structure
-            STATUS_DUPLICATED,            //!< Duplicated value
-            STATUS_PERMISSION_DENIED,     //!< Permission denied while accessing the resource
-            STATUS_IO_ERROR,              //!< Generic input/output error
-            STATUS_INVALID_VALUE,         //!< Invalid value passed as an argument
-            STATUS_INSUFFICIENT,          //!< Insufficient arguments
-            STATUS_KILLED,                //!< The task has been gracefully terminated
-            STATUS_TIMED_OUT,             //!< The task has timed out
-            STATUS_FAILED,                //!< The task has failed
-            STATUS_NOT_DIRECTORY,         //!< The accessed object is not a directory
-            STATUS_NOT_FOUND,             //!< The object was not found
-
-            STATUS_TOTAL,
-            STATUS_MAX = STATUS_TOTAL - 1,
-            STATUS_SUCCESS = STATUS_OK    //!< STATUS_SUCCESS an alias to STATUS_OK
-        };
-
         // Wide size types
         typedef uint64_t        wsize_t;
         typedef int64_t         wssize_t;

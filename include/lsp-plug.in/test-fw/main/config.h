@@ -19,12 +19,13 @@
  * along with lsp-test-fw. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TEST_MAIN_CONFIG_H_
-#define TEST_MAIN_CONFIG_H_
+#ifndef LSP_TEST_FW_MAIN_CONFIG_H_
+#define LSP_TEST_FW_MAIN_CONFIG_H_
 
 #include <lsp-plug.in/test-fw/version.h>
 
 #include <lsp-plug.in/test-fw/main/dynarray.h>
+#include <lsp-plug.in/test-fw/main/status.h>
 #include <lsp-plug.in/test-fw/types.h>
 
 #include <stdio.h>
@@ -85,4 +86,4 @@ namespace lsp
     }
 }
 
-#endif /* TEST_MAIN_CONFIG_H_ */
+#endif /* LSP_TEST_FW_MAIN_CONFIG_H_ */

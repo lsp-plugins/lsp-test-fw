@@ -29,6 +29,7 @@
 #include <lsp-plug.in/test-fw/utest.h>
 
 #include <lsp-plug.in/test-fw/main/config.h>
+#include <lsp-plug.in/test-fw/main/status.h>
 #include <lsp-plug.in/test-fw/main/types.h>
 
 namespace lsp
