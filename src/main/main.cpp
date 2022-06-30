@@ -40,6 +40,13 @@ namespace lsp
 {
     namespace test
     {
+        static int cmp_test_name(const void *a, const void *b)
+        {
+            const test::Test * const *_a = reinterpret_cast<const test::Test * const *>(a);
+            const test::Test * const *_b = reinterpret_cast<const test::Test * const *>(b);
+            return ::strcmp((*_a)->full_name(), (*_b)->full_name());
+        }
+
         test_status_t check_duplicates(const char *tclass, dynarray_t *list)
         {
             size_t n = list->size();
@@ -62,6 +69,8 @@ namespace lsp
                     return LSP_TEST_FW_DUPLICATED;
                 }
             }
+
+            ::qsort(list->array<test::Test>(), list->size(), sizeof(test::Test *), cmp_test_name);
 
             return LSP_TEST_FW_OK;
         }
@@ -216,35 +225,27 @@ namespace lsp
             return false;
         }
 
-        static int cmp_test_name(const void *a, const void *b)
+        test_status_t list_all(const char *text, const config_t *cfg, dynarray_t *list)
         {
-            const char *const *_a = reinterpret_cast<const char *const *>(a);
-            const char *const *_b = reinterpret_cast<const char *const *>(b);
-            return ::strcmp(*_a, *_b);
-        }
-
-        test_status_t list_all(const char *text, dynarray_t *list)
-        {
-            dynarray_t names;
-
-            for (size_t i=0, n=list->size() ; i < n; ++i)
+            if (!cfg->suppress)
             {
-                test::Test *test = list->at<test::Test>(i);
-                const char *str = test->full_name();
-                if (str != NULL)
-                    names.add(str);
+                ::printf("\n%s (total: %d):\n", text, int(list->size()));
+                for (size_t i=0, n=list->size() ; i < n; ++i)
+                {
+                    test::Test *test = list->at<test::Test>(i);
+                    ::printf("  %s\n", test->full_name());
+                }
+                ::printf("\n");
+            }
+            else
+            {
+                for (size_t i=0, n=list->size() ; i < n; ++i)
+                {
+                    test::Test *test = list->at<test::Test>(i);
+                    ::printf("%s\n", test->full_name());
+                }
             }
 
-            size_t n = names.size();
-            ::printf("\n%s (total: %d):\n", text, int(n));
-
-            // Sort list of tests and output it to screen
-            ::qsort(names.array<void>(), names.size(), sizeof(void *), cmp_test_name);
-            for (size_t i=0; i<n; ++i)
-                ::printf("  %s\n", names.at<char>(i));
-            ::printf("\n");
-
-            names.clear();
             return LSP_TEST_FW_OK;
         }
 
@@ -369,7 +370,7 @@ namespace lsp
                         return LSP_TEST_FW_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available unit tests", &list);
+                        return list_all("List of available unit tests", &cfg, &list);
                     break;
                 case PTEST:
                     res = test::ptest_init(&list);
@@ -384,7 +385,7 @@ namespace lsp
                         return LSP_TEST_FW_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available performance tests", &list);
+                        return list_all("List of available performance tests", &cfg, &list);
                     break;
                 case MTEST:
                     res = test::mtest_init(&list);
@@ -399,7 +400,7 @@ namespace lsp
                         return LSP_TEST_FW_NO_DATA;
                     }
                     else if (cfg.list_all)
-                        return list_all("List of available manual tests", &list);
+                        return list_all("List of available manual tests", &cfg, &list);
                     break;
                 default:
                     return LSP_TEST_FW_BAD_ARGUMENTS;

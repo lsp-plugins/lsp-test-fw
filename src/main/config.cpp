@@ -74,6 +74,7 @@ namespace lsp
             ::fputs("    -r, --resource path   Location of the resource directory used by tests,\n", out);
             ::fprintf(out, "                          default resource path is '%s'\n", resdir);
             ::fputs("    -s, --silent          Do not output additional information from tests\n", out);
+            ::fputs("    -ss, --suppress       Suppress extra messages, output only necessary information\n", out);
             ::fputs("    -si, --sysinfo        Output system information\n", out);
             ::fputs("    -t, --tracepath path  Override default trace path with specified value\n", out);
             ::fprintf(out, "                          default trace path is '%s'\n", tracepath);
@@ -155,6 +156,8 @@ namespace lsp
                     verbose     = true;
                 else if ((!::strcmp(argv[i], "--silent")) || (!::strcmp(argv[i], "-s")))
                     verbose     = false;
+                else if ((!::strcmp(argv[i], "--suppress")) || (!::strcmp(argv[i], "-ss")))
+                    suppress    = true;
                 else if ((!::strcmp(argv[i], "--sysinfo")) || (!::strcmp(argv[i], "-si")))
                     sysinfo     = true;
                 else if ((!::strcmp(argv[i], "--nosysinfo")) || (!::strcmp(argv[i], "-nsi")))
@@ -289,6 +292,7 @@ namespace lsp
             ilist           = false;
             sysinfo         = true;
             is_child        = false;
+            suppress        = false;
             executable      = NULL;
             tracepath       = NULL;
             resource        = NULL;

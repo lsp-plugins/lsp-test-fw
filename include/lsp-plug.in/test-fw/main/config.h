@@ -46,6 +46,7 @@ namespace lsp
         {
             private:
                 config_t & operator = (const config_t &);
+                config_t(const config_t &);
 
             public:
                 test_mode_t                 mode;
@@ -57,6 +58,7 @@ namespace lsp
                 bool                        ilist;
                 bool                        sysinfo;
                 bool                        is_child;
+                bool                        suppress;
                 size_t                      threads;
                 const char                 *executable;
                 const char                 *outfile;

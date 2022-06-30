@@ -154,6 +154,7 @@ USAGE: {utest|ptest|mtest} [args...] [test name...]
     -r, --resource path   Location of the resource directory used by tests,
                           default resource path is 'res/test'
     -s, --silent          Do not output additional information from tests
+    -ss, --suppress       Suppress extra messages, output only necessary information
     -si, --sysinfo        Output system information
     -t, --tracepath path  Override default trace path with specified value
                           default trace path is '/tmp/lsp-test-trace'
