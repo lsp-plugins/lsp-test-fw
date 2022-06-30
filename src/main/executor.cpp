@@ -54,7 +54,7 @@ namespace lsp
             }
         }
 
-        status_t TestExecutor::init(config_t *config, stats_t *stats, dynarray_t *inits)
+        test_status_t TestExecutor::init(config_t *config, stats_t *stats, dynarray_t *inits)
         {
         #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
             SetErrorMode(SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
@@ -68,7 +68,7 @@ namespace lsp
 
                 task_t *tasks   = new task_t[threads];
                 if (tasks == NULL)
-                    return STATUS_NO_MEM;
+                    return LSP_TEST_FW_NO_MEM;
 
                 nTasksMax       = threads;
                 nTasksActive    = 0;
@@ -85,25 +85,25 @@ namespace lsp
             pStats      = stats;
             pInits      = inits;
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::wait()
+        test_status_t TestExecutor::wait()
         {
             if (pCfg->is_child)
-                return STATUS_OK;
+                return LSP_TEST_FW_OK;
 
             while (nTasksActive > 0)
             {
-                status_t res    = wait_for_children();
-                if (res != STATUS_OK)
+                test_status_t res   = wait_for_children();
+                if (res != LSP_TEST_FW_OK)
                     return res;
             }
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::submit(test::Test *test)
+        test_status_t TestExecutor::submit(test::Test *test)
         {
             const char *tclass  = (pCfg->mode == UTEST) ? "unit test" :
                                   (pCfg->mode == PTEST) ? "performance test" :
@@ -112,10 +112,10 @@ namespace lsp
             // Do we need to fork() ?
             if ((!pCfg->fork) || (vTasks == NULL) || (nTasksMax <= 0))
             {
-                status_t res = launch_test(test);
+                test_status_t res = launch_test(test);
                 if (pStats != NULL)
                 {
-                    if (res == STATUS_OK)
+                    if (res == LSP_TEST_FW_OK)
                         pStats->success.add(test);
                     else
                         pStats->failed.add(test);
@@ -126,8 +126,8 @@ namespace lsp
             // Wait for empty task descriptor
             while (nTasksActive >= nTasksMax)
             {
-                status_t res    = wait_for_children();
-                if (res != STATUS_OK)
+                test_status_t res   = wait_for_children();
+                if (res != LSP_TEST_FW_OK)
                     return res;
             }
 
@@ -145,16 +145,16 @@ namespace lsp
             task_t *task        = &vTasks[nTasksActive++];
             get_test_time(&task->submitted); // Remember start time of the test
             task->test          = test;
-            task->result        = STATUS_OK;
+            task->result        = LSP_TEST_FW_OK;
 
             // Launch the nested process
-            status_t res        = submit_task(task);
-            if (res != STATUS_OK)
+            test_status_t res   = submit_task(task);
+            if (res != LSP_TEST_FW_OK)
                 --nTasksActive;
             return res;
         }
 
-        status_t TestExecutor::wait_for_children()
+        test_status_t TestExecutor::wait_for_children()
         {
             test_clock_t ts;
             const char *test    = (pCfg->mode == UTEST) ? "Unit test" :
@@ -163,8 +163,8 @@ namespace lsp
 
             // Try to wait for child task
             task_t *task        = NULL;
-            status_t res        = wait_for_child(&task);
-            if ((res != STATUS_OK) || (task == NULL))
+            test_status_t res   = wait_for_child(&task);
+            if ((res != LSP_TEST_FW_OK) || (task == NULL))
                 return res;
 
             // Get execution time
@@ -176,7 +176,7 @@ namespace lsp
             // Update statistics
             if (pStats != NULL)
             {
-                if (task->result == STATUS_OK)
+                if (task->result == LSP_TEST_FW_OK)
                     pStats->success.add(task->test);
                 else
                     pStats->failed.add(task->test);
@@ -186,18 +186,18 @@ namespace lsp
             if (task < &vTasks[--nTasksActive])
                 *task   = vTasks[nTasksActive];
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::launch(test::UnitTest *test)
+        test_status_t TestExecutor::launch(test::UnitTest *test)
         {
             // Set-up timer for deadline expiration
-            status_t res = STATUS_OK;
+            test_status_t res = LSP_TEST_FW_OK;
             if (!pCfg->debug)
                 res = set_timeout(test->time_limit());
 
             // Launch unit test
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
             {
                 config_t *cfg = const_cast<config_t *>(pCfg);
 
@@ -210,18 +210,18 @@ namespace lsp
             }
 
             // Cancel and disable timer
-            if ((res == STATUS_OK) && (!pCfg->debug))
+            if ((res == LSP_TEST_FW_OK) && (!pCfg->debug))
             {
-                status_t res = kill_timeout();
-                if (res != STATUS_OK)
+                test_status_t res = kill_timeout();
+                if (res != LSP_TEST_FW_OK)
                     return res;
             }
 
             // Return success
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::launch(test::PerfTest *test)
+        test_status_t TestExecutor::launch(test::PerfTest *test)
         {
             config_t *cfg = const_cast<config_t *>(pCfg);
 
@@ -254,10 +254,10 @@ namespace lsp
 
             test->free_stats();
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::launch(test::ManualTest *test)
+        test_status_t TestExecutor::launch(test::ManualTest *test)
         {
             config_t *cfg = const_cast<config_t *>(pCfg);
             // Execute performance test
@@ -268,10 +268,10 @@ namespace lsp
             test->destroy();
             end_memcheck();
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::launch_test(test::Test *test)
+        test_status_t TestExecutor::launch_test(test::Test *test)
         {
             // 'before' should be called in direct order
             if (pInits != NULL)
@@ -283,7 +283,7 @@ namespace lsp
                 }
             }
 
-            status_t result;
+            test_status_t result;
             switch (pCfg->mode)
             {
                 case UTEST:
@@ -296,7 +296,7 @@ namespace lsp
                     result = launch(static_cast<test::ManualTest *>(test));
                     break;
                 default:
-                    result = STATUS_BAD_STATE;
+                    result = LSP_TEST_FW_BAD_STATE;
                     break;
             }
 
@@ -326,7 +326,7 @@ namespace lsp
                 fprintf(stderr, "Test execution wait failed: error_code=%d\n", int(GetLastError()));
                 fflush(stdout);
                 fflush(stderr);
-                ExitProcess(STATUS_TIMED_OUT);
+                ExitProcess(LSP_TEST_FW_TIMED_OUT);
             }
             else if (res >= WAIT_ABANDONED_0)
                 res    -= WAIT_ABANDONED_0;
@@ -336,23 +336,23 @@ namespace lsp
                 fprintf(stderr, "Test has timed out\n");
                 fflush(stdout);
                 fflush(stderr);
-                ExitProcess(STATUS_TIMED_OUT);
+                ExitProcess(LSP_TEST_FW_TIMED_OUT);
             }
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::set_timeout(double timeout)
+        test_status_t TestExecutor::set_timeout(double timeout)
         {
             hLock   = CreateMutexW(NULL, TRUE, L"timeout_handler");
             if (!hLock)
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
 
             hTimer  = CreateWaitableTimerW(NULL, TRUE, L"timeout_countdown");
             if (!hTimer)
             {
                 CloseHandle(hLock);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
             LARGE_INTEGER liDueTime;
@@ -361,7 +361,7 @@ namespace lsp
             {
                 CloseHandle(hTimer);
                 CloseHandle(hLock);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
             DWORD tid;
@@ -370,13 +370,13 @@ namespace lsp
             {
                 CloseHandle(hTimer);
                 CloseHandle(hLock);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::kill_timeout()
+        test_status_t TestExecutor::kill_timeout()
         {
             ReleaseMutex(hLock);
             WaitForSingleObject(hThread, INFINITE);
@@ -388,19 +388,19 @@ namespace lsp
             hTimer      = 0;
             hLock       = 0;
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::submit_task(task_t *task)
+        test_status_t TestExecutor::submit_task(task_t *task)
         {
-            status_t res;
+            test_status_t res;
             char *cmdbuf    = NULL;
             size_t len      = 0;
             size_t cap      = 0;
 
             // Append executable name
             res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->executable, false);
-            if (res != STATUS_OK)
+            if (res != LSP_TEST_FW_OK)
                 return res;
 
             // Append parameters
@@ -409,54 +409,54 @@ namespace lsp
                     (pCfg->mode == PTEST) ? "ptest" :
                     "mtest"
                 );
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "--run-as-nested-process");
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-nsi");
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-nf");
-            if ((res == STATUS_OK) && (pCfg->debug))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->debug))
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-d");
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, (pCfg->verbose) ? "-v" : "-s");
-            if ((res == STATUS_OK) && (pCfg->outfile != NULL))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->outfile != NULL))
             {
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-o");
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                     res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->outfile);
             }
-            if ((res == STATUS_OK) && (pCfg->tracepath != NULL))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->tracepath != NULL))
             {
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-t");
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                     res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->tracepath);
             }
-            if ((res == STATUS_OK) && (pCfg->tempdir != NULL))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->tempdir != NULL))
             {
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-td");
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                     res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->tempdir);
             }
-            if ((res == STATUS_OK) && (pCfg->resource != NULL))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->resource != NULL))
             {
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-r");
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                     res     = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->resource);
             }
-            if (res == STATUS_OK)
+            if (res == LSP_TEST_FW_OK)
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, task->test->full_name());
-            if ((res == STATUS_OK) && (pCfg->args.size() > 0))
+            if ((res == LSP_TEST_FW_OK) && (pCfg->args.size() > 0))
             {
                 res     = cmdline_append_escaped(&cmdbuf, &len, &cap, "-a");
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                 {
                     for (size_t i=0, n=pCfg->args.size(); i<n; ++i)
-                        if ((res = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->args.at<char>(i))) != STATUS_OK)
+                        if ((res = cmdline_append_escaped(&cmdbuf, &len, &cap, pCfg->args.at<char>(i))) != LSP_TEST_FW_OK)
                             break;
                 }
             }
 
-            if (res != STATUS_OK)
+            if (res != LSP_TEST_FW_OK)
             {
                 free(cmdbuf);
                 return res;
@@ -466,12 +466,12 @@ namespace lsp
             WCHAR *cmd          = utf8_to_utf16(cmdbuf);
             free(cmdbuf);
             if (cmd == NULL)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
             WCHAR *executable   = utf8_to_utf16(pCfg->executable);
             if (executable == NULL)
             {
                 free(cmd);
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
             }
 
             // Launch child process
@@ -502,20 +502,20 @@ namespace lsp
                 WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), cmd, len, NULL, NULL);
                 free(cmd);
                 free(executable);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
             free(cmd);
             free(executable);
 
             task->pid       = pi;
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::wait_for_child(task_t **task)
+        test_status_t TestExecutor::wait_for_child(task_t **task)
         {
             if (nTasksActive <= 0)
-                return STATUS_NOT_FOUND;
+                return LSP_TEST_FW_NOT_FOUND;
 
             // Wait for any child process exit event
             HANDLE *pids    = reinterpret_cast<HANDLE *>(alloca(nTasksActive * sizeof(HANDLE)));
@@ -530,7 +530,7 @@ namespace lsp
             vTasks[idx].result  = code;
             *task       = &vTasks[idx];
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
     #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
@@ -577,10 +577,10 @@ namespace lsp
         void utest_timeout_handler(int signum)
         {
             fprintf(stderr, "Unit test time limit exceeded\n");
-            exit(STATUS_TIMED_OUT);
+            exit(LSP_TEST_FW_TIMED_OUT);
         }
 
-        status_t TestExecutor::submit_task(task_t *task)
+        test_status_t TestExecutor::submit_task(task_t *task)
         {
             pid_t pid = fork();
             if (pid == 0)
@@ -593,14 +593,14 @@ namespace lsp
                 int error = errno;
                 fprintf(stderr, "Error while spawning child process %d\n", error);
                 fflush(stderr);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
             task->pid       = pid;
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::wait_for_child(task_t **task)
+        test_status_t TestExecutor::wait_for_child(task_t **task)
         {
             task_t *ret       = NULL;
             int result;
@@ -611,7 +611,7 @@ namespace lsp
                 if (pid < 0)
                 {
                     fprintf(stderr, "Child process completion wait failed\n");
-                    return STATUS_UNKNOWN_ERR;
+                    return LSP_TEST_FW_UNKNOWN_ERR;
                 }
 
                 // Find the associated thread process
@@ -630,13 +630,13 @@ namespace lsp
             if (WIFEXITED(result))
                 ret->result   = WEXITSTATUS(result);
             else if (WIFSIGNALED(result))
-                ret->result   = STATUS_KILLED;
+                ret->result   = LSP_TEST_FW_KILLED;
 
             *task   = ret;
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t TestExecutor::set_timeout(double timeout)
+        test_status_t TestExecutor::set_timeout(double timeout)
         {
             struct itimerval timer;
 
@@ -644,20 +644,20 @@ namespace lsp
             timer.it_interval.tv_usec   = suseconds_t(timeout * 1e+6) % 1000000L;
             timer.it_value              = timer.it_interval;
 
-            status_t res                = STATUS_OK;
+            test_status_t res           = LSP_TEST_FW_OK;
             if (setitimer(ITIMER_REAL, &timer, NULL) != 0)
             {
                 int code = errno;
                 fprintf(stderr, "setitimer failed with errno=%d\n", code);
                 fflush(stderr);
-                res = STATUS_UNKNOWN_ERR;
+                res = LSP_TEST_FW_UNKNOWN_ERR;
             }
             signal(SIGALRM, utest_timeout_handler);
 
             return res;
         }
 
-        status_t TestExecutor::kill_timeout()
+        test_status_t TestExecutor::kill_timeout()
         {
             struct itimerval timer;
 
@@ -667,12 +667,12 @@ namespace lsp
 
             signal(SIGALRM, SIG_DFL);
             if (setitimer(ITIMER_REAL, &timer, NULL) == 0)
-                return STATUS_OK;
+                return LSP_TEST_FW_OK;
 
             int code = errno;
             fprintf(stderr, "setitimer failed with errno=%d\n", code);
             fflush(stderr);
-            return STATUS_UNKNOWN_ERR;
+            return LSP_TEST_FW_UNKNOWN_ERR;
         }
 
     #endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */

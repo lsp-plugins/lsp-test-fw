@@ -114,7 +114,7 @@ namespace lsp
                 UnitTest & operator = (const UnitTest &);
 
             private:
-                friend status_t         utest_init(dynarray_t *list);
+                friend test_status_t    utest_init(dynarray_t *list);
 
             private:
                 static UnitTest        *__root;

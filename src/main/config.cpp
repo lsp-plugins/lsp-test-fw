@@ -29,23 +29,23 @@ namespace lsp
 {
     namespace test
     {
-        status_t config_t::print_usage(FILE *out, bool detailed)
+        test_status_t config_t::print_usage(FILE *out, bool detailed)
         {
             ::fputs("USAGE: {utest|ptest|mtest} [args...] [test name...]\n", out);
             if (!detailed)
-                return STATUS_INSUFFICIENT;
+                return LSP_TEST_FW_INSUFFICIENT;
 
             char *tempdir = get_default_temporary_path();
             if (!tempdir)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
 
             char *tracepath = get_default_trace_path();
             if (!tempdir)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
 
             char *resdir = get_default_resource_path();
             if (!resdir)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
 
             ::fputs("  First argument:\n", out);
             ::fputs("    utest                 Unit testing subsystem\n", out);
@@ -74,6 +74,7 @@ namespace lsp
             ::fputs("    -r, --resource path   Location of the resource directory used by tests,\n", out);
             ::fprintf(out, "                          default resource path is '%s'\n", resdir);
             ::fputs("    -s, --silent          Do not output additional information from tests\n", out);
+            ::fputs("    -ss, --suppress       Suppress extra messages, output only necessary information\n", out);
             ::fputs("    -si, --sysinfo        Output system information\n", out);
             ::fputs("    -t, --tracepath path  Override default trace path with specified value\n", out);
             ::fprintf(out, "                          default trace path is '%s'\n", tracepath);
@@ -85,10 +86,10 @@ namespace lsp
             ::free(tracepath);
             ::free(resdir);
 
-            return STATUS_INSUFFICIENT;
+            return LSP_TEST_FW_INSUFFICIENT;
         }
 
-        status_t config_t::parse(FILE *out, int argc, const char **argv)
+        test_status_t config_t::parse(FILE *out, int argc, const char **argv)
         {
             clear();
 
@@ -106,7 +107,7 @@ namespace lsp
             {
                 fprintf(stderr, "Error obtaining command-line arguments\n");
                 fflush(stderr);
-                return STATUS_UNKNOWN_ERR;
+                return LSP_TEST_FW_UNKNOWN_ERR;
             }
 
             // Convert UTF-16-encoded command line arguments to UTF-8-encoded
@@ -118,7 +119,7 @@ namespace lsp
             {
                 utf8_argv[i]        = utf16_to_utf8(arglist[i]);
                 if (utf8_argv[i] == NULL)
-                    return STATUS_NO_MEM;
+                    return LSP_TEST_FW_NO_MEM;
             }
 
             LocalFree(arglist);
@@ -155,6 +156,8 @@ namespace lsp
                     verbose     = true;
                 else if ((!::strcmp(argv[i], "--silent")) || (!::strcmp(argv[i], "-s")))
                     verbose     = false;
+                else if ((!::strcmp(argv[i], "--suppress")) || (!::strcmp(argv[i], "-ss")))
+                    suppress    = true;
                 else if ((!::strcmp(argv[i], "--sysinfo")) || (!::strcmp(argv[i], "-si")))
                     sysinfo     = true;
                 else if ((!::strcmp(argv[i], "--nosysinfo")) || (!::strcmp(argv[i], "-nsi")))
@@ -174,43 +177,43 @@ namespace lsp
                     if ((++i) >= argc)
                     {
                         ::fprintf(stderr, "Not specified trace path\n");
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
                     if (tracepath != NULL)
                         ::free(tracepath);
                     if (!(tracepath = ::strdup(argv[i])))
-                        return STATUS_NO_MEM;
+                        return LSP_TEST_FW_NO_MEM;
                 }
                 else if ((!::strcmp(argv[i], "--tempdir")) || (!::strcmp(argv[i], "-td")))
                 {
                     if ((++i) >= argc)
                     {
                         ::fprintf(stderr, "Not specified path to temporary directory\n");
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
                     if (tempdir != NULL)
                         ::free(tempdir);
                     if (!(tempdir = ::strdup(argv[i])))
-                        return STATUS_NO_MEM;
+                        return LSP_TEST_FW_NO_MEM;
                 }
                 else if ((!::strcmp(argv[i], "--resource")) || (!::strcmp(argv[i], "-r")))
                 {
                     if ((++i) >= argc)
                     {
                         ::fprintf(stderr, "Not specified resource path\n");
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
                     if (resource != NULL)
                         ::free(resource);
                     if (!(resource = ::strdup(argv[i])))
-                        return STATUS_NO_MEM;
+                        return LSP_TEST_FW_NO_MEM;
                 }
                 else if ((!::strcmp(argv[i], "--outfile")) || (!::strcmp(argv[i], "-o")))
                 {
                     if ((++i) >= argc)
                     {
                         ::fprintf(stderr, "Not specified name of output file\n");
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
                     outfile     = argv[i];
                 }
@@ -224,7 +227,7 @@ namespace lsp
                     if ((++i) >= argc)
                     {
                         fprintf(stderr, "Not specified number of jobs for --jobs parameter\n");
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
 
                     errno           = 0;
@@ -233,7 +236,7 @@ namespace lsp
                     if ((errno != 0) || ((*end) != '\0') || (jobs <= 0))
                     {
                         ::fprintf(stderr, "Invalid value for --jobs parameter: %s\n", argv[i]);
-                        return STATUS_INVALID_VALUE;
+                        return LSP_TEST_FW_INVALID_VALUE;
                     }
                     threads         = size_t(jobs);
                 }
@@ -260,19 +263,19 @@ namespace lsp
             if (!tracepath)
             {
                 if (!(tracepath = get_default_trace_path()))
-                    return STATUS_NO_MEM;
+                    return LSP_TEST_FW_NO_MEM;
             }
 
             if (!tempdir)
             {
                 if (!(tempdir = get_default_temporary_path()))
-                    return STATUS_NO_MEM;
+                    return LSP_TEST_FW_NO_MEM;
             }
 
             if (!resource)
             {
                 if (!(resource = get_default_resource_path()))
-                    return STATUS_NO_MEM;
+                    return LSP_TEST_FW_NO_MEM;
             }
 
             return 0;
@@ -289,6 +292,7 @@ namespace lsp
             ilist           = false;
             sysinfo         = true;
             is_child        = false;
+            suppress        = false;
             executable      = NULL;
             tracepath       = NULL;
             resource        = NULL;

@@ -138,7 +138,7 @@ namespace lsp
                 PerfTest & operator = (const PerfTest &);
 
             private:
-                friend status_t ptest_init(dynarray_t *list);
+                friend test_status_t    ptest_init(dynarray_t *list);
 
             private:
                 static PerfTest    *__root;

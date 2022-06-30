@@ -38,35 +38,35 @@ namespace lsp
     namespace test
     {
     #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
-        static status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
+        static test_status_t cmdline_append_char(char **buffer, size_t *length, size_t *capacity, char ch)
         {
             char *dst           = *buffer;
             if (*length < *capacity)
             {
                 dst[(*length)++]    = ch;
-                return STATUS_OK;
+                return LSP_TEST_FW_OK;
             }
 
             *capacity   = (*capacity > 0) ? ((*capacity) << 1) : 32;
             dst         = static_cast<char *>(::realloc(dst, *capacity + 1)); // Do not count the last '\0' character as capacity
             if (dst == NULL)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
             *buffer     = dst;
             dst[(*length)++]    = ch;
 
-            return STATUS_OK;
+            return LSP_TEST_FW_OK;
         }
 
-        status_t cmdline_append_escaped(char **buffer, size_t *length, size_t *capacity, const char *text, bool space)
+        test_status_t cmdline_append_escaped(char **buffer, size_t *length, size_t *capacity, const char *text, bool space)
         {
             char ch;
-            status_t res    = STATUS_OK;
+            test_status_t res   = LSP_TEST_FW_OK;
 
             // Append space if needed
             if (space)
             {
                 res = cmdline_append_char(buffer, length, capacity, ' ');
-                if (res != STATUS_OK)
+                if (res != LSP_TEST_FW_OK)
                     return res;
             }
 
@@ -75,7 +75,7 @@ namespace lsp
             {
                 // Empty argument
                 res = cmdline_append_char(buffer, length, capacity, '\"');
-                if (res == STATUS_OK)
+                if (res == LSP_TEST_FW_OK)
                     res = cmdline_append_char(buffer, length, capacity, '\"');
             }
             else
@@ -89,14 +89,14 @@ namespace lsp
                     {
                         case ' ':
                             res = cmdline_append_char(buffer, length, capacity, '\"');
-                            if (res == STATUS_OK)
+                            if (res == LSP_TEST_FW_OK)
                                 res = cmdline_append_char(buffer, length, capacity, ' ');
-                            if (res == STATUS_OK)
+                            if (res == LSP_TEST_FW_OK)
                                 res = cmdline_append_char(buffer, length, capacity, '\"');
                             break;
                         case '"':
                             res = cmdline_append_char(buffer, length, capacity, '\\');
-                            if (res == STATUS_OK)
+                            if (res == LSP_TEST_FW_OK)
                                 res = cmdline_append_char(buffer, length, capacity, '\"');
                             break;
                         default:
@@ -104,7 +104,7 @@ namespace lsp
                             break;
                     }
 
-                    if (res != STATUS_OK)
+                    if (res != LSP_TEST_FW_OK)
                         break;
                 }
             }
@@ -484,11 +484,11 @@ namespace lsp
             return res;
         }
 
-        status_t mkdirs(const char *path)
+        test_status_t mkdirs(const char *path)
         {
             utf16_t *wpath = utf8_to_utf16(path);
             if (!wpath)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
 
             // Skip first separator if path is not relative
             utf16_t *curr = wpath;
@@ -497,11 +497,11 @@ namespace lsp
                 while ((*curr != 0) && (*curr != LSP_TEST_FW_FILE_SEPARATOR_C))
                     ++curr;
                 if (*curr == 0)
-                    return STATUS_OK;
+                    return LSP_TEST_FW_OK;
                 ++curr;
             }
 
-            status_t res = STATUS_OK;
+            test_status_t res = LSP_TEST_FW_OK;
 
             while (true)
             {
@@ -524,7 +524,7 @@ namespace lsp
                         DWORD x = ::GetFileAttributesW(wpath);
                         if (x == INVALID_FILE_ATTRIBUTES)
                         {
-                            res = STATUS_PERMISSION_DENIED;
+                            res = LSP_TEST_FW_PERMISSION_DENIED;
                             break;
                         }
                     }
@@ -533,7 +533,7 @@ namespace lsp
                 // Check the final result
                 if (!(x & FILE_ATTRIBUTE_DIRECTORY))
                 {
-                    res = STATUS_NOT_DIRECTORY;
+                    res = LSP_TEST_FW_NOT_DIRECTORY;
                     break;
                 }
 
@@ -551,13 +551,13 @@ namespace lsp
         }
 
     #else
-        status_t mkdirs(const char *path)
+        test_status_t mkdirs(const char *path)
         {
             char *tmp = ::strdup(path);
             if (!tmp)
-                return STATUS_NO_MEM;
+                return LSP_TEST_FW_NO_MEM;
 
-            status_t res = STATUS_OK;
+            test_status_t res = LSP_TEST_FW_OK;
 
             // Skip first separator
             char *curr = tmp;
@@ -588,7 +588,7 @@ namespace lsp
                 // Check the final result
                 if (x != 0)
                 {
-                    res = STATUS_IO_ERROR;
+                    res = LSP_TEST_FW_IO_ERROR;
                     break;
                 }
 

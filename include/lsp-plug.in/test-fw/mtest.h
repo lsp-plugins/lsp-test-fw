@@ -96,7 +96,7 @@ namespace lsp
                 ManualTest & operator = (const ManualTest &);
 
             private:
-                friend status_t         mtest_init(dynarray_t *list);
+                friend test_status_t    mtest_init(dynarray_t *list);
 
             private:
                 static ManualTest      *__root;

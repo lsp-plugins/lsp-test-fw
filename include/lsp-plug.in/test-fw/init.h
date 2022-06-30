@@ -74,7 +74,7 @@ namespace lsp
                 Initializer & operator = (const Initializer &);
 
             private:
-                friend status_t         init_init(dynarray_t *list);
+                friend test_status_t    init_init(dynarray_t *list);
 
             private:
                 static Initializer     *__root;

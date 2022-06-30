@@ -19,12 +19,13 @@
  * along with lsp-test-fw. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TEST_MAIN_CONFIG_H_
-#define TEST_MAIN_CONFIG_H_
+#ifndef LSP_TEST_FW_MAIN_CONFIG_H_
+#define LSP_TEST_FW_MAIN_CONFIG_H_
 
 #include <lsp-plug.in/test-fw/version.h>
 
 #include <lsp-plug.in/test-fw/main/dynarray.h>
+#include <lsp-plug.in/test-fw/main/status.h>
 #include <lsp-plug.in/test-fw/types.h>
 
 #include <stdio.h>
@@ -45,6 +46,7 @@ namespace lsp
         {
             private:
                 config_t & operator = (const config_t &);
+                config_t(const config_t &);
 
             public:
                 test_mode_t                 mode;
@@ -56,6 +58,7 @@ namespace lsp
                 bool                        ilist;
                 bool                        sysinfo;
                 bool                        is_child;
+                bool                        suppress;
                 size_t                      threads;
                 const char                 *executable;
                 const char                 *outfile;
@@ -77,12 +80,12 @@ namespace lsp
                 explicit config_t();
                 ~config_t()         { clear(); }
 
-                status_t        parse(FILE *out, int argc, const char **argv);
-                status_t        print_usage(FILE *out, bool detailed=false);
-                void            clear();
+                test_status_t       parse(FILE *out, int argc, const char **argv);
+                test_status_t       print_usage(FILE *out, bool detailed=false);
+                void                clear();
 
         } config_t;
     }
 }
 
-#endif /* TEST_MAIN_CONFIG_H_ */
+#endif /* LSP_TEST_FW_MAIN_CONFIG_H_ */
