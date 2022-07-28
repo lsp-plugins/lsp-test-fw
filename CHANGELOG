@@ -4,6 +4,7 @@
 
 === 1.0.15 ===
 * Got rid of the plauge <windows.h> header in the header files.
+* Updated build scripts.
 
 === 1.0.14 ===
 * Updated build scripts.
