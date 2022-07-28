@@ -53,7 +53,6 @@ endif
 
 #------------------------------------------------------------------------------
 # Windows dependencies
-
 WINDOWS_DEPENDENCIES = \
   LIBSHLWAPI
 
