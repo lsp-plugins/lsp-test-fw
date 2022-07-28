@@ -30,7 +30,7 @@
 
 #if defined(LSP_TEST_FW_PLATFORM_LINUX) && defined(USE_GLIBC)
     #include <mcheck.h>
-#endif /* PLATFORM_LINUX */
+#endif /* LSP_TEST_FW_PLATFORM_LINUX */
 
 #ifdef LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE
     #include <signal.h>
@@ -38,6 +38,10 @@
     #include <sys/types.h>
     #include <sys/wait.h>
 #endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
+
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {

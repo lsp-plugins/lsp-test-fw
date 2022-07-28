@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {
