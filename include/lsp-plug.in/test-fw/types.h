@@ -147,12 +147,6 @@
 
 #define LSP_TEST_FW_DEFAULT_ALIGN       16
 
-//-----------------------------------------------------------------------------
-// Different platform-dependent includes
-#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
-    #include <windows.h>
-#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
-
 namespace lsp
 {
     namespace test
@@ -163,7 +157,7 @@ namespace lsp
 
         // Character type definition
     #if defined(LSP_TEST_FW_WCHART_16BIT)
-        typedef WCHAR               utf16_t;
+        typedef wchar_t             utf16_t;
         typedef uint32_t            utf32_t;
     #else
         typedef uint16_t            utf16_t;
