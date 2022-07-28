@@ -23,8 +23,7 @@ DEMO_TEST                  := 1
 
 #------------------------------------------------------------------------------
 # List of common dependencies
-DEPENDENCIES = \
-  LIBPTHREAD
+DEPENDENCIES =
 
 TEST_DEPENDENCIES = 
 

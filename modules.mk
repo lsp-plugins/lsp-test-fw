@@ -18,12 +18,11 @@
 # along with lsp-test-fw.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Variables that describe dependencies
-LIBPTHREAD_VERSION         := system
-LIBPTHREAD_NAME            := libpthread
-LIBPTHREAD_TYPE            := opt
-LIBPTHREAD_LDFLAGS         := -lpthread
+#------------------------------------------------------------------------------
+# Variables that describe source code dependencies
 
+#------------------------------------------------------------------------------
+# Variables that describe system dependencies
 LIBSHLWAPI_VERSION         := system
 LIBSHLWAPI_NAME            := libshlwapi
 LIBSHLWAPI_TYPE            := opt
