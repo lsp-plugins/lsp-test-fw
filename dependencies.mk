@@ -38,7 +38,6 @@ ifeq ($(PLATFORM),Linux)
   TEST_DEPENDENCIES        += $(LINUX_TEST_DEPENDENCIES)
 endif
 
-
 #------------------------------------------------------------------------------
 # BSD dependencies
 BSD_DEPENDENCIES =
