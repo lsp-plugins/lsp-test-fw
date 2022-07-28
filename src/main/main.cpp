@@ -370,7 +370,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         ::fprintf(stderr, "No unit tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available unit tests", &cfg, &list);
@@ -385,7 +385,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         fprintf(stderr, "No performance tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available performance tests", &cfg, &list);
@@ -400,7 +400,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         fprintf(stderr, "No manual tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available manual tests", &cfg, &list);
