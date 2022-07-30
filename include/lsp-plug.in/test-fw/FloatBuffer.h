@@ -39,7 +39,7 @@ namespace lsp
          * and constant boundary markers that helps to detect buffer
          * overruns/underruns
          */
-        class FloatBuffer
+        class LSP_TEST_FW_PUBLIC FloatBuffer
         {
             private:
                 float      *pBuffer;

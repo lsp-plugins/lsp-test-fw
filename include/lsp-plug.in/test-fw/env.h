@@ -29,7 +29,7 @@ namespace lsp
 {
     namespace test
     {
-        class Environment
+        class LSP_TEST_FW_PUBLIC Environment
         {
             private:
                 Environment & operator = (const Environment &);

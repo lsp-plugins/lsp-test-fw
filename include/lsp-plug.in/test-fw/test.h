@@ -53,7 +53,7 @@ namespace lsp
 {
     namespace test
     {
-        class Test: public Environment
+        class LSP_TEST_FW_PUBLIC Test: public Environment
         {
             private:
                 static dynarray_t   support;

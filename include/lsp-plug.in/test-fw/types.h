@@ -133,18 +133,6 @@
     #define LSP_TEST_FW_WCHART_16BIT
 #endif /* WCHAR_MAX */
 
-//-----------------------------------------------------------------------------
-// Configure the export symbol
-#ifdef LSP_TEST_FW_BUILTIN
-    #define LSP_TEST_FW_EXPORT
-#else
-    #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
-        #define LSP_TEST_FW_EXPORT              __declspec(dllexport)
-    #else
-        #define LSP_TEST_FW_EXPORT              __attribute__((visibility("default")))
-    #endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
-#endif /* LSP_TEST_FW_BUILTIN */
-
 #define LSP_TEST_FW_DEFAULT_ALIGN       16
 
 namespace lsp

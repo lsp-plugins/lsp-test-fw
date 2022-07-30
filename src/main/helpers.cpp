@@ -30,6 +30,7 @@ namespace lsp
 {
     namespace test
     {
+        LSP_TEST_FW_PUBLIC
         bool float_equals_relative(float a, float b, float tolerance)
         {
             if (a == 0.0f)
@@ -41,11 +42,13 @@ namespace lsp
             return fabs(1.0f - diff) < tolerance;
         }
 
+        LSP_TEST_FW_PUBLIC
         bool float_equals_absolute(float a, float b, float tolerance)
         {
             return fabs(a - b) <= tolerance;
         }
 
+        LSP_TEST_FW_PUBLIC
         bool float_equals_adaptive(float a, float b, float tolerance)
         {
             return (fabs(a) > 1.0f) ?
@@ -53,6 +56,7 @@ namespace lsp
                 float_equals_absolute(a, b, tolerance);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_bytes(FILE *out, const char *text, const void *buf, size_t count)
         {
             ::fprintf(out, "  dump of buffer %s[%p]:\n    ", text, buf);
@@ -63,6 +67,7 @@ namespace lsp
             ::fflush(out);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(FILE *out, const char *text, const size_t *buf, size_t count)
         {
             ::fprintf(out, "  dump of buffer %s[%p]:\n    ", text, buf);
@@ -72,6 +77,7 @@ namespace lsp
             ::fflush(out);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(FILE *out, const char *text, const ssize_t *buf, size_t count)
         {
             ::fprintf(out, "  dump of buffer %s[%p]:\n    ", text, buf);
@@ -81,6 +87,7 @@ namespace lsp
             ::fflush(out);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(FILE *out, const char *text, const float *buf, size_t count)
         {
             ::fprintf(out, "dump of buffer %s[%p]:\n", text, buf);
@@ -89,6 +96,7 @@ namespace lsp
             ::fflush(out);
         }
 
+        LSP_TEST_FW_PUBLIC
         void printf_buffer(FILE *out, const float *buf, size_t count, const char *fmt, ...)
         {
             va_list vl;
@@ -107,26 +115,31 @@ namespace lsp
             ::fflush(out);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(const char *text, const size_t *buf, size_t count)
         {
             dump_buffer(stdout, text, buf, count);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_bytes(const char *text, const void *buf, size_t count)
         {
             dump_bytes(stdout, text, buf, count);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(const char *text, const ssize_t *buf, size_t count)
         {
             dump_buffer(stdout, text, buf, count);
         }
 
+        LSP_TEST_FW_PUBLIC
         void dump_buffer(const char *text, const float *buf, size_t count)
         {
             dump_buffer(stdout, text, buf, count);
         }
 
+        LSP_TEST_FW_PUBLIC
         void printf_buffer(const float *buf, size_t count, const char *fmt, ...)
         {
             va_list vl;
@@ -145,24 +158,28 @@ namespace lsp
             ::fflush(stdout);
         }
 
+        LSP_TEST_FW_PUBLIC
         float randf(float min, float max)
         {
             float v = float(rand()) / (float(RAND_MAX) + 1.0f);
             return min + (max - min) * v;
         }
 
+        LSP_TEST_FW_PUBLIC
         void randomize_positive(float *buf, size_t n)
         {
             for (size_t i=0; i<n; ++i)
                 buf[i] = (float(rand())/float(RAND_MAX)) + 0.001f;
         }
 
+        LSP_TEST_FW_PUBLIC
         void randomize_0to1(float *buf, size_t n)
         {
             for (size_t i=0; i<n; ++i)
                 buf[i] = (float(rand())/float(RAND_MAX-1));
         }
 
+        LSP_TEST_FW_PUBLIC
         void randomize(float *buf, size_t n, float min, float max)
         {
             float delta = max - min;
@@ -170,12 +187,14 @@ namespace lsp
                 buf[i] = min + delta * (float(rand())/float(RAND_MAX-1));
         }
 
+        LSP_TEST_FW_PUBLIC
         void randomize_negative(float *buf, size_t n)
         {
             for (size_t i=0; i<n; ++i)
                 buf[i] = - ((float(rand())/float(RAND_MAX)) + 0.001f);
         }
 
+        LSP_TEST_FW_PUBLIC
         void randomize_sign(float *buf, size_t n)
         {
             for (size_t i=0; i<n; ++i)

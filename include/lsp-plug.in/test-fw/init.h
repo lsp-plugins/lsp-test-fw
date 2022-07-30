@@ -68,7 +68,7 @@ namespace lsp
         /**
          * Test initializer base class
          */
-        class Initializer: public Environment
+        class LSP_TEST_FW_PUBLIC Initializer: public Environment
         {
             private:
                 Initializer & operator = (const Initializer &);
