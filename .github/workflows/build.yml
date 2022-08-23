@@ -1,0 +1,106 @@
+---
+
+name: Build on various Operating Systems
+
+on:
+  push:
+    branches: [devel, master]
+  pull_request:
+    branches: [devel, master]
+
+env:
+  ARTIFACT: lsp-test-fw
+  VALGRIND_ARGS: --error-exitcode=255 --leak-check=full --track-origins=yes --keep-debuginfo=yes --suppressions=.github/workflows/valgrind.supp
+
+jobs:
+  arch_linux:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: pacman --noconfirm -Syu base-devel git
+      - uses: actions/checkout@v2
+      - name: Configure project
+        run: make config TEST=1
+      - name: Fetch project dependencies
+        run: make fetch
+      - name: Build project
+        run: make VERBOSE=1
+      - name: Run unit tests
+        run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
+      - name: Run unit tests with memcheck
+        run: |
+          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
+          do \
+            valgrind ${{VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          done
+  VALGRIND_ARGS: --error-exitcode=255 --leak-check=no --track-origins=yes --suppressions=.github/workflows/valgrind.supp
+  arch_linux_debug:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: pacman --noconfirm -Syu base-devel git valgrind
+      - uses: actions/checkout@v2
+      - name: Configure project
+        run: make config TEST=1 DEBUG=1
+      - name: Fetch project dependencies
+        run: make fetch
+      - name: Build project
+        run: make VERBOSE=1
+      - name: Run unit tests
+        run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
+      - name: Run unit tests with memcheck
+        run: |
+          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
+          do \
+            valgrind ${{VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          done
+  opensuse_leap:
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:latest
+    steps:
+      - name: Install dependencies
+        run: zypper --non-interactive --no-gpg-checks in tar gzip gcc gcc-c++ git make
+      - uses: actions/checkout@v2
+      - name: Configure project
+        run: make config TEST=1
+      - name: Fetch project dependencies
+        run: make fetch
+      - name: Build project
+        run: make VERBOSE=1
+      - name: Run unit tests
+        run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
+      - name: Run unit tests with memcheck
+        run: |
+          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
+          do \
+            valgrind ${{VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          done
+  debian_stable:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:stable
+    steps:
+      - name: Update repositories
+        run: apt-get update
+      - name: Install dependencies
+        run: apt-get -y install gcc g++ git make pkg-config
+      - uses: actions/checkout@v2
+      - name: Configure project
+        run: make config TEST=1
+      - name: Fetch project dependencies
+        run: make fetch
+      - name: Build project
+        run: make VERBOSE=1
+      - name: Run unit tests
+        run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
+      - name: Run unit tests with memcheck
+        run: |
+          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
+          do \
+            valgrind ${{VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          done
