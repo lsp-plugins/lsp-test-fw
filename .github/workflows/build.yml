@@ -35,7 +35,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+          for test in $(.build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --list --suppress); do \
+            echo "memcheck $test"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   arch_linux_debug:
@@ -60,7 +61,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+          for test in $(.build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --list --suppress); do \
+            echo "memcheck $test"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   opensuse_leap:
@@ -81,7 +83,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+          for test in $(.build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --list --suppress); do \
+            echo "memcheck $test"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   debian_stable:
@@ -104,6 +107,7 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+          for test in $(.build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --list --suppress); do \
+            echo "memcheck $test"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
