@@ -35,7 +35,6 @@ jobs:
           do \
             valgrind ${{VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
           done
-  VALGRIND_ARGS: --error-exitcode=255 --leak-check=no --track-origins=yes --suppressions=.github/workflows/valgrind.supp
   arch_linux_debug:
     runs-on: ubuntu-latest
     container:
