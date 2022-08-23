@@ -31,9 +31,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
-          do \
-            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   arch_linux_debug:
     runs-on: ubuntu-latest
@@ -53,9 +52,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
-          do \
-            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   opensuse_leap:
     runs-on: ubuntu-latest
@@ -75,9 +73,8 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
-          do \
-            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
   debian_stable:
     runs-on: ubuntu-latest
@@ -99,7 +96,6 @@ jobs:
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1
       - name: Run unit tests with memcheck
         run: |
-          for test in `.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress`; \
-          do \
-            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test \
+          for test in $(.build/target/lsp-test-fw/lsp-test-fw-test utest --list --suppress); do \
+            valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
