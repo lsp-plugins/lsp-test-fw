@@ -42,7 +42,7 @@ namespace lsp
             MTEST
         };
 
-        typedef struct config_t
+        typedef struct LSP_TEST_FW_PUBLIC config_t
         {
             private:
                 config_t & operator = (const config_t &);

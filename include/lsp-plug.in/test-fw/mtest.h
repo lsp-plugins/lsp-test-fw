@@ -90,7 +90,7 @@ namespace lsp
 {
     namespace test
     {
-        class ManualTest: public Test
+        class LSP_TEST_FW_PUBLIC ManualTest: public Test
         {
             private:
                 ManualTest & operator = (const ManualTest &);

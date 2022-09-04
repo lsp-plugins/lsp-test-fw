@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
 
 namespace lsp
 {
@@ -47,7 +50,7 @@ namespace lsp
             return ::strcmp((*_a)->full_name(), (*_b)->full_name());
         }
 
-        test_status_t check_duplicates(const char *tclass, dynarray_t *list)
+        static test_status_t check_duplicates(const char *tclass, dynarray_t *list)
         {
             size_t n = list->size();
 
@@ -119,7 +122,7 @@ namespace lsp
             return LSP_TEST_FW_OK;
         }
 
-        void out_system_info(config_t *cfg, dynarray_t *inits)
+        static void out_system_info(config_t *cfg, dynarray_t *inits)
         {
             for (size_t i=0, n=inits->size(); i<n; ++i)
             {
@@ -129,7 +132,7 @@ namespace lsp
             }
         }
 
-        void initialize_global(config_t *cfg, dynarray_t *inits)
+        static void initialize_global(config_t *cfg, dynarray_t *inits)
         {
             // Initialize in direct order
             for (size_t i=0, n=inits->size(); i<n; ++i)
@@ -140,7 +143,7 @@ namespace lsp
             }
         }
 
-        void finalize_global(dynarray_t *inits)
+        static void finalize_global(dynarray_t *inits)
         {
             // Finalize in reverse order
             for (ssize_t i=inits->size()-1; i>=0; --i)
@@ -150,7 +153,7 @@ namespace lsp
             }
         }
 
-        bool match_string(const char *p, const char *m)
+        static bool match_string(const char *p, const char *m)
         {
             while (p != NULL)
             {
@@ -188,7 +191,7 @@ namespace lsp
             return ((m == NULL) || (*m == '\0'));
         }
 
-        bool match_list(dynarray_t &list, test::Test *v, bool match_if_empty)
+        static bool match_list(dynarray_t &list, test::Test *v, bool match_if_empty)
         {
             // Empty list always matches
             if (list.size() <= 0)
@@ -205,7 +208,7 @@ namespace lsp
             return false;
         }
 
-        bool check_test_skip(config_t *cfg, stats_t *stats, test::Test *v)
+        static bool check_test_skip(config_t *cfg, stats_t *stats, test::Test *v)
         {
             // Check that test is not ignored
             if (v->ignore())
@@ -225,7 +228,7 @@ namespace lsp
             return false;
         }
 
-        test_status_t list_all(const char *text, const config_t *cfg, dynarray_t *list)
+        static test_status_t list_all(const char *text, const config_t *cfg, dynarray_t *list)
         {
             if (!cfg->suppress)
             {
@@ -249,7 +252,7 @@ namespace lsp
             return LSP_TEST_FW_OK;
         }
 
-        test_status_t output_stats(const config_t *cfg, stats_t *stats)
+        static test_status_t output_stats(const config_t *cfg, stats_t *stats)
         {
             const char *tclass =
                     (cfg->mode == UTEST) ? "unit test" :
@@ -292,7 +295,7 @@ namespace lsp
             return LSP_TEST_FW_OK;
         }
 
-        test_status_t create_outfile(config_t *cfg, dynarray_t *inits)
+        static test_status_t create_outfile(config_t *cfg, dynarray_t *inits)
         {
             if (cfg->outfile == NULL)
                 return LSP_TEST_FW_OK;
@@ -319,7 +322,7 @@ namespace lsp
             return LSP_TEST_FW_OK;
         }
 
-        int test_main(int argc, const char **argv)
+        static int test_main(int argc, const char **argv)
         {
             // Parse configuration
             config_t cfg;
@@ -367,7 +370,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         ::fprintf(stderr, "No unit tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available unit tests", &cfg, &list);
@@ -382,7 +385,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         fprintf(stderr, "No performance tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available performance tests", &cfg, &list);
@@ -397,7 +400,7 @@ namespace lsp
                     else if (list.is_empty())
                     {
                         fprintf(stderr, "No manual tests available\n");
-                        return LSP_TEST_FW_NO_DATA;
+                        return LSP_TEST_FW_OK;
                     }
                     else if (cfg.list_all)
                         return list_all("List of available manual tests", &cfg, &list);
@@ -460,7 +463,8 @@ namespace lsp
             return res;
         }
 
-        LSP_TEST_FW_EXPORT int main(int argc, const char **argv)
+        LSP_TEST_FW_PUBLIC
+        int main(int argc, const char **argv)
         {
             #ifdef LSP_TEST_FW_PLATFORM_WINDOWS
                 // Add a hack to change console encoding to UTF-8

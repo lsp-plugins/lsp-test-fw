@@ -36,7 +36,7 @@ namespace lsp
          * Implementation of simple dynamic array of pointers,
          * to avoid STL and std::vector stuff
          */
-        typedef class dynarray_t
+        typedef class LSP_TEST_FW_PUBLIC dynarray_t
         {
             private:
                 dynarray_t & operator = (const dynarray_t &);

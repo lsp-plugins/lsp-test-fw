@@ -108,7 +108,7 @@ namespace lsp
 {
     namespace test
     {
-        class UnitTest: public Test
+        class LSP_TEST_FW_PUBLIC UnitTest: public Test
         {
             private:
                 UnitTest & operator = (const UnitTest &);

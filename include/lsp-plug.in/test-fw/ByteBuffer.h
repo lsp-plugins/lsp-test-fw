@@ -37,7 +37,7 @@ namespace lsp
          * and constant boundary markers that helps to detect buffer
          * overruns/underruns
          */
-        class ByteBuffer
+        class LSP_TEST_FW_PUBLIC ByteBuffer
         {
             private:
                 uint8_t    *pBuffer;

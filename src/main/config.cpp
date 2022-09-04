@@ -25,6 +25,10 @@
 #include <lsp-plug.in/test-fw/main/config.h>
 #include <lsp-plug.in/test-fw/main/tools.h>
 
+#ifdef LSP_TEST_FW_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif /* LSP_TEST_FW_PLATFORM_WINDOWS */
+
 namespace lsp
 {
     namespace test

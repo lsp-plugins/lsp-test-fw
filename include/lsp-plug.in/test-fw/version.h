@@ -25,6 +25,22 @@
 // Define header version
 #define LSP_TEST_FW_MAJOR           1
 #define LSP_TEST_FW_MINOR           0
-#define LSP_TEST_FW_MICRO           14
+#define LSP_TEST_FW_MICRO           15
+
+#if defined(__WINDOWS__) || defined(__WIN32__) || defined(__WIN64__) || defined(_WIN64) || defined(_WIN32) || defined(__WINNT) || defined(__WINNT__)
+    #define LSP_TEST_FW_EXPORT_MODIFIER     __declspec(dllexport)
+    #define LSP_TEST_FW_IMPORT_MODIFIER     __declspec(dllimport)
+#else
+    #define LSP_TEST_FW_EXPORT_MODIFIER     __attribute__((visibility("default")))
+    #define LSP_TEST_FW_IMPORT_MODIFIER
+#endif /* __WINDOWS__ */
+
+#if defined(LSP_TEST_FW_PUBLISHER)
+    #define LSP_TEST_FW_PUBLIC          LSP_TEST_FW_EXPORT_MODIFIER
+#elif defined(LSP_TEST_FW_BUILTIN) || defined(LSP_IDE_DEBUG)
+    #define LSP_TEST_FW_PUBLIC
+#else
+    #define LSP_TEST_FW_PUBLIC          LSP_TEST_FW_IMPORT_MODIFIER
+#endif
 
 #endif /* LSP_PLUG_IN_TEST_FW_VERSION_H_ */

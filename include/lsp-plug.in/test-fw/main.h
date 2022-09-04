@@ -35,7 +35,8 @@ namespace lsp
          * @param argv list of arguments
          * @return execution code
          */
-        LSP_TEST_FW_EXPORT int main(int argc, const char **argv);
+        LSP_TEST_FW_PUBLIC
+        int main(int argc, const char **argv);
     }
 }
 

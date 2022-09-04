@@ -132,7 +132,7 @@ namespace lsp
 {
     namespace test
     {
-        class PerfTest: public Test
+        class LSP_TEST_FW_PUBLIC PerfTest: public Test
         {
             private:
                 PerfTest & operator = (const PerfTest &);

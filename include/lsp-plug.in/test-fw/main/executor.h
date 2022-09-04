@@ -36,7 +36,7 @@ namespace lsp
 {
     namespace test
     {
-        class TestExecutor
+        class LSP_TEST_FW_PUBLIC TestExecutor
         {
             protected:
                 typedef struct task_t
