@@ -25,7 +25,7 @@
 // Define header version
 #define LSP_TEST_FW_MAJOR           1
 #define LSP_TEST_FW_MINOR           0
-#define LSP_TEST_FW_MICRO           116
+#define LSP_TEST_FW_MICRO           11117
 
 #if defined(__WINDOWS__) || defined(__WIN32__) || defined(__WIN64__) || defined(_WIN64) || defined(_WIN32) || defined(__WINNT) || defined(__WINNT__)
     #define LSP_TEST_FW_EXPORT_MODIFIER     __declspec(dllexport)
