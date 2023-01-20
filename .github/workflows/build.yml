@@ -87,7 +87,7 @@ jobs:
             echo "***** MEMCHECK $test *****"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
-  opensuse_tumbleweed:
+  opensuse_tumbleweed_clang:
     runs-on: ubuntu-latest
     container:
       image: opensuse/tumbleweed:latest
