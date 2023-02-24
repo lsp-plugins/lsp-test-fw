@@ -133,7 +133,7 @@ jobs:
             echo "***** MEMCHECK $test *****"; \
             valgrind ${{env.VALGRIND_ARGS}} .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test utest --verbose --jobs 1 --nofork --debug $test; \
           done
-  windows:
+  windows_mingw64:
     runs-on: windows-2022
     defaults:
       run:
