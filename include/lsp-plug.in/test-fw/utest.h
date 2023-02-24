@@ -66,33 +66,37 @@
 
 #define UTEST_SUPPORTED(ptr)        TEST_SUPPORTED(ptr)
 
-#define UTEST_FAIL_MSG(message, ...) {  \
+#define UTEST_FAIL_MSG(message, ...) do {  \
             ::fprintf(stderr, "Unit test '%s.%s' has failed at file %s, line %d with message: \n  " message  "\n", \
                     __test_group, __test_name, __FILE__, __LINE__, ## __VA_ARGS__); \
             ::exit(1); \
-        }
+        } while (false)
 
-#define UTEST_FAIL(...) {\
+#define UTEST_FAIL(...) do {\
             ::fprintf(stderr, "Unit test '%s.%s' has failed at file %s, line %d\n", \
                     __test_group, __test_name, __FILE__, __LINE__); \
             __VA_ARGS__; \
             ::exit(1); \
-        }
+        } while (false)
 
 #define UTEST_ASSERT(code, ...) \
-        if (!(code)) { \
-            ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
+        do { \
+            if (!(code)) { \
+                ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
                     __test_group, __test_name, __FILE__, __LINE__, # code); \
-            __VA_ARGS__; \
-            ::exit(2); \
-        }
+                    __VA_ARGS__; \
+                    ::exit(2); \
+            } \
+        } while (false)
 
 #define UTEST_ASSERT_MSG(code, message, ...) \
-        if (!(code)) { \
-            ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
+        do { \
+            if (!(code)) { \
+                ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
                     __test_group, __test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
-            ::exit(2); \
-        }
+                    ::exit(2); \
+            } \
+        } while (false)
 
 #define UTEST_FOREACH(var, ...)    \
         const size_t ___sizes[] = { __VA_ARGS__, 0 }; \
@@ -127,7 +131,7 @@ namespace lsp
             public:
                 virtual double time_limit() const;
         };
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* TEST_UTEST_H_ */

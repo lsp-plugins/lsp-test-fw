@@ -50,35 +50,37 @@
 
 #define MTEST_SUPPORTED(ptr)        TEST_SUPPORTED(ptr)
 
-#define MTEST_FAIL_MSG(message, ...) {  \
+#define MTEST_FAIL_MSG(message, ...) do {  \
             fprintf(stderr, "Manual test '%s.%s' has failed at file %s, line %d with message: \n  " message  "\n", \
                     __test_group, __test_name, __FILE__, __LINE__, ## __VA_ARGS__); \
             exit(1); \
-        }
+        } while (false)
 
-#define MTEST_FAIL(...) {\
+#define MTEST_FAIL(...) do {\
             fprintf(stderr, "Manual test '%s.%s' has failed at file %s, line %d\n", \
                     __test_group, __test_name, __FILE__, __LINE__); \
             __VA_ARGS__; \
             exit(1); \
-        }
+        } while (false)
 
 #define MTEST_FAIL_SILENT()     exit(5);
 
-#define MTEST_ASSERT(code, ...) \
-        if (!(code)) { \
-            fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
-                    __test_group, __test_name, __FILE__, __LINE__, # code); \
-            __VA_ARGS__; \
-            exit(2); \
-        }
+#define MTEST_ASSERT(code, ...) do { \
+            if (!(code)) { \
+                fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
+                        __test_group, __test_name, __FILE__, __LINE__, # code); \
+                __VA_ARGS__; \
+                exit(2); \
+            } \
+        } while (false)
 
-#define MTEST_ASSERT_MSG(code, message, ...) \
-        if (!(code)) { \
-            fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
-                    __test_group, __test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
-            exit(2); \
-        }
+#define MTEST_ASSERT_MSG(code, message, ...) do { \
+            if (!(code)) { \
+                fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
+                        __test_group, __test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
+                exit(2); \
+            } \
+        } while (false)
 
 #define MTEST_END \
         } manual_test;  /* mtest class */ \
@@ -106,7 +108,7 @@ namespace lsp
                 explicit ManualTest(const char *group, const char *name);
                 virtual ~ManualTest();
         };
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* TEST_MTEST_H_ */
