@@ -110,17 +110,17 @@
         gather_stats(NULL, 0.0f, 1); \
         printf("\n");
 
-#define PTEST_FAIL_MSG(message, ...) {  \
+#define PTEST_FAIL_MSG(message, ...) do {  \
             fprintf(stderr, "Performance test '%s.%s' has failed at file %s, line %d with message:\n  " message  "\n", \
                     __test_group, __test_name, __FILE__, __LINE__, ## __VA_ARGS__); \
             exit(1); \
-        }
+        } while (false)
 
-#define PTEST_FAIL() {\
+#define PTEST_FAIL() do {\
             fprintf(stderr, "Performance test '%s.%s' has failed at file %s, line %d\n", \
                     __test_group, __test_name, __FILE__, __LINE__); \
             exit(1); \
-        }
+        } while (false)
 
 #define PTEST_END \
         } performance_test;  /* ptest class */ \
@@ -183,7 +183,7 @@ namespace lsp
                 void                dump_stats(FILE *out) const;
                 void                free_stats();
         };
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* TEST_PTEST_H_ */

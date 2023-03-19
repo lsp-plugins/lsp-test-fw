@@ -2,6 +2,11 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.19 ===
+* Added test build for Windows using MSYS2.
+* More strict syntax for test asserts.
+* Updated build scripts.
+
 === 1.0.18 ===
 * Fixed invalid version in header files.
 

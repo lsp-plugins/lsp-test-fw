@@ -42,12 +42,13 @@
 /**
  * Do an assertion
  */
-#define TEST_ASSERT(code) \
-        if (!(code)) { \
-            fprintf(stderr, "Test assertion has failed at file %s, line %d:\n  %s\n", \
-                    __FILE__, __LINE__, # code); \
-            exit(2); \
-        }
+#define TEST_ASSERT(code) do { \
+            if (!(code)) { \
+                fprintf(stderr, "Test assertion has failed at file %s, line %d:\n  %s\n", \
+                        __FILE__, __LINE__, # code); \
+                exit(2); \
+            } \
+        } while (false)
 
 namespace lsp
 {
@@ -97,7 +98,7 @@ namespace lsp
                     }
 
         };
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* TEST_TEST_H_ */
