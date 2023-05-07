@@ -117,7 +117,7 @@ $(CXX_OBJ_ALL):
 # Producing large object files
 $(ARTIFACT_OBJ): $(CXX_OBJ)
 	@echo "  $($(HOST)LD)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ))"
-	@$($(HOST)LD) -o $(ARTIFACT_OBJ) $($(HOST)LDFLAGS) $(CXX_OBJ)
+	$($(HOST)LD) -o $(ARTIFACT_OBJ) $($(HOST)LDFLAGS) $(CXX_OBJ)
 
 $(ARTIFACT_OBJ_TEST): $(CXX_OBJ_TEST)
 	echo "  $($(HOST)LD)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ_TEST))"
