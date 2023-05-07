@@ -58,6 +58,7 @@ ARTIFACT_SLIB           = $(ARTIFACT_BIN)/$(LIBRARY_PREFIX)$(ARTIFACT_NAME)-$(AR
 ARTIFACT_LIBLINK        = $(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(LIBRARY_EXT)
 ARTIFACT_SLIBLINK       = $(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(STATICLIB_EXT)
 ARTIFACT_PC             = $(ARTIFACT_BIN)/$(ARTIFACT_NAME)$(PKGCONFIG_EXT)
+ARTIFACT_DEPS           = $(call dquery, OBJ, $(ARTIFACT_DEPENDENCIES))
 ARTIFACT_CFLAGS         = $(call query, CFLAGS, $(ARTIFACT_DEPENDENCIES) $(HOST)$(ARTIFACT_ID))
 ARTIFACT_DEPFLAGS       = $(call query, CFLAGS, $(ARTIFACT_DEP_LIST))
 ARTIFACT_LDFLAGS        = $(call query, LDFLAGS, $(ARTIFACT_DEPENDENCIES) $(HOST)$(ARTIFACT_ID))
@@ -105,6 +106,12 @@ DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 
 .DEFAULT_GOAL = all
 .PHONY: compile all install uninstall
+.PHONY: $(ARTIFACT_DEPS)
+
+# Compile dependencies
+$(ARTIFACT_DEPS):
+	echo "make $(notdir $($(@)_OBJ))"
+	$(MAKE) -C "$($(@)_PATH)" compile VERBOSE="$(VERBOSE)" CONFIG="$(CONFIG)" DEMO_TEST="0" BUILD_HOST="$(BUILD_HOST)"
 
 # Compilation
 compile: $(ARTIFACT_OBJ)
