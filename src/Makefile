@@ -79,6 +79,12 @@ CXX_OBJ_TEST            = $(patsubst %.cpp, $(ARTIFACT_BIN)/%.o, $(CXX_SRC_TEST)
 CXX_OBJ_NOTEST          = $(patsubst %.cpp, $(ARTIFACT_BIN)/%.o, $(CXX_SRC_NOTEST))
 CXX_OBJ_EXT             = $(patsubst %.cpp, $(ARTIFACT_BIN)/%.o, $(CXX_SRC_EXT))
 CXX_OBJ                 = $(CXX_OBJ_MAIN) $(CXX_OBJ_EXT)
+CXX_OBJ_ALL             = \
+  $(CXX_OBJ_MAIN) \
+  $(CXX_OBJ_EXPORT) \
+  $(CXX_OBJ_EXT) \
+  $(CXX_OBJ_TEST) \
+  $(CXX_OBJ_NOTEST)
 
 ALL_HEADERS             = $(call rwildcard, $(ARTIFACT_INC), *.h)
 CXX_FILE                = $(patsubst $(ARTIFACT_BIN)/%.o,%.cpp, $(@))
@@ -86,13 +92,6 @@ CXX_HDR_PATHS           = $(foreach hdr,$(ARTIFACT_HEADERS),$(ARTIFACT_INC)/$(hd
 CXX_HEADERS             = $(foreach path,$(CXX_HDR_PATHS),$(call rwildcard, $(path), *.h))
 CXX_INSTHEADERS         = $(patsubst $(ARTIFACT_INC)/%,$(DESTDIR)$(INCDIR)/%,$(CXX_HEADERS))
 DEP_FILE                = $(patsubst %.o,%.d, $(@))
-
-CXX_OBJ_ALL             = \
-  $(CXX_OBJ_MAIN) \
-  $(CXX_OBJ_EXPORT) \
-  $(CXX_OBJ_EXT) \
-  $(CXX_OBJ_TEST) \
-  $(CXX_OBJ_NOTEST)
 
 BUILD_ALL               = $(ARTIFACT_LIB) $(ARTIFACT_SLIB) $(ARTIFACT_PC)
 
