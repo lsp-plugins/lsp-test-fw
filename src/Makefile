@@ -58,7 +58,6 @@ ARTIFACT_SLIB           = $(ARTIFACT_BIN)/$(LIBRARY_PREFIX)$(ARTIFACT_NAME)-$(AR
 ARTIFACT_LIBLINK        = $(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(LIBRARY_EXT)
 ARTIFACT_SLIBLINK       = $(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(STATICLIB_EXT)
 ARTIFACT_PC             = $(ARTIFACT_BIN)/$(ARTIFACT_NAME)$(PKGCONFIG_EXT)
-ARTIFACT_DEPS           = $(call dquery, OBJ, $(ARTIFACT_DEPENDENCIES))
 ARTIFACT_CFLAGS         = $(call query, CFLAGS, $(ARTIFACT_DEPENDENCIES) $(HOST)$(ARTIFACT_ID))
 ARTIFACT_DEPFLAGS       = $(call query, CFLAGS, $(ARTIFACT_DEP_LIST))
 ARTIFACT_LDFLAGS        = $(call query, LDFLAGS, $(ARTIFACT_DEPENDENCIES) $(HOST)$(ARTIFACT_ID))
@@ -86,6 +85,14 @@ CXX_FILE                = $(patsubst $(ARTIFACT_BIN)/%.o,%.cpp, $(@))
 CXX_HDR_PATHS           = $(foreach hdr,$(ARTIFACT_HEADERS),$(ARTIFACT_INC)/$(hdr))
 CXX_HEADERS             = $(foreach path,$(CXX_HDR_PATHS),$(call rwildcard, $(path), *.h))
 CXX_INSTHEADERS         = $(patsubst $(ARTIFACT_INC)/%,$(DESTDIR)$(INCDIR)/%,$(CXX_HEADERS))
+DEP_FILE                = $(patsubst %.o,%.d, $(@))
+
+CXX_OBJ_ALL             = \
+  $(CXX_OBJ_MAIN) \
+  $(CXX_OBJ_EXPORT) \
+  $(CXX_OBJ_EXT) \
+  $(CXX_OBJ_TEST) \
+  $(CXX_OBJ_NOTEST)
 
 BUILD_ALL               = $(ARTIFACT_LIB) $(ARTIFACT_SLIB) $(ARTIFACT_PC)
 
@@ -98,41 +105,15 @@ DEP_CXX_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.cpp,$(@))
 DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 
 .DEFAULT_GOAL = all
-.PHONY: compile depend dep_clean all install uninstall
-.PHONY: $(ARTIFACT_DEPS)
-
-# Dependencies
-dep_clean:
-
-$(DEP_CXX): dep_clean
-	echo "  dep  [$(ARTIFACT_NAME)] $(DEP_CXX_FILE)"
-	mkdir -p $(dir $(@))
-	$(CXX) -MM -MT "\$$($(ARTIFACT_ID)_BIN)/$(DEP_DEP_FILE)" -MF $(@) $(DEP_CXX_FILE) $(CXXFLAGS) $(INCLUDE) $(ARTIFACT_DEPFLAGS)
-
-depend: $(DEP_CXX)
-	$(foreach dep,$(ARTIFACT_DEP_LIST),\
-	  $(if $($(dep)_INC), \
-	    $(eval REPLACEMENT = $(shell echo "$($(dep)_INC)" | sed -E "s/\//\\\\\\\\\//g")) \
-	    $(eval SED_RULES += s/$(REPLACEMENT)/\$$$$\\($(dep)_INC\\)/g;)\
-	  )\
-	  $(if $($(dep)_BIN), \
-	    $(eval REPLACEMENT = $(shell echo "$($(dep)_BIN)" | sed -E "s/\//\\\\\\\\\//g")) \
-	    $(eval SED_RULES += s/$(REPLACEMENT)/\\$$$$\\($(dep)_BIN\\)/g;)\
-	  )\
-	)
-	cat $(DEP_CXX) | sed -E "$(SED_RULES)" >Makefile.d
-
-$(ARTIFACT_DEPS):
-	echo "make $(notdir $($(@)_OBJ))"
-	$(MAKE) -C "$($(@)_PATH)" compile VERBOSE="$(VERBOSE)" CONFIG="$(CONFIG)" DEMO_TEST="0" BUILD_HOST="$(BUILD_HOST)"
+.PHONY: compile all install uninstall
 
 # Compilation
 compile: $(ARTIFACT_OBJ)
 
-$(CXX_OBJ_MAIN) $(CXX_OBJ_EXPORT) $(CXX_OBJ_EXT) $(CXX_OBJ_TEST) $(CXX_OBJ_NOTEST):
+$(CXX_OBJ_ALL):
 	echo "  $($(HOST)CXX)  [$(ARTIFACT_NAME)] $(CXX_FILE)"
 	mkdir -p $(dir $@)
-	$($(HOST)CXX) -o $(@) -c $(CXX_FILE) -fPIC $($(HOST)CXXFLAGS) $(ARTIFACT_MFLAGS) $($(HOST)EXT_FLAGS) $(INCLUDE) $(ARTIFACT_CFLAGS)
+	$($(HOST)CXX) -o $(@) -c $(CXX_FILE) -fPIC $($(HOST)CXXFLAGS) $(ARTIFACT_MFLAGS) $($(HOST)EXT_FLAGS) $(INCLUDE) $(ARTIFACT_CFLAGS) -MMD -MP -MF $(DEP_FILE) -MT $(@)
 	
 # Producing large object files
 $(ARTIFACT_OBJ): $(CXX_OBJ)
@@ -195,4 +176,4 @@ uninstall:
 	echo "Uninstall OK"
 
 # Dependencies
--include $(CURDIR)/Makefile.d
+-include $(foreach objfile,$(CXX_OBJ_ALL),$(patsubst %.o,%.d,$(objfile)))
