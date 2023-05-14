@@ -32,18 +32,7 @@ TRACE                      := 0
 include $(BASEDIR)/project.mk
 include $(BASEDIR)/make/functions.mk
 include $(BASEDIR)/make/system.mk
-
-LIBDIR                     := $(PREFIX)/lib
-BINDIR                     := $(PREFIX)/bin
-SHAREDDIR                  := $(PREFIX)/share
-INCDIR                     := $(PREFIX)/include
-BUILDDIR                   := $(BASEDIR)/.build
-TARGET_BUILDDIR            := $(BUILDDIR)/target
-HOST_BUILDDIR              := $(BUILDDIR)/host
-MODULES                    := $(BASEDIR)/modules
-CONFIG                     := $(BASEDIR)/.config.mk
-
-# Configure tools and dependencies
+include $(BASEDIR)/make/paths.mk
 include $(BASEDIR)/make/tools.mk
 include $(BASEDIR)/modules.mk
 include $(BASEDIR)/dependencies.mk
@@ -230,6 +219,7 @@ OVERALL_DEPS := $(call uniq,$(DEPENDENCIES) $(ARTIFACT_ID))
 __tmp := $(foreach dep,$(OVERALL_DEPS),$(call vardef, $(dep)))
 
 CONFIG_VARS = \
+  $(PATH_VARS) \
   $(COMMON_VARS) \
   $(TOOL_VARS) \
   $(foreach name, $(OVERALL_DEPS), \
@@ -281,8 +271,7 @@ config: $(CONFIG_VARS)
 	echo "Features:     $(FEATURES)"
 	echo "Configured OK"
 
-help: | toolvars sysvars
-	echo ""
+help: | pathvars toolvars sysvars
 	echo "List of variables for each dependency:"
 	echo "  <ARTIFACT>_BIN            location to put all binaries when building artifact"
 	echo "  <ARTIFACT>_BRANCH         git branch used to checkout source code"
