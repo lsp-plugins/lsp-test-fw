@@ -21,15 +21,29 @@ ifneq ($(VERBOSE),1)
 .SILENT:
 endif
 
+BASEDIR                    := $(CURDIR)
+ROOTDIR                    := $(CURDIR)
+
+# Detect system, tools and dependencies
+include $(BASEDIR)/project.mk
+include $(BASEDIR)/make/functions.mk
+include $(BASEDIR)/make/system.mk
+include $(BASEDIR)/make/tools.mk
+include $(BASEDIR)/modules.mk
+include $(BASEDIR)/dependencies.mk
+
 # Definitions
-PREFIX                     := /usr/local
+ifeq ($(PLATFORM),Windows)
+  PREFIX                     := $(BASEDIR)/INSTALL
+  ETCDIR                     := $(BASEDIR)/etc
+else
+  PREFIX                     := /usr/local
+  ETCDIR                     := /etc
+endif
 LIBDIR                     := $(PREFIX)/lib
 BINDIR                     := $(PREFIX)/bin
 SHAREDDIR                  := $(PREFIX)/share
 INCDIR                     := $(PREFIX)/include
-ETCDIR                     := /etc
-BASEDIR                    := $(CURDIR)
-ROOTDIR                    := $(CURDIR)
 BUILDDIR                   := $(BASEDIR)/.build
 TARGET_BUILDDIR            := $(BUILDDIR)/target
 HOST_BUILDDIR              := $(BUILDDIR)/host
@@ -45,13 +59,6 @@ ifeq ($(DEVEL),1)
 else
   X_URL_SUFFIX                = _RO
 endif
-
-include $(BASEDIR)/project.mk
-include $(BASEDIR)/make/functions.mk
-include $(BASEDIR)/make/system.mk
-include $(BASEDIR)/make/tools.mk
-include $(BASEDIR)/modules.mk
-include $(BASEDIR)/dependencies.mk
 
 # Compute the full list of dependencies
 MERGED_DEPENDENCIES        := \
