@@ -23,11 +23,27 @@ endif
 
 BASEDIR                    := $(CURDIR)
 ROOTDIR                    := $(CURDIR)
+TEST                       := 0
+DEBUG                      := 0
+PROFILE                    := 0
+TRACE                      := 0
 
-# Detect system, tools and dependencies
+# Configure system settings
 include $(BASEDIR)/project.mk
 include $(BASEDIR)/make/functions.mk
 include $(BASEDIR)/make/system.mk
+
+LIBDIR                     := $(PREFIX)/lib
+BINDIR                     := $(PREFIX)/bin
+SHAREDDIR                  := $(PREFIX)/share
+INCDIR                     := $(PREFIX)/include
+BUILDDIR                   := $(BASEDIR)/.build
+TARGET_BUILDDIR            := $(BUILDDIR)/target
+HOST_BUILDDIR              := $(BUILDDIR)/host
+MODULES                    := $(BASEDIR)/modules
+CONFIG                     := $(BASEDIR)/.config.mk
+
+# Configure tools and dependencies
 include $(BASEDIR)/make/tools.mk
 include $(BASEDIR)/modules.mk
 include $(BASEDIR)/dependencies.mk
@@ -40,19 +56,6 @@ else
   PREFIX                     := /usr/local
   ETCDIR                     := /etc
 endif
-LIBDIR                     := $(PREFIX)/lib
-BINDIR                     := $(PREFIX)/bin
-SHAREDDIR                  := $(PREFIX)/share
-INCDIR                     := $(PREFIX)/include
-BUILDDIR                   := $(BASEDIR)/.build
-TARGET_BUILDDIR            := $(BUILDDIR)/target
-HOST_BUILDDIR              := $(BUILDDIR)/host
-MODULES                    := $(BASEDIR)/modules
-CONFIG                     := $(BASEDIR)/.config.mk
-TEST                       := 0
-DEBUG                      := 0
-PROFILE                    := 0
-TRACE                      := 0
 
 ifeq ($(DEVEL),1)
   X_URL_SUFFIX                = _RW
