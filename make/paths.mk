@@ -85,5 +85,5 @@ pathvars:
 	echo "  PREFIX                    installation prefix for binary files"
 	echo "  SHAREDDIR                 location of the shared files"
 	echo "  TEMPDIR                   location of temporary directory"
-	echo ""
+
 

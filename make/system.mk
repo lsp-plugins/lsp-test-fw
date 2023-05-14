@@ -219,4 +219,4 @@ sysvars:
 	echo "  SUB_FEATURES              list of features disabled in the build as a subtraction of default"
 	echo "  TEST                      use test build"
 	echo "  TRACE                     compile with additional trace information output"
-	echo ""
+

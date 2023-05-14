@@ -272,6 +272,7 @@ config: $(CONFIG_VARS)
 	echo "Configured OK"
 
 help: | pathvars toolvars sysvars
+	echo ""
 	echo "List of variables for each dependency:"
 	echo "  <ARTIFACT>_BIN            location to put all binaries when building artifact"
 	echo "  <ARTIFACT>_BRANCH         git branch used to checkout source code"
