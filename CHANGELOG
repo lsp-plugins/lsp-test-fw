@@ -2,6 +2,10 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.21 ===
+* Added strict compilation option.
+* Updated build scripts.
+
 === 1.0.20 ===
 * Removed Makefile.d. Dependencies are now automatically generated at the build stage.
 * Updated build scripts.
