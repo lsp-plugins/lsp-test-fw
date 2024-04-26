@@ -23,5 +23,5 @@ ARTIFACT_ID                 = LSP_TEST_FW
 ARTIFACT_NAME               = lsp-test-fw
 ARTIFACT_DESC               = Test framework for executing automated and manual tests
 ARTIFACT_HEADERS            = lsp-plug.in
-ARTIFACT_VERSION            = 1.0.25-devel
+ARTIFACT_VERSION            = 1.0.25
 ARTIFACT_EXPORT_SYMBOLS     = 1
