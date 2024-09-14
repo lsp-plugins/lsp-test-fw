@@ -34,6 +34,8 @@ ifndef PLATFORM
     PLATFORM       := OpenBSD
   else ifeq ($(findstring BSD,$(BUILD_SYSTEM)),BSD)
     PLATFORM       := BSD
+  else ifeq ($(findstring Haiku,$(BUILD_SYSTEM)),Haiku)
+    PLATFORM       := Haiku
   else ifeq ($(findstring Linux,$(BUILD_SYSTEM)),Linux)
     PLATFORM       := Linux
   else ifeq ($(findstring SunOS,$(BUILD_SYSTEM)),SunOS)
