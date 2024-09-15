@@ -22,8 +22,6 @@
 ifndef PREFIX
   ifeq ($(PLATFORM),Windows)
     PREFIX                     := $(BASEDIR)/INSTALL
-  else ifeq ($(PLATFORM),Haiku)
-    PREFIX                     := $(BASEDIR)/system
   else
     PREFIX                     := /usr/local
   endif
@@ -66,6 +64,7 @@ ifndef INCDIR
   INCDIR                   := $(PREFIX)/include
 endif
 
+# Shared resources
 ifndef SHAREDDIR
   ifeq ($(PLATFORM),Haiku)
     SHAREDDIR                     := $(PREFIX)/data
