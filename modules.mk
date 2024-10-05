@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
-#           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+# Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+#           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
 #
 # This file is part of lsp-test-fw
 #
@@ -27,3 +27,8 @@ LIBSHLWAPI_VERSION         := system
 LIBSHLWAPI_NAME            := libshlwapi
 LIBSHLWAPI_TYPE            := opt
 LIBSHLWAPI_LDFLAGS         := -lshlwapi
+
+LIBGNU_VERSION             := system
+LIBGNU_NAME                := libgnu
+LIBGNU_TYPE                := opt
+LIBGNU_LDFLAGS             := -lgnu

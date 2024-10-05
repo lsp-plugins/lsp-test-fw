@@ -65,17 +65,22 @@
     #define IF_LSP_TEST_FW_PLATFORM_MACOSX(...)     __VA_ARGS__
 #endif /* __macosx__ */
 
-#if defined(LSP_TEST_FW_PLATFORM_UNIX) || defined(LSP_TEST_FW_PLATFORM_LINUX) || defined(LSP_TEST_FW_PLATFORM_MACOSX) || defined(LSP_TEST_FW_PLATFORM_BSD)
+#if defined(__WINDOWS__) || defined(__WIN32__) || defined(__WIN64__) || defined(_WIN64) || defined(_WIN32) || defined(__WINNT) || defined(__WINNT__)
+    #define LSP_TEST_FW_PLATFORM_WINDOWS
+    #define IF_LSP_TEST_FW_PLATFORM_WINDOWS(...)    __VA_ARGS__
+#endif /* __WINDOWS__ */
+
+#if defined(__HAIKU__)
+    #define LSP_TEST_FW_PLATFORM_HAIKU
+    #define IF_LSP_TEST_FW_PLATFORM_HAIKU(...)    __VA_ARGS__
+#endif /* __Haiku__ */
+
+#if defined(LSP_TEST_FW_PLATFORM_UNIX) || defined(LSP_TEST_FW_PLATFORM_LINUX) || defined(LSP_TEST_FW_PLATFORM_MACOSX) || defined(LSP_TEST_FW_PLATFORM_BSD) || defined(LSP_TEST_FW_PLATFORM_HAIKU)
     #define LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE
     #define LSP_TEST_FW_PLATFORM_POSIX
 
     #define IF_LSP_TEST_FW_PLATFORM_POSIX(...)      __VA_ARGS__
 #endif /* unix-compatible platforms */
-
-#if defined(__WINDOWS__) || defined(__WIN32__) || defined(__WIN64__) || defined(_WIN64) || defined(_WIN32) || defined(__WINNT) || defined(__WINNT__)
-    #define LSP_TEST_FW_PLATFORM_WINDOWS
-    #define IF_LSP_TEST_FW_PLATFORM_WINDOWS(...)    __VA_ARGS__
-#endif /* __WINDOWS__ */
 
 //-----------------------------------------------------------------------------
 // Detect build platform (part 2)
@@ -98,6 +103,10 @@
 #ifndef IF_LSP_TEST_FW_PLATFORM_BSD
     #define IF_LSP_TEST_FW_PLATFORM_BSD(...)
 #endif /* IF_LSP_TEST_FW_PLATFORM_BSD */
+
+#ifndef IF_LSP_TEST_FW_PLATFORM_HAIKU
+    #define IF_LSP_TEST_FW_PLATFORM_HAIKU(...)
+#endif /* IF_LSP_TEST_FW_PLATFORM_HAIKU */
 
 #ifndef IF_LSP_TEST_FW_PLATFORM_MACOSX
     #define IF_LSP_TEST_FW_PLATFORM_MACOSX(...)
