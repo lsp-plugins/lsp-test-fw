@@ -59,7 +59,7 @@ ifeq ($(PLATFORM),Linux)
 else ifeq ($(PLATFORM),BSD)
   OBJ_LDFLAGS_X86       =  -m elf_i386
   OBJ_LDFLAGS_X86_64    =  -m elf_x86_64
-else ifeq ($(PLATFORM),Windows
+else ifeq ($(PLATFORM),Windows)
   OBJ_LDFLAGS_X86       =  -m i386pe
   OBJ_LDFLAGS_X86_64    =  -m i386pep
 endif
