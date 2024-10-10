@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
-#           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+# Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+#           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
 #
 # This file is part of lsp-test-fw
 #
@@ -121,12 +121,12 @@ $(CXX_OBJ_ALL):
 	
 # Producing large object files
 $(ARTIFACT_OBJ): $(CXX_OBJ)
-	@echo "  $($(HOST)LD)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ))"
-	$($(HOST)LD) -o $(ARTIFACT_OBJ) $($(HOST)LDFLAGS) $(CXX_OBJ)
+	@echo "  $($(HOST)AR)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ))"
+	$($(HOST)AR) rcs $(ARTIFACT_OBJ) $(CXX_OBJ)
 
 $(ARTIFACT_OBJ_TEST): $(CXX_OBJ_TEST)
-	echo "  $($(HOST)LD)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ_TEST))"
-	$($(HOST)LD) -o $(ARTIFACT_OBJ_TEST) $($(HOST)LDFLAGS) $(CXX_OBJ_TEST)
+	echo "  $($(HOST)AR)   [$(ARTIFACT_NAME)] $(notdir $(ARTIFACT_OBJ_TEST))"
+	$($(HOST)AR) rcs $(ARTIFACT_OBJ_TEST) $(CXX_OBJ_TEST)
 
 # Linking
 all: $(ARTIFACT_TARGETS)

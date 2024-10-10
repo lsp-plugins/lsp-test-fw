@@ -49,7 +49,7 @@ MERGED_DEPENDENCIES        := \
   $(TEST_DEPENDENCIES)
 UNIQ_MERGED_DEPENDENCIES   := $(call uniq, $(MERGED_DEPENDENCIES))
 DEPENDENCIES                = $(UNIQ_MERGED_DEPENDENCIES)
-FEATURES                   := $(sort $(call subtraction,$(SUB_FEATURES),$(DEFAULT_FEATURES) $(ADD_FEATURES)))
+BUILD_FEATURES             := $(sort $(call subtraction,$(SUB_FEATURES),$(if $(FEATURES),$(FEATURES),$(DEFAULT_FEATURES)) $(ADD_FEATURES)))
 
 # Determine versions
 ifeq ($(findstring -devel,$(ARTIFACT_VERSION)),-devel)
@@ -119,8 +119,8 @@ define _modconfig =
   $(if $($(name)_BIN),,          $(eval $(name)_BIN          := $(TARGET_BUILDDIR)/$($(name)_NAME)))
   $(if $($(name)_CFLAGS),,       $(eval $(name)_CFLAGS       := "$(if $($(name)_INC_OPT),$($(name)_INC_OPT) ,-I )\"$($(name)_INC)\"" -D$(name)_BUILTIN$(if $(publisher), -D$(name)_PUBLISHER)))
   $(if $($(name)_LDLAGS),,       $(eval $(name)_LDFLAGS      :=))
-  $(if $($(name)_OBJ),,          $(eval $(name)_OBJ          := "$($(name)_BIN)/$($(name)_NAME).o"))
-  $(if $($(name)_OBJ_TEST),,     $(eval $(name)_OBJ_TEST     := "$($(name)_BIN)/$($(name)_NAME)-test.o"))
+  $(if $($(name)_OBJ),,          $(eval $(name)_OBJ          := "$($(name)_BIN)/$($(name)_NAME).a"))
+  $(if $($(name)_OBJ_TEST),,     $(eval $(name)_OBJ_TEST     := "$($(name)_BIN)/$($(name)_NAME)-test.a"))
   $(if $($(name)_MFLAGS),,       $(eval $(name)_MFLAGS       := $(if $(publisher),,"-D$(name)_BUILTIN -fvisibility=hidden")))
   
   $(if $(HOST_$(name)_NAME),,    $(eval HOST_$(name)_NAME    := $($(name)_NAME)))
@@ -135,8 +135,8 @@ define _modconfig =
   $(if $(HOST_$(name)_BIN),,     $(eval HOST_$(name)_BIN     := $(HOST_BUILDDIR)/$($(name)_NAME)))
   $(if $(HOST_$(name)_CFLAGS),,  $(eval HOST_$(name)_CFLAGS  := "$(if $($(name)_INC_OPT),$($(name)_INC_OPT) ,-I )\"$($(name)_INC)\"" -D$(name)_BUILTIN$(if $(publisher), -D$(name)_PUBLISHER)))
   $(if $(HOST_$(name)_LDLAGS),,  $(eval HOST_$(name)_LDFLAGS :=))
-  $(if $(HOST_$(name)_OBJ),,     $(eval HOST_$(name)_OBJ     := "$(HOST_$(name)_BIN)/$($(name)_NAME).o"))
-  $(if $(HOST_$(name)_OBJ_TEST),,$(eval HOST_$(name)_OBJ_TEST:= "$(HOST_$(name)_BIN)/$($(name)_NAME)-test.o"))
+  $(if $(HOST_$(name)_OBJ),,     $(eval HOST_$(name)_OBJ     := "$(HOST_$(name)_BIN)/$($(name)_NAME).a"))
+  $(if $(HOST_$(name)_OBJ_TEST),,$(eval HOST_$(name)_OBJ_TEST:= "$(HOST_$(name)_BIN)/$($(name)_NAME)-test.a"))
   $(if $(HOST_$(name)_MFLAGS),,  $(eval HOST_$(name)_MFLAGS  := $(if $(publisher),,"-D$(name)_BUILTIN -fvisibility=hidden")))
 endef
 
@@ -270,7 +270,7 @@ $(CONFIG_VARS): prepare
 config: $(CONFIG_VARS)
 	echo "Host architecture: $(HOST_ARCHITECTURE_FAMILY)/$(HOST_ARCHITECTURE) ($(HOST_ARCHITECTURE_CFLAGS))"
 	echo "Architecture:      $(ARCHITECTURE_FAMILY)/$(ARCHITECTURE) ($(ARCHITECTURE_CFLAGS))"
-	echo "Features:          $(FEATURES)"
+	echo "Features:          $(BUILD_FEATURES)"
 	echo "Configured OK"
 
 help: | pathvars toolvars sysvars
