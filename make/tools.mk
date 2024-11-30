@@ -109,6 +109,8 @@ else ifeq ($(PLATFORM),Windows)
 else ifeq ($(PLATFORM),MacOS)
   FLAG_RELRO          =
   FLAG_GC_SECTIONS    = 
+  NOARCH_CXXFLAGS    += -std=c++0x
+  NOARCH_LDFLAGS     += -keep_private_externs
 else ifeq ($(PLATFORM),BSD)
   NOARCH_EXE_FLAGS   += -L/usr/local/lib
   NOARCH_SO_FLAGS    += -L/usr/local/lib
