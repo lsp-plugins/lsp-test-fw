@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 22 мар. 2020 г.
@@ -208,7 +208,9 @@ namespace lsp
                 test->configure(pCfg);
                 start_memcheck(test);
                 test->init();
-                test->execute(pCfg->args.size(), cfg->args.array<const char>());
+                test->execute(
+                    int(pCfg->args.size()),
+                    cfg->args.array<const char>());
                 test->destroy();
                 end_memcheck();
             }
@@ -233,7 +235,9 @@ namespace lsp
             test->configure(pCfg);
             start_memcheck(test);
             test->init();
-            test->execute(pCfg->args.size(), cfg->args.array<const char>());
+            test->execute(
+                int(pCfg->args.size()),
+                cfg->args.array<const char>());
             test->destroy();
             end_memcheck();
 
@@ -268,7 +272,9 @@ namespace lsp
             test->configure(pCfg);
             start_memcheck(test);
             test->init();
-            test->execute(pCfg->args.size(), cfg->args.array<const char>());
+            test->execute(
+                int(pCfg->args.size()),
+                cfg->args.array<const char>());
             test->destroy();
             end_memcheck();
 
@@ -680,7 +686,8 @@ namespace lsp
         }
 
     #endif /* LSP_TEST_FW_PLATFORM_UNIX_COMPATIBLE */
-    }
-}
+
+    } /* namespace test */
+} /* namespace lsp */
 
 
