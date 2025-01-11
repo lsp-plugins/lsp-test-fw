@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
-#           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+# Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+#           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
 #
 # This file is part of lsp-test-fw
 #
@@ -62,6 +62,17 @@ ifeq ($(PLATFORM),Windows)
 endif
 
 #------------------------------------------------------------------------------
+# MacOS dependencies
+MACOS_DEPENDENCIES =
+
+MACOS_TEST_DEPENDENCIES =
+
+ifeq ($(PLATFORM),MacOS)
+  DEPENDENCIES             += $(MACOS_DEPENDENCIES)
+  TEST_DEPENDENCIES        += $(MACOS_TEST_DEPENDENCIES)
+endif
+
+#------------------------------------------------------------------------------
 # Haiku dependencies
 HAIKU_DEPENDENCIES = \
   LIBGNU
@@ -80,11 +91,13 @@ ALL_DEPENDENCIES = \
   $(DEPENDENCIES) \
   $(LINUX_DEPENDENCIES) \
   $(BSD_DEPENDENCIES) \
-  $(HAIKU_DEPENDENCIES) \
   $(WINDOWS_DEPENDENCIES) \
+  $(MACOS_DEPENDENCIES) \
+  $(HAIKU_DEPENDENCIES) \
   $(TEST_DEPENDENCIES) \
   $(LINUX_TEST_DEPENDENCIES) \
   $(BSD_TEST_DEPENDENCIES) \
-  $(HAIKU_TEST_DEPENDENCIES) \
-  $(WINDOWS_TEST_DEPENDENCIES)
+  $(WINDOWS_TEST_DEPENDENCIES) \
+  $(MACOS_TEST_DEPENDENCIES) \
+  $(HAIKU_TEST_DEPENDENCIES)
 
