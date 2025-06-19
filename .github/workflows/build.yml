@@ -188,7 +188,6 @@ jobs:
       - name: Run unit tests
         shell: msys2 {0}
         run: .build/target/${{env.ARTIFACT}}/${{env.ARTIFACT}}-test.exe utest --verbose --jobs 1
-
   macos_stable:
     runs-on: macos-latest
     steps:
