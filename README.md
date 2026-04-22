@@ -10,8 +10,7 @@ parameters do affect the execution of the same algorithm.
 * Manual tests - tests that can not be automated but can be simly launched and
 performed 'by hand'.
 
-Supported platforms
-======
+## Supported platforms
 
 The build and correct unit test execution has been confirmed for following platforms:
 * FreeBSD
@@ -21,16 +20,14 @@ The build and correct unit test execution has been confirmed for following platf
 * Windows 32-bit
 * Windows 64-bit
 
-Requirements
-======
+## Requirements
 
 The following packages need to be installed for building:
 
 * gcc >= 4.9
 * make >= 4.0
 
-Building
-======
+## Building
 
 To build the library, perform the following commands:
 
@@ -65,8 +62,7 @@ To clean the whole project tree including configuration files, run:
 make prune
 ```
 
-Integrating
-======
+## Integrating
 
 To compile compile the object file for future linking, perform the following commands:
 ```bash
@@ -90,8 +86,7 @@ make fetch # Fetch dependencies from Git repository
 make compile
 ```
 
-Launching
-======
+## Launching
 
 To build application which will allow to execute tests, issue the following command:
 ```bash
