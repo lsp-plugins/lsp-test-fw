@@ -29,8 +29,6 @@ include $(MODDIR)/project.mk
 include $(MODDIR)/dependencies.mk
 include $(MODDIR)/make/functions.mk
 
-$(info BUILD_FEATURES=$(BUILD_FEATURES))
-
 ifeq ($(call fcheck,test,$(BUILD_FEATURES),ON),ON)
   UNIQ_DEPENDENCIES      := $(call uniq, $(DEPENDENCIES) $(TEST_DEPENDENCIES))
   DEPENDENCIES            = $(UNIQ_DEPENDENCIES)
