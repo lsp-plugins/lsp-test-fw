@@ -65,22 +65,26 @@
 
 #define MTEST_FAIL_SILENT()     exit(5);
 
-#define MTEST_ASSERT(code, ...) do { \
+#define MTEST_ASSERT_PTR(ptr, code, ...) do { \
             if (!(code)) { \
                 fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
-                        __test_group, __test_name, __FILE__, __LINE__, # code); \
+                        ptr->__test_group, ptr->__test_name, __FILE__, __LINE__, # code); \
                 __VA_ARGS__; \
                 exit(2); \
             } \
         } while (false)
 
-#define MTEST_ASSERT_MSG(code, message, ...) do { \
+#define MTEST_ASSERT(code, ...) MTEST_ASSERT_PTR(this, code, ## __VA_ARGS__)
+
+#define MTEST_ASSERT_PTR_MSG(ptr, code, message, ...) do { \
             if (!(code)) { \
                 fprintf(stderr, "Manual test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
-                        __test_group, __test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
+                        ptr->__test_group, ptr->__test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
                 exit(2); \
             } \
         } while (false)
+
+#define MTEST_ASSERT_MSG(code, message, ...) MTEST_ASSERT_PTR_MSG(this, code, message, ## __VA_ARGS__)
 
 #define MTEST_END \
         } manual_test;  /* mtest class */ \
