@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
-#           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+# Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+#           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
 #
 # This file is part of lsp-test-fw
 #
@@ -23,5 +23,5 @@ ARTIFACT_ID                 = LSP_TEST_FW
 ARTIFACT_NAME               = lsp-test-fw
 ARTIFACT_DESC               = Test framework for executing automated and manual tests
 ARTIFACT_HEADERS            = lsp-plug.in
-ARTIFACT_VERSION            = 1.0.32
+ARTIFACT_VERSION            = 1.0.33
 ARTIFACT_EXPORT_SYMBOLS     = 1

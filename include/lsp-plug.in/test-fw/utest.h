@@ -79,24 +79,28 @@
             ::exit(1); \
         } while (false)
 
-#define UTEST_ASSERT(code, ...) \
+#define UTEST_ASSERT_PTR(ptr, code, ...) \
         do { \
             if (!(code)) { \
                 ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n", \
-                    __test_group, __test_name, __FILE__, __LINE__, # code); \
+                    ptr->__test_group, ptr->__test_name, __FILE__, __LINE__, # code); \
                     __VA_ARGS__; \
                     ::exit(2); \
             } \
         } while (false)
 
-#define UTEST_ASSERT_MSG(code, message, ...) \
+#define UTEST_ASSERT(code, ...) UTEST_ASSERT_PTR(this, code, ## __VA_ARGS__)
+
+#define UTEST_ASSERT_MSG_PTR(ptr, code, message, ...) \
         do { \
             if (!(code)) { \
                 ::fprintf(stderr, "Unit test '%s.%s' assertion has failed at file %s, line %d:\n  %s\n  " message "\n", \
-                    __test_group, __test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
+                    ptr->__test_group, ptr->__test_name, __FILE__, __LINE__, # code, ## __VA_ARGS__); \
                     ::exit(2); \
             } \
         } while (false)
+
+#define UTEST_ASSERT_MSG(code, message, ...) UTEST_ASSERT_MSG_PTR(this, code, message, ## __VA_ARGS__)
 
 #define UTEST_FOREACH(var, ...)    \
         const size_t ___sizes[] = { __VA_ARGS__, 0 }; \
