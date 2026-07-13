@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 21 авг. 2018 г.
@@ -31,9 +31,9 @@ namespace lsp
 {
     namespace test
     {
-        ByteBuffer::ByteBuffer(size_t samples, size_t align, bool aligned)
+        ByteBuffer::ByteBuffer(size_t bytes, size_t align, bool aligned)
         {
-            allocate(samples, align, aligned);
+            allocate(bytes, align, aligned);
             randomize();
         }
 
@@ -43,10 +43,10 @@ namespace lsp
             ::memcpy(pBuffer, src.pBuffer, src.nLength);
         }
 
-        ByteBuffer::ByteBuffer(const void *data, size_t samples, size_t align, bool aligned)
+        ByteBuffer::ByteBuffer(const void *data, size_t bytes, size_t align, bool aligned)
         {
-            allocate(samples, align, aligned);
-            ::memcpy(pBuffer, data, samples);
+            allocate(bytes, align, aligned);
+            ::memcpy(pBuffer, data, bytes);
         }
 
         ByteBuffer::~ByteBuffer()
@@ -59,28 +59,28 @@ namespace lsp
             pBuffer = NULL;
         }
 
-        void ByteBuffer::allocate(size_t samples, size_t align, bool aligned)
+        void ByteBuffer::allocate(size_t bytes, size_t align, bool aligned)
         {
-            size_t alloc    = sizeof(uint32_t)*2 + samples + align;
-            nAlign          = align;
-            nLength         = samples;
-            pData           = new uint8_t[alloc];
-            bAligned        = aligned;
+            const size_t alloc  = sizeof(uint32_t)*2 + bytes + align;
+            nAlign              = align;
+            nLength             = bytes;
+            pData               = new uint8_t[alloc];
+            bAligned            = aligned;
 
-            uint8_t *head   = &pData[sizeof(uint32_t)];
+            uint8_t *head       = &pData[sizeof(uint32_t)];
             if (aligned)
-                head            = align_pointer<uint8_t>(head, nAlign);
+                head                = align_pointer<uint8_t>(head, nAlign);
             else if (check_alignment(head, nAlign))
-                head       += sizeof(float);
+                head               += sizeof(uint8_t);
 
-            pBuffer         = head;
+            pBuffer             = head;
 
             // Mark the head and the tail of the buffer with signatures
-            uint32_t key    = uint32_t(ptrdiff_t(this));
-            uint32_t *ptr   = reinterpret_cast<uint32_t *>(&pBuffer[-sizeof(uint32_t)]);
-            *ptr            = uint32_t(CK_HEAD_SIGNATURE ^ key);
-            ptr             = reinterpret_cast<uint32_t *>(&pBuffer[nLength]);
-            *ptr            = uint32_t(CK_TAIL_SIGNATURE ^ key);
+            const uint32_t key  = uint32_t(ptrdiff_t(this));
+            uint32_t *ptr       = reinterpret_cast<uint32_t *>(&pBuffer[-sizeof(uint32_t)]);
+            *ptr                = uint32_t(CK_HEAD_SIGNATURE ^ key);
+            ptr                 = reinterpret_cast<uint32_t *>(&pBuffer[nLength]);
+            *ptr                = uint32_t(CK_TAIL_SIGNATURE ^ key);
         }
 
         void ByteBuffer::randomize()
@@ -100,7 +100,7 @@ namespace lsp
 
         bool ByteBuffer::validate() const
         {
-            uint32_t key            = uint32_t(ptrdiff_t(this));
+            const uint32_t key      = uint32_t(ptrdiff_t(this));
             const uint32_t *ptr     = reinterpret_cast<uint32_t *>(&pBuffer[-sizeof(uint32_t)]);
             if (*ptr != (CK_HEAD_SIGNATURE ^ key))
                 return false;
@@ -131,7 +131,7 @@ namespace lsp
         {
             ::fprintf(out, "%s: ", text);
             for (size_t i=0; i<nLength; ++i)
-                ::fprintf(out, "%02x ", pBuffer[i]);
+                ::fprintf(out, "%02x ", int(pBuffer[i]));
             ::fprintf(out, "\n");
         }
 
@@ -139,8 +139,9 @@ namespace lsp
         {
             ::fprintf(out, "%s: ", text);
             for (size_t i=0; i<nLength; ++i)
-                ::fprintf(out, "%02x ", pBuffer[i]);
+                ::fprintf(out, "%02x ", int(pBuffer[i]));
             ::fprintf(out, "\n");
         }
-    }
-}
+
+    } /* namespace test */
+} /* namespace lsp */
