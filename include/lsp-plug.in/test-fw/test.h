@@ -57,9 +57,19 @@ namespace lsp
         class LSP_TEST_FW_PUBLIC Test: public Environment
         {
             private:
-                static dynarray_t   support;
-                static void         __mark_supported(const void *x);
-                static bool         __check_supported(const void *ptr);
+                typedef struct support_list_t
+                {
+                    const void    **list;
+                    uint32_t        count;
+                    uint32_t        capacity;
+
+                    ~support_list_t();
+                } support_list_t;
+
+            private:
+                static support_list_t   support;
+                static void             __mark_supported(const void *x);
+                static bool             __check_supported(const void *ptr);
 
             protected:
                 const char         *__test_group;
