@@ -3,7 +3,8 @@
 *******************************************************************************
 
 === 1.0.34 ===
-
+* Dynamic lst of supported by test functions is now compatible with static
+  initialization.
 
 === 1.0.33 ===
 * Added possibility to run asserts from static methods.
