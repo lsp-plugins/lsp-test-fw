@@ -46,9 +46,9 @@ DISTSRC_PATH                = $(BUILDDIR)/distsrc
 DISTSRC                     = $(DISTSRC_PATH)/$(ARTIFACT_NAME)
 
 .DEFAULT_GOAL              := all
-.PHONY: all compile install uninstall clean
+.PHONY: all bundle clean compile install uninstall
 
-compile all install uninstall:
+all compile bundle install uninstall:
 	$(CHK_CONFIG)
 	$(MAKE) -C "$(BASEDIR)/src" $(@) VERBOSE="$(VERBOSE)" CONFIG="$(CONFIG)" DESTDIR="$(DESTDIR)"
 

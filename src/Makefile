@@ -169,6 +169,12 @@ install: all
 	ln -sf $(notdir $(ARTIFACT_SLIB)) "$(DESTDIR)$(LIBDIR)/$(ARTIFACT_SLIBLINK)"
 	echo "Install OK"
 
+bundle: all
+	echo "Make bundle $($(ARTIFACT_ID)_NAME)"
+	$(if $(strip $(DESTDIR)),,echo "The destination directory DESTDIR should be defined" && exit 1)
+	$(INSTALL) $(ARTIFACT_LIB) "$(DESTDIR)/$(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(LIBRARY_EXT)"
+	echo "Bundle OK"
+
 uninstall:
 	echo "Uninstalling $($(ARTIFACT_ID)_NAME)"
 	-rm -f "$(DESTDIR)$(LIBDIR)/$(notdir $(ARTIFACT_LIB))"
