@@ -103,7 +103,7 @@ DEP_CXX_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.cpp,$(@))
 DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 
 .DEFAULT_GOAL = all
-.PHONY: compile all install uninstall
+.PHONY: all bundle compile install uninstall
 .PHONY: $(ARTIFACT_DEPS)
 
 # Compile dependencies
