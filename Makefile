@@ -102,6 +102,7 @@ distsrc:
 help:
 	echo "Available targets:"
 	echo "  all                       Build all binaries"
+	echo "  bundle                    Install only necessary binaries for bundling"
 	echo "  clean                     Clean all build files and configuration file"
 	echo "  config                    Configure build"
 	echo "  distsrc                   Make tarball with source code for packagers"
