@@ -103,12 +103,16 @@
     }
 
 #define PTEST_SEPARATOR \
-        gather_stats(NULL, 0.0f, 0); \
-        printf("\n");
+        do { \
+            gather_stats(NULL, 0.0f, 0); \
+            printf("\n"); \
+        } while (false)
 
 #define PTEST_SEPARATOR2 \
-        gather_stats(NULL, 0.0f, 1); \
-        printf("\n");
+        do { \
+            gather_stats(NULL, 0.0f, 1); \
+            printf("\n"); \
+        } while (false)
 
 #define PTEST_FAIL_MSG(message, ...) do {  \
             fprintf(stderr, "Performance test '%s.%s' has failed at file %s, line %d with message:\n  " message  "\n", \
