@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 22 авг. 2018 г.
@@ -28,7 +28,16 @@ namespace lsp
 {
     namespace test
     {
-        dynarray_t      Test::support;
+        Test::support_list_t    Test::support   = { NULL, 0, 0 };
+
+        Test::support_list_t::~support_list_t()
+        {
+            if (list != NULL)
+                free(list);
+            list                = NULL;
+            count               = 0;
+            capacity            = 0;
+        }
 
         Test::Test(const char *group, const char *name)
         {
@@ -77,15 +86,31 @@ namespace lsp
 
         void Test::__mark_supported(const void *ptr)
         {
-            support.add(const_cast<void *>(ptr));
+            if (support.count >= support.capacity)
+            {
+                uint32_t new_cap    = support.capacity + (support.capacity >> 1);
+                if (new_cap < 0x20)
+                    new_cap             = 0x20;
+                const void **data       = static_cast<const void **>(::realloc(support.list, sizeof(const void *) * new_cap));
+                if (data == NULL)
+                    return;
+
+                support.list        = data;
+                support.capacity    = new_cap;
+            }
+
+            support.list[support.count++]  = const_cast<void *>(ptr);
         }
 
         bool Test::__check_supported(const void *ptr)
         {
-            return support.index_of(ptr) >= 0;
+            for (uint32_t i=0; i<support.count; ++i)
+                if (support.list[i] == ptr)
+                    return true;
+            return false;
         }
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 
 

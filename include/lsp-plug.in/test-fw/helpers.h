@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 27 авг. 2018 г.
@@ -71,7 +71,7 @@ namespace lsp
         void printf_buffer(const float *buf, size_t count, const char *fmt, ...);
 
         LSP_TEST_FW_PUBLIC
-        float randf(float min, float max);
+        float randf(float min = 0.0f, float max = 1.0f);
 
         LSP_TEST_FW_PUBLIC
         void randomize_positive(float *buf, size_t n);
@@ -87,7 +87,7 @@ namespace lsp
 
         LSP_TEST_FW_PUBLIC
         void randomize_sign(float *buf, size_t n);
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* LSP_PLUG_IN_TEST_FW_HELPERS_H_ */

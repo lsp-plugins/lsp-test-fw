@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 22 мар. 2020 г.
@@ -139,7 +139,7 @@ namespace lsp
                 }
         } dynarray_t;
 
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 #endif /* LSP_PLUG_IN_TEST_FW_DYNARRAY_H_ */
