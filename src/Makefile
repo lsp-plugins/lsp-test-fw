@@ -93,6 +93,7 @@ CXX_INSTHEADERS         = $(patsubst $(ARTIFACT_INC)/%,$(DESTDIR)$(INCDIR)/%,$(C
 DEP_FILE                = $(patsubst %.o,%.d, $(@))
 
 BUILD_ALL               = $(ARTIFACT_LIB) $(ARTIFACT_SLIB) $(ARTIFACT_PC)
+BUNDLE_DEPS             = $(call if_eq,$(ROOT_ARTIFACT_ID),$(ARTIFACT_ID),all,)
 
 ifeq ($($(ARTIFACT_ID)_TESTING),1)
   ARTIFACT_TARGETS       += $(ARTIFACT_TEST_BIN)
@@ -102,7 +103,6 @@ DEP_CXX                 = $(foreach src,$(CXX_SRC_MAIN) $(CXX_SRC_EXPORT) $(CXX_
 DEP_CXX_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.cpp,$(@))
 DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 
-BUNDLE_DEPS             = $(call if_eq,$(ROOT_ARTIFACT_ID),$(ARTIFACT_ID),all,)
 
 .DEFAULT_GOAL = all
 .PHONY: all bundle compile install uninstall
