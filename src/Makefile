@@ -102,6 +102,8 @@ DEP_CXX                 = $(foreach src,$(CXX_SRC_MAIN) $(CXX_SRC_EXPORT) $(CXX_
 DEP_CXX_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.cpp,$(@))
 DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
 
+BUNDLE_DEPS             = $(call if_eq,$(ROOT_ARTIFACT_ID),$(ARTIFACT_ID),all,)
+
 .DEFAULT_GOAL = all
 .PHONY: all bundle compile install uninstall
 .PHONY: $(ARTIFACT_DEPS)
@@ -169,7 +171,7 @@ install: all
 	ln -sf $(notdir $(ARTIFACT_SLIB)) "$(DESTDIR)$(LIBDIR)/$(ARTIFACT_SLIBLINK)"
 	echo "Install OK"
 
-bundle: all
+bundle: $(BUNDLE_DEPS)
 	echo "Make bundle $($(ARTIFACT_ID)_NAME)"
 	$(if $(strip $(DESTDIR)),,echo "The destination directory DESTDIR should be defined" && exit 1)
 	$(INSTALL) $(ARTIFACT_LIB) "$(DESTDIR)/$(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(LIBRARY_EXT)"
