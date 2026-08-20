@@ -93,6 +93,7 @@ CXX_INSTHEADERS         = $(patsubst $(ARTIFACT_INC)/%,$(DESTDIR)$(INCDIR)/%,$(C
 DEP_FILE                = $(patsubst %.o,%.d, $(@))
 
 BUILD_ALL               = $(ARTIFACT_LIB) $(ARTIFACT_SLIB) $(ARTIFACT_PC)
+BUNDLE_DEPS             = $(call if_eq,$(ROOT_ARTIFACT_ID),$(ARTIFACT_ID),all,)
 
 ifeq ($($(ARTIFACT_ID)_TESTING),1)
   ARTIFACT_TARGETS       += $(ARTIFACT_TEST_BIN)
@@ -101,6 +102,7 @@ endif
 DEP_CXX                 = $(foreach src,$(CXX_SRC_MAIN) $(CXX_SRC_EXPORT) $(CXX_SRC_EXT) $(CXX_SRC_TEST),$(patsubst %.cpp,$(ARTIFACT_BIN)/%.d,$(src)))
 DEP_CXX_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.cpp,$(@))
 DEP_DEP_FILE            = $(patsubst $(ARTIFACT_BIN)/%.d,%.o,$(@))
+
 
 .DEFAULT_GOAL = all
 .PHONY: all bundle compile install uninstall
@@ -169,7 +171,7 @@ install: all
 	ln -sf $(notdir $(ARTIFACT_SLIB)) "$(DESTDIR)$(LIBDIR)/$(ARTIFACT_SLIBLINK)"
 	echo "Install OK"
 
-bundle: all
+bundle: $(BUNDLE_DEPS)
 	echo "Make bundle $($(ARTIFACT_ID)_NAME)"
 	$(if $(strip $(DESTDIR)),,echo "The destination directory DESTDIR should be defined" && exit 1)
 	$(INSTALL) $(ARTIFACT_LIB) "$(DESTDIR)/$(LIBRARY_PREFIX)$(ARTIFACT_NAME)$(LIBRARY_EXT)"
