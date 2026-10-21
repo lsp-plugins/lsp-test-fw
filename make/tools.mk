@@ -96,6 +96,7 @@ NOARCH_CXXFLAGS    :=
 NOARCH_EXE_FLAGS   := 
 NOARCH_SO_FLAGS    := 
 NOARCH_LDFLAGS     := 
+NOARCH_LDSCRIPT    :=
 
 ifeq ($(PLATFORM),Solaris)
   FLAG_RELRO          =
@@ -108,7 +109,7 @@ else ifeq ($(PLATFORM),Windows)
   NOARCH_CXXFLAGS    += -DWINVER=0x600 -D_WIN32_WINNT=0x600
   NOARCH_EXE_FLAGS   += -static-libgcc -static-libstdc++
   NOARCH_SO_FLAGS    += -static-libgcc -static-libstdc++
-  NOARCH_LDFLAGS     += -T $(CURDIR)/make/ld-windows.script
+  NOARCH_LDSCRIPT     = -T $(CURDIR)/make/ld-windows.script
 else ifeq ($(PLATFORM),MacOS)
   FLAG_RELRO          =
   FLAG_GC_SECTIONS    =
@@ -203,6 +204,9 @@ INCLUDE            :=
 NOARCH_LDFLAGS     += -r
 LDFLAGS            := $(ARCHITECTURE_LDFLAGS) $(NOARCH_LDFLAGS)
 HOST_LDFLAGS       := $(HOST_ARCHITECTURE_LDFLAGS) $(NOARCH_LDFLAGS)
+
+LDSCRIPT           := $(NOARCH_LDSCRIPT)
+HOST_LDSCRIPT      := $(NOARCH_LDSCRIPT)
 
 NOARCH_EXE_FLAGS   += $(FLAG_RELRO) $(FLAG_GC_SECTIONS) $(FLAG_AS_NEEDED)
 EXE_FLAGS          := $(ARCHITECTURE_CFLAGS) $(NOARCH_EXE_FLAGS)
