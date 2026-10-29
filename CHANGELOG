@@ -2,6 +2,10 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.36 ===
+* Small code optimizations.
+* Updated build files and linking script for Windows.
+
 === 1.0.35 ===
 * Updated build files.
 

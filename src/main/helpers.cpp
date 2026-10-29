@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-test-fw
  * Created on: 27 авг. 2018 г.
@@ -34,18 +34,18 @@ namespace lsp
         bool float_equals_relative(float a, float b, float tolerance)
         {
             if (a == 0.0f)
-                return (fabs(b) < tolerance);
+                return (fabsf(b) < tolerance);
             else if (b == 0.0f)
-                return (fabs(a) < tolerance);
+                return (fabsf(a) < tolerance);
 
-            float diff = (a > b) ? fabs(a/b) : fabs(b/a);
-            return fabs(1.0f - diff) < tolerance;
+            float diff = (a > b) ? fabsf(a/b) : fabsf(b/a);
+            return fabsf(1.0f - diff) < tolerance;
         }
 
         LSP_TEST_FW_PUBLIC
         bool float_equals_absolute(float a, float b, float tolerance)
         {
-            return fabs(a - b) <= tolerance;
+            return fabsf(a - b) <= tolerance;
         }
 
         LSP_TEST_FW_PUBLIC
@@ -203,7 +203,7 @@ namespace lsp
                 buf[i] = (rand() >= (RAND_MAX >> 1)) ? tmp : -tmp;
             }
         }
-    }
-}
+    } /* namespace test */
+} /* namespace lsp */
 
 
